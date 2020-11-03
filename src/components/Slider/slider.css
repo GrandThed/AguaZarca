@@ -1,0 +1,101 @@
+img {
+  width: 100vw;
+  height: 100vh;
+}
+
+.sliderInner {
+  height: 100vh;
+}
+.slides .slick-next {
+  right: 5%;
+}
+.slides .slick-prev {
+  left: 5%;
+}
+.slides .slick-prev,
+.slides .slick-next {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+}
+.slides {
+  position: relative;
+}
+.slides .slick-prev,
+.slides .slick-next {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+}
+.slick-slide {
+  outline: none;
+}
+
+.image-div {
+  width: 100%;
+  height: 100vh;
+  background-repeat: no-repeat;
+  z-index: 4;
+  padding: 20px;
+  background-size: 100%;
+  display: flex;
+}
+.image-container-filler {
+  width: 60%;
+  height: 100px;
+}
+.image-container {
+  padding: 40px 40px 60px 40px;
+  box-shadow: 0px 0px 8px -2px rgba(0, 0, 0, 0.75);
+  background-color: white;
+  margin: 14% 0 0 0;
+  width: 450px;
+  height: 350px;
+}
+.image-features {
+  display: flex;
+  margin: 5px 0;
+}
+
+.image-title {
+  margin-bottom: 4px;
+  font-weight: 400;
+}
+
+.image-ubication {
+  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 400;
+  color: gray;
+}
+
+.image-feat-icons-div {
+  margin: 0 10px;
+}
+.image-feat-title {
+  color: rgb(82, 82, 82);
+  padding: 3px 0;
+}
+
+.image-text-span {
+  display: inline;
+}
+
+.image-icons {
+  color: #a51a1a;
+  vertical-align: -6px;
+
+  font-size: 26px;
+}
+
+.image-price-title{
+  text-transform: capitalize;
+  color: rgb(82, 82, 82);
+  padding-top: 10px;
+}
+
+.image-price{
+  font-weight: 400;
+  font-size: 25px;
+  color: #a51a1a;
+}
