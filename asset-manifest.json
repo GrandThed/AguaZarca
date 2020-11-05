@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/AguaZarca/static/css/main.8ec1de66.chunk.css",
-    "main.js": "/AguaZarca/static/js/main.8362166a.chunk.js",
-    "main.js.map": "/AguaZarca/static/js/main.8362166a.chunk.js.map",
-    "runtime-main.js": "/AguaZarca/static/js/runtime-main.758dbbce.js",
-    "runtime-main.js.map": "/AguaZarca/static/js/runtime-main.758dbbce.js.map",
+    "main.css": "/AguaZarca/static/css/main.c82ee2a8.chunk.css",
+    "main.js": "/AguaZarca/static/js/main.2962d021.chunk.js",
+    "main.js.map": "/AguaZarca/static/js/main.2962d021.chunk.js.map",
+    "runtime-main.js": "/AguaZarca/static/js/runtime-main.c2bdaa77.js",
+    "runtime-main.js.map": "/AguaZarca/static/js/runtime-main.c2bdaa77.js.map",
     "static/css/2.6d7cc9e7.chunk.css": "/AguaZarca/static/css/2.6d7cc9e7.chunk.css",
-    "static/js/2.f342a315.chunk.js": "/AguaZarca/static/js/2.f342a315.chunk.js",
-    "static/js/2.f342a315.chunk.js.map": "/AguaZarca/static/js/2.f342a315.chunk.js.map",
-    "static/js/3.ff001e95.chunk.js": "/AguaZarca/static/js/3.ff001e95.chunk.js",
-    "static/js/3.ff001e95.chunk.js.map": "/AguaZarca/static/js/3.ff001e95.chunk.js.map",
+    "static/js/2.c11a418b.chunk.js": "/AguaZarca/static/js/2.c11a418b.chunk.js",
+    "static/js/2.c11a418b.chunk.js.map": "/AguaZarca/static/js/2.c11a418b.chunk.js.map",
+    "static/js/3.7dab5982.chunk.js": "/AguaZarca/static/js/3.7dab5982.chunk.js",
+    "static/js/3.7dab5982.chunk.js.map": "/AguaZarca/static/js/3.7dab5982.chunk.js.map",
     "index.html": "/AguaZarca/index.html",
     "static/css/2.6d7cc9e7.chunk.css.map": "/AguaZarca/static/css/2.6d7cc9e7.chunk.css.map",
-    "static/css/main.8ec1de66.chunk.css.map": "/AguaZarca/static/css/main.8ec1de66.chunk.css.map",
-    "static/js/2.f342a315.chunk.js.LICENSE.txt": "/AguaZarca/static/js/2.f342a315.chunk.js.LICENSE.txt",
+    "static/css/main.c82ee2a8.chunk.css.map": "/AguaZarca/static/css/main.c82ee2a8.chunk.css.map",
+    "static/js/2.c11a418b.chunk.js.LICENSE.txt": "/AguaZarca/static/js/2.c11a418b.chunk.js.LICENSE.txt",
     "static/media/slick-theme.css": "/AguaZarca/static/media/slick.c94f7671.ttf"
   },
   "entrypoints": [
-    "static/js/runtime-main.758dbbce.js",
+    "static/js/runtime-main.c2bdaa77.js",
     "static/css/2.6d7cc9e7.chunk.css",
-    "static/js/2.f342a315.chunk.js",
-    "static/css/main.8ec1de66.chunk.css",
-    "static/js/main.8362166a.chunk.js"
+    "static/js/2.c11a418b.chunk.js",
+    "static/css/main.c82ee2a8.chunk.css",
+    "static/js/main.2962d021.chunk.js"
   ]
 }
