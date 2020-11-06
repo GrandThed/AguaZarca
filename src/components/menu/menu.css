@@ -1,3 +1,4 @@
+/* *************** Full menu ***************** */
 .menu {
   z-index: 1;
   position: absolute;
@@ -40,7 +41,8 @@
 }
 
 .menu-image {
-  width: 20vw;
+  min-width: 170px;
+  width: 30vw;
   max-width: 200px;
   height: auto;
 }
@@ -50,21 +52,194 @@
   border-radius: 5px;
 }
 
-.menu-icon-phone{
-    font-size: 30px;
-    padding: 0 5px 0 0;
-    margin: 0;
-    vertical-align: -10px;
-} 
+.menu-icon-phone {
+  font-size: 30px;
+  padding: 0 5px 0 0;
+  margin: 0;
+  vertical-align: -10px;
+}
 
-.menu-icon-profile{
-    font-size: 40px;
-    padding: 0 -20px 0 20px;
-    margin: 0;
-    vertical-align: -8px;
+.menu-icon-profile {
+  font-size: 40px;
+  padding: 0 -20px 0 20px;
+  margin: 0;
+  vertical-align: -8px;
 }
 
 .menu-link {
   text-decoration: none !important;
   color: white !important;
+}
+
+/* **************** mediumMenu ******************** */
+
+.medium-menu {
+  height: 86px;
+  display: flex;
+  flex-flow: nowrap;
+  justify-content: space-between;
+  background-color: rgb(70, 70, 70);
+  color: white;
+  align-items: center;
+}
+
+.medium-menu-image {
+  margin: 15px 10px;
+}
+
+.medium-menu-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.medium-menu-ul {
+  position: absolute;
+  list-style: none;
+}
+
+.medium-menu-publish {
+  margin-right: 10px;
+}
+
+.medium-menu-burger {
+  font-size: 50px;
+  margin-right: 10px;
+  color: rgb(65, 0, 0);
+}
+
+.dropdown {
+  position: absolute;
+  top: 86px;
+  width: 200px;
+  right: 0;
+  border-radius: 0 0 0 8px;
+  z-index: 4;
+  overflow: hidden;
+  background-color: rgb(70, 70, 70);
+  color: rgb(190, 190, 190);
+}
+
+.medium-menu-list {
+  padding: 20px 25px;
+  margin: 0;
+  color: rgb(197, 197, 197);
+  transition: color 200ms ease;
+
+}
+.medium-menu-list:hover {
+  color: white;
+}
+
+
+.medium-menu-icon-phone {
+  vertical-align: -4px;
+  margin-right: 3px;
+  font-size: 18px;
+}
+
+/* **************** mediumMenu ******************** */
+.mobile-menu {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(70, 70, 70);
+  color: white;
+}
+.mobile-menu-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+}
+
+.mobile-menu-bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: rgb(44, 44, 44);
+}
+
+.mobile-menu-publish {
+  margin: 0 0 -1px 0;
+  list-style: none;
+  background-color: red;
+  padding: 16px;
+  text-align: center;
+}
+
+.dropdown-mobile {
+  position: absolute;
+  top: 70px;
+  width: 200px;
+  right: 0;
+  border-radius: 0 0 0 8px;
+  z-index: 4;
+  overflow: hidden;
+  background-color: rgb(70, 70, 70);
+}
+
+.menu-phone{
+  text-decoration: none;
+  color: white;
+}
+
+/* ***** navbar burger icon ***** */
+
+#nav-icon span:nth-child(1) {
+  top: 0px;
+}
+
+#nav-icon span:nth-child(2),
+#nav-icon span:nth-child(3) {
+  top: 18px;
+}
+
+#nav-icon span:nth-child(4) {
+  top: 36px;
+}
+
+#nav-icon.open span:nth-child(1) {
+  top: 18px;
+  width: 0%;
+  left: 50%;
+}
+
+#nav-icon.open span:nth-child(2) {
+  transform: rotate(45deg);
+}
+
+#nav-icon.open span:nth-child(3) {
+  transform: rotate(-45deg);
+}
+
+#nav-icon.open span:nth-child(4) {
+  top: 18px;
+  width: 0%;
+  left: 50%;
+}
+
+#nav-icon {
+  width: 60px;
+  height: 45px;
+  position: relative;
+  margin: 0 10px;
+  transform: rotate(0deg);
+  transition: 0.5s ease-in-out;
+  cursor: pointer;
+  margin-top: 7px;
+}
+
+#nav-icon span {
+  display: block;
+  position: absolute;
+  height: 3px;
+  width: 90%;
+  background: white;
+  border-radius: 9px;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: 0.25s ease-in-out;
 }

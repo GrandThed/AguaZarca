@@ -8,37 +8,46 @@ import { IconContext } from "react-icons";
 import { BiPhone } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 
-export const MobileMenu = () => {
+export const MediumMenu = () => {
   const [show, setShow] = useState();
   return (
-    <div className="mobile-menu">
-      <div className="mobile-menu-top">
+    <div className="medium-menu">
+      <div className="medium-menu-logo">
+        <Link className="menu-link" to="/AguaZarca/">
+          <img
+            src={logo}
+            alt="logo"
+            className="menu-image medium-menu-image"
+            width="200"
+            height="50"
+          />
+        </Link>
+      </div>
+      <div className="medium-menu-container">
+        <IconContext.Provider value={{ className: "medium-menu-icon-phone" }}>
+          <li className="menu-list menu-list-icon">
+            <BiPhone />
+                        <a href="tel:35415659041" className="menu-phone"><span>35415659041</span></a>
+          </li>
+        </IconContext.Provider>
         <IconContext.Provider value={{ className: "menu-icon-profile" }}>
           <li className="menu-list">
             <CgProfile />
           </li>
         </IconContext.Provider>
-        <Link className="menu-link" to="/AguaZarca/">
-          <img
-            src={logo}
-            alt="logo"
-            className="menu-image"
-            width="200"
-            height="50"
-          />
+        <Link className="menu-link" to="/AguaZarca/publicar-propiedad">
+          <li className="menu-list menu-publish medium-menu-publish">
+            Publicar
+          </li>
         </Link>
-        <div
-          id="nav-icon"
-          className={show ? "open" : ""}
-          onClick={() => setShow(!show)}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
+        <div id="nav-icon" className={show ? "open" : ""} onClick={() => setShow(!show)}>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
         </div>
         {show ? (
-          <ul className=" medium-menu-ul dropdown-mobile">
+          <ul className="medium-menu-ul dropdown">
             <Link className="medium-menu-link menu-link" to="/AguaZarca/">
               <li className="medium-menu-list medium-menu-list-first">Inicio</li>
             </Link>
@@ -72,29 +81,6 @@ export const MobileMenu = () => {
           </ul>
         ) : null}
       </div>
-      <div className="mobile-menu-bottom">
-      <IconContext.Provider value={{ className: "medium-menu-icon-phone" }}>
-          <li className="menu-list menu-list-icon">
-            <BiPhone />
-            <a href="tel:35415659041" className="menu-phone"><span>35415659041</span></a>
-          </li>
-        </IconContext.Provider>
-      
-      <Link className="menu-link" to="/AguaZarca/publicar-propiedad">
-          <li className="  mobile-menu-publish">
-            Publicar
-          </li>
-        </Link>
-        </div>
-      {/* <div className="medium-menu-logo">
-        
-      </div>
-      <div className="medium-menu-container">
-        
-        
-        
-        
-      </div> */}
     </div>
   );
 };

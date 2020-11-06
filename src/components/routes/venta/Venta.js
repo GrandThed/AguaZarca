@@ -1,10 +1,11 @@
-import React from 'react'
+import React from "react";
+import { PageTitle } from "./../../pageTitle/PageTitle";
 
 const Venta = () => {
-    return (
-        <div>
-            <h2>Venta!</h2>
-        </div>
-    )
-}
-export default Venta
+  return (
+    <div>
+      <PageTitle title="Venta"></PageTitle>
+    </div>
+  );
+};
+export default Venta;

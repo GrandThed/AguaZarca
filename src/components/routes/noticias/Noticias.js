@@ -1,10 +1,11 @@
-import React from 'react'
+import React from "react";
+import { PageTitle } from "./../../pageTitle/PageTitle";
 
 const Noticias = () => {
-    return (
-        <div>
-            <h2>Noticias!</h2>
-        </div>
-    )
-}
-export default Noticias
+  return (
+    <div>
+      <PageTitle title="Publicar"></PageTitle>
+    </div>
+  );
+};
+export default Noticias;

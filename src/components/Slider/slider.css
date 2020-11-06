@@ -37,8 +37,9 @@ img {
   background-repeat: no-repeat;
   z-index: 4;
   padding: 20px;
-  background-size: 100%;
+  background-size: cover;
   display: flex;
+  
 }
 .image-container-filler {
   width: 60%;
@@ -78,7 +79,14 @@ img {
 }
 
 .image-text-span {
-  display: inline;
+  font-weight: 700;
+}
+
+.m2:after{
+  position: absolute;
+  padding: 0px 0 0 1px;
+  content: " m2";
+  color: rgb(82, 82, 82);
 }
 
 .image-icons {
@@ -98,4 +106,46 @@ img {
   font-weight: 400;
   font-size: 25px;
   color: #a51a1a;
+}
+
+
+@media (max-width: 768px) {
+
+  .image-container-filler {
+    display: none;
+  }
+  .image-features{
+    display: none;
+  }
+  .image-ubication{
+    display: none;
+  }
+  .image-container{
+    margin:0;
+    height: 230px;
+  }
+  .image-div{
+    justify-content: center;
+  }
+  .image-price-title{
+    font-size: 14px;
+    font-weight: 500;
+
+  }
+  .image-price{
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+}
+
+@media (min-width : 769px) and (max-width : 1139px) {
+  .image-container{
+    margin:0;
+  }
+  .image-div{
+    padding-top: 0;
+    padding-right: 80px;
+  }
+  
 }

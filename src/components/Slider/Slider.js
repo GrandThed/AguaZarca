@@ -73,10 +73,10 @@ const ImageSlider = (props) => {
   let style = {
     backgroundImage: `url("${props.image}")`,
   };
+  
   let sliderFeatureskeys = Object.keys(sliderFeatures);
   return (
     <div>
-      {/* <img src={props.image} alt="" /> */}
       <div className="image-div" style={style}>
         <div className="image-container-filler"></div>
         <div className="image-container">
@@ -86,22 +86,22 @@ const ImageSlider = (props) => {
             <div className="image-features">
               {sliderFeatureskeys.map((key) => {
                 return (
-                  <div className="image-feat-icons-div">
+                  <div className="image-feat-icons-div" key={key}>
                     <h5 className="image-feat-title">{title[key]}</h5>
                     <p className="image-feat-p">
                       {icon[key]}{" "}
-                      <span className="image-text-span">
+                      <span className={`image-text-span${key === "covered" ? " m2" : ""}`}>
                         {sliderFeatures[key]}
                       </span>
                     </p>
-                    
                   </div>
                 );
               })}
             </div>
-
             <h3 className="image-price-title">{propiedad.type}</h3>
-            <p className="image-price">${propiedad.value} {propiedad.currency}</p>
+            <p className="image-price">
+              ${propiedad.value} {propiedad.currency}
+            </p>
           </IconContext.Provider>
         </div>
       </div>

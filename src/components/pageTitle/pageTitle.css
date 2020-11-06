@@ -1,0 +1,12 @@
+.pagetitle-div{
+    padding: 100px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 30%;
+}
+h1{
+    color: white;
+    font-size: 70px;
+    text-shadow: 1px 1px 8px rgb(93, 93, 93);
+    font-weight: 400;
+}

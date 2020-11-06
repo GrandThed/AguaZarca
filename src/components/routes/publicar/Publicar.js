@@ -1,9 +1,11 @@
 import React from 'react'
+import { PageTitle } from "./../../pageTitle/PageTitle";
 
 export const Publicar = () => {
     return (
         <div>
-            <h2>Publicar!</h2>
+      <PageTitle title="Publicar"></PageTitle>
+
         </div>
     )
 }

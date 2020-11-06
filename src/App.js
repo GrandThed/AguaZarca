@@ -10,19 +10,21 @@ import Home from './components/routes/home/Home'
 import Noticias from './components/routes/noticias/Noticias'
 import Publicar from './components/routes/publicar/Publicar'
 import Venta from './components/routes/venta/Venta'
+import Footer from './components/footer/Footer'
 
 const App = () =>{
   return (
     <div className="App">
       <Router>
-        <Menu></Menu>
-        <Route path="/" exact component={Home}></Route>
-        <Route path="/venta" component={Venta}></Route>
-        <Route path="/alquiler-temporario" component={AlquilerTemporal}></Route>
-        <Route path="/alquiler-anual" component={AlquilerAnual}></Route>
-        <Route path="/noticias" component={Noticias}></Route>
-        <Route path="/contacto" component={Contacto}></Route>
-        <Route path="/publicar-propiedad" component={Publicar}></Route>
+        <Menu />
+        <Route path="/AguaZarca/" exact component={Home}></Route>
+        <Route path="/AguaZarca/venta" component={Venta}></Route>
+        <Route path="/AguaZarca/alquiler-temporario" component={AlquilerTemporal}></Route>
+        <Route path="/AguaZarca/alquiler-anual" component={AlquilerAnual}></Route>
+        <Route path="/AguaZarca/noticias" component={Noticias}></Route>
+        <Route path="/AguaZarca/contacto" component={Contacto}></Route>
+        <Route path="/AguaZarca/publicar-propiedad" component={Publicar}></Route>
+        <Footer />
       </Router>
     </div>
   );

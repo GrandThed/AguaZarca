@@ -1,6 +1,7 @@
 const propiedad1 = [{
     "title" : "Casa de Diseño y calidad, completamente equipada. Villa del Lago. Carlos Paz",
     "type" : "venta",
+    "typeOfProperty":"Casa",
     "currency" : "USD",
     "value":"470.000",
     "image" : ["https://aguazarca.com.ar/wp-content/uploads/2019/10/0-1-1200x680.jpg","https://aguazarca.com.ar/wp-content/uploads/2019/10/espacio_serrano1b-1.jpg"],
