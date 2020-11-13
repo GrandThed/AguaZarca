@@ -9,7 +9,7 @@ import { BiPhone } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 
 export const MediumMenu = () => {
-  const [show, setShow] = useState();
+  
   return (
     <div className="medium-menu">
       <div className="medium-menu-logo">
@@ -36,11 +36,25 @@ export const MediumMenu = () => {
           </li>
         </IconContext.Provider>
         <Link className="menu-link" to="/AguaZarca/publicar-propiedad">
-          <li className="menu-list menu-publish medium-menu-publish">
+          <li className="menu-list menu-publish medium-menu-publish" >
             Publicar
           </li>
         </Link>
-        <div id="nav-icon" className={show ? "open" : ""} onClick={() => setShow(!show)}>
+        <Dowpdown />
+      </div>
+    </div>
+  );
+};
+
+
+const Dowpdown = () => {
+  let handleClick = () => {
+    window.scrollTo(0,0)
+  }
+  const [show, setShow] = useState();
+  return (
+    <div>
+      <div id="nav-icon" className={show ? "open" : ""} onClick={() => setShow(!show)}>
               <span></span>
               <span></span>
               <span></span>
@@ -49,38 +63,37 @@ export const MediumMenu = () => {
         {show ? (
           <ul className="medium-menu-ul dropdown">
             <Link className="medium-menu-link menu-link" to="/AguaZarca/">
-              <li className="medium-menu-list medium-menu-list-first">Inicio</li>
+              <li className="medium-menu-list medium-menu-list-first" onClick={handleClick}>Inicio</li>
             </Link>
             <Link className="medium-menu-link menu-link" to="/AguaZarca/venta">
-              <li className="medium-menu-list">Venta</li>
+              <li className="medium-menu-list" onClick={handleClick}>Venta</li>
             </Link>
             <Link
               className="medium-menu-link menu-link"
               to="/AguaZarca/alquiler-temporario"
             >
-              <li className="medium-menu-list">Alquiler temporario</li>
+              <li className="medium-menu-list" onClick={handleClick}>Alquiler temporario</li>
             </Link>
             <Link
               className="medium-menu-link menu-link"
               to="/AguaZarca/alquiler-anual"
             >
-              <li className="medium-menu-list">Alquiler Anual</li>
+              <li className="medium-menu-list" onClick={handleClick}>Alquiler Anual</li>
             </Link>
             <Link
               className="medium-menu-link menu-link"
               to="/AguaZarca/noticias"
             >
-              <li className="medium-menu-list">Noticias</li>
+              <li className="medium-menu-list" onClick={handleClick}>Noticias</li>
             </Link>
             <Link
               className="medium-menu-link menu-link"
               to="/AguaZarca/contacto"
             >
-              <li className="medium-menu-list">Contacto</li>
+              <li className="medium-menu-list" onClick={handleClick}>Contacto</li>
             </Link>
           </ul>
         ) : null}
-      </div>
     </div>
-  );
-};
+  )
+}

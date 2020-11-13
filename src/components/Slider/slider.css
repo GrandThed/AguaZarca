@@ -1,7 +1,8 @@
-img {
+
+/* img {
   width: 100vw;
   height: 100vh;
-}
+} */
 
 .sliderInner {
   height: 100vh;
@@ -21,6 +22,12 @@ img {
 .slides {
   position: relative;
 }
+
+.slides:focus {
+  border: none;
+  outline: none;
+}
+
 .slides .slick-prev,
 .slides .slick-next {
   position: absolute;
@@ -46,12 +53,12 @@ img {
   height: 100px;
 }
 .image-container {
-  padding: 40px 40px 60px 40px;
+  padding: 40px 40px 40px 40px;
   box-shadow: 0px 0px 8px -2px rgba(0, 0, 0, 0.75);
   background-color: white;
   margin: 14% 0 0 0;
   width: 450px;
-  height: 350px;
+  align-self: flex-start;
 }
 .image-features {
   display: flex;
@@ -80,6 +87,10 @@ img {
 
 .image-text-span {
   font-weight: 700;
+} 
+
+.image-feat-p{
+  white-space: nowrap;
 }
 
 .m2:after{
@@ -108,7 +119,6 @@ img {
   color: #a51a1a;
 }
 
-
 @media (max-width: 768px) {
 
   .image-container-filler {
@@ -122,7 +132,6 @@ img {
   }
   .image-container{
     margin:0;
-    height: 230px;
   }
   .image-div{
     justify-content: center;
@@ -141,6 +150,7 @@ img {
 
 @media (min-width : 769px) and (max-width : 1139px) {
   .image-container{
+    width: 500px;
     margin:0;
   }
   .image-div{

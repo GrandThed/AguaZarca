@@ -16,10 +16,7 @@
   width: 100%;
   max-width: 100vw;
 }
-.menu-ul {
-  display: flex;
-  align-items: center;
-}
+
 
 .menu-list {
   list-style: none;
@@ -48,7 +45,7 @@
 }
 
 .menu-publish {
-  background-color: red;
+  background-color: #a51a1a;
   border-radius: 5px;
 }
 
@@ -67,8 +64,8 @@
 }
 
 .menu-link {
-  text-decoration: none !important;
-  color: white !important;
+  text-decoration: none;
+  color: white;
 }
 
 /* **************** mediumMenu ******************** */
@@ -110,7 +107,7 @@
 
 .dropdown {
   position: absolute;
-  top: 86px;
+  
   width: 200px;
   right: 0;
   border-radius: 0 0 0 8px;
@@ -162,11 +159,12 @@
 }
 
 .mobile-menu-publish {
-  margin: 0 0 -1px 0;
+  margin: 0;
   list-style: none;
-  background-color: red;
+  background-color: #a51a1a;
   padding: 16px;
   text-align: center;
+  outline: 1px #a51a1a solid;
 }
 
 .dropdown-mobile {
@@ -184,6 +182,59 @@
   text-decoration: none;
   color: white;
 }
+
+/* **************** scrollMenu ******************** */
+.scrollmenu-div {
+  z-index: 20;
+  background-color: #333;
+  position: fixed;
+  top: -85px;
+  width: 100%;
+  transition: top 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.scrollmenu-image{
+  width: 200px;
+  height: 50px;
+}
+
+.scrollmenu-left{
+  display: flex;
+  align-items: center;
+}
+
+.scrollmenu-link{
+  padding: 20px;
+  transition: background 200ms ease;
+}
+
+.scrollmenu-publish{
+  box-sizing: content-box;
+  margin: 5px;
+  padding: 10px 20px;
+  border: 3px solid white;
+  transition: background 200ms ease;
+
+}
+
+.scrollmenu-link:hover, .scrollmenu-publish:hover{
+  background-color: white;
+  color: #333;
+}
+
+
+.scrollmenu-div a {
+  color: #f2f2f2;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+
 
 /* ***** navbar burger icon ***** */
 

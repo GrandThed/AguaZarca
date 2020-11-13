@@ -1,0 +1,187 @@
+.home-card-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-flow: wrap;
+  margin-top: 10px;
+}
+/* ******************** Title from Home ******************* */
+
+.titlehome-div {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.titlehome-postitle {
+  text-align: center;
+
+  color: rgb(209, 68, 68);
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.titlehome-title {
+  text-align: center;
+  font-weight: 400;
+  font-size: 50px;
+}
+
+.titlehome-subtitle {
+  text-align: center;
+
+  color: gray;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.titlehome-separator {
+  border-top: 1px solid rgb(255, 0, 0);
+  margin-bottom: 20px;
+}
+
+/* ******************** Title Info from Home ******************* */
+
+.titleinfohome-div {
+  color: white;
+  margin: 50px 0;
+  background-size: cover;
+  transform: skewY(-3deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  z-index: 10;
+}
+
+.titleinfohome-div > * {
+  transform: skewY(3deg);
+}
+
+.titleinfohome-subtitle {
+  margin-bottom: 15px;
+  font-size: medium;
+  font-weight: 500;
+}
+
+.titleinfohome-title {
+  margin-bottom: 15px;
+  font-size: 3em;
+  font-weight: 300;
+}
+
+.titleinfohome-button {
+  margin: 20px;
+  padding: 13px 15px;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.titleinfohome-button:focus{
+  transform: scale(0.97);
+  outline: none;
+}
+
+.titleinfohome-button-black{
+  background-color: black;
+  color: white;
+
+}
+
+/* ******************** Services from Home ******************* */
+
+.serviceshome-div{
+  background-color: #f7f7f7;
+  position: relative;
+  margin-top: 10vw;
+
+
+}
+
+
+.serviceshome-postitle{
+  color: #6BA69A;
+  font-weight: 500;
+  font-size: 17px;
+  text-align: center;
+}
+/* that one angled line */
+.serviceshome-div:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -5vw;
+  width: 100%;
+  height: 500px;
+  background: inherit;
+  transform: skewY(4deg);
+  z-index: -1;
+}
+
+.serviceshome-feat{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin: 0 60px;
+  padding-bottom: 100px;
+
+}
+
+.serviceshome-feat-item{
+  margin-top: 60px;
+  padding: 0 40px;
+  flex: 1 0 31%;
+  text-align: center;
+  color: #818A91;
+}
+
+.serviceshome-feat-text{
+  font-size: 24px;
+}
+
+.serviceshome-icons{
+  font-size: 60px;
+}
+
+.serviceshome-feat-extrainfo::after{
+  text-align: center;
+  margin-top: 20px;
+  display: block;
+  content: "*Solicite con el número Matrícula – Costo $ 300 por hoja";
+  font-size: small;
+  z-index: 2;
+}
+
+@media (max-width: 1010px) {
+  .serviceshome-div:before{
+    display: none;
+  }
+
+  .serviceshome-div{
+    padding-top: 1vw;
+  }
+
+  .serviceshome-feat{
+    flex: 1 0 50%;
+  }
+  
+  .titleinfohome-div {
+    transform: skewY(0deg);
+  }
+  .titleinfohome-div>* {
+    text-align: center;
+    transform: skewY(0deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .titlehome-subtitle {
+    display: none;
+  }
+  .titleinfohome-title {
+    font-size: xx-large;
+  }
+}

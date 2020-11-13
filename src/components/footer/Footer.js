@@ -21,7 +21,7 @@ const Footer = () => {
           </p>
         </div>
         <div className="footer-top-right">
-          <IconContext.Provider value={{ className: "footer-socialmedia" }}>
+          <IconContext.Provider value={{ className: "footer-socialmedia footer-socialmedia-facebook" }}>
             <a
               href="https://www.facebook.com/aguazarca.alquila/"
               className="footer-social-link"
@@ -31,7 +31,7 @@ const Footer = () => {
               <RiFacebookBoxLine />
             </a>
             <a
-              href="https://www.facebook.com/aguazarca.alquila/"
+              href="https://www.instagram.com/aguazarcainmobiliaria/?hl=es-la"
               className="footer-social-link"
               target="_blank"
               rel="noreferrer"
@@ -80,8 +80,8 @@ const FooterInfo = () => {
         </p>
         <p>
           <RiMailLine />{" "}
-          <a href="mailto:hola@aguazarca.com.ar" className="footer-email">
-            hola@aguazarca.com.ar
+          <a href="mailto:gillio.inmo@gmail.com" className="footer-email">
+            gillio.inmo@gmail.com
           </a>
         </p>
       </IconContext.Provider>

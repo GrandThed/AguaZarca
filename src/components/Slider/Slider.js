@@ -27,7 +27,7 @@ class Slider extends Component {
       centerPadding: "0px",
     };
     return (
-      <SliderProvider {...settings}>
+      <SliderProvider className="slider-main" {...settings}>
         <div>
           <ImageSlider
             image={propiedad1[0].image[0]}

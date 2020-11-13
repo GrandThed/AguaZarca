@@ -1,12 +1,26 @@
-.pagetitle-div{
-    padding: 100px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 30%;
+.pagetitle-div {
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  background-size: cover;
 }
-h1{
-    color: white;
-    font-size: 70px;
-    text-shadow: 1px 1px 8px rgb(93, 93, 93);
-    font-weight: 400;
+.pagetitle-title {
+  margin-left: 100px;
+  color: white;
+  font-size: 70px;
+  text-shadow: 1px 1px 8px rgb(93, 93, 93);
+  font-weight: 400;
+}
+
+@media (max-width: 664px) {
+  .pagetitle-title {
+    justify-self: center;
+    margin-left: 0;
+  }
+  .pagetitle-div {
+    height: 30vh;
+    display: flex;
+    align-items: center;
+    background-size: cover;
+  }
 }
