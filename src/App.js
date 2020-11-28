@@ -2,6 +2,9 @@ import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import { Menu } from "./components/menu/menu";
+import Footer from "./components/footer/Footer";
+
+// routes
 import AlquilerAnual from "./components/routes/alquiler-anual/AlquilerAnual";
 import AlquilerTemporal from "./components/routes/alquiler-temporal/AlquilerTemporal";
 import Contacto from "./components/routes/contacto/Contacto";
@@ -9,7 +12,6 @@ import Home from "./components/routes/home/Home";
 import Noticias from "./components/routes/noticias/Noticias";
 import Publicar from "./components/routes/publicar/Publicar";
 import Venta from "./components/routes/venta/Venta";
-import Footer from "./components/footer/Footer";
 
 const App = () => {
   return (

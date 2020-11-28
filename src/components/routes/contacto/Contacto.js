@@ -54,7 +54,7 @@ const ContactForm = () => {
             name="name"
             onChange={(event) => resetInvalid(event)}
             onInvalid={(invalid) => handleInvalid(invalid)}
-            className="contact-field"
+            className="contact-field contact-field-input"
             type="name"
             autoFocus
             required
@@ -67,7 +67,7 @@ const ContactForm = () => {
             name="email"
             onChange={resetInvalid}
             onInvalid={(invalid) => handleInvalid(invalid)}
-            className="contact-field"
+            className="contact-field contact-field-input"
             type="email"
           />
         </label>
@@ -78,7 +78,7 @@ const ContactForm = () => {
             name="phone"
             onChange={resetInvalid}
             onInvalid={(invalid) => handleInvalid(invalid)}
-            className="contact-field"
+            className="contact-field contact-field-input"
             type="number"
           />
         </label>
@@ -89,7 +89,7 @@ const ContactForm = () => {
             name="mesage"
             onChange={resetInvalid}
             onInvalid={(invalid) => handleInvalid(invalid)}
-            className="contact-field"
+            className="contact-field contact-field-textarea"
             rows="10"
             required
           />

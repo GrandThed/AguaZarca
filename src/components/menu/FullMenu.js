@@ -58,7 +58,6 @@ export const FullMenu = () => {
             <CgProfile />
           </p>
         </IconContext.Provider>
-
         <Link className="menu-link" to="/AguaZarca/publicar-propiedad">
           <p className="menu-list menu-publish">Publicar</p>
         </Link>

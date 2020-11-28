@@ -18,27 +18,26 @@ export const MediumMenu = () => {
             src={logo}
             alt="logo"
             className="menu-image medium-menu-image"
-            width="200"
-            height="50"
+     
           />
         </Link>
       </div>
       <div className="medium-menu-container">
         <IconContext.Provider value={{ className: "medium-menu-icon-phone" }}>
-          <li className="menu-list menu-list-icon">
+          <p className="menu-list menu-list-icon">
             <BiPhone />
                         <a href="tel:35415659041" className="menu-phone"><span>35415659041</span></a>
-          </li>
+          </p>
         </IconContext.Provider>
         <IconContext.Provider value={{ className: "menu-icon-profile" }}>
-          <li className="menu-list">
+          <p className="menu-list">
             <CgProfile />
-          </li>
+          </p>
         </IconContext.Provider>
         <Link className="menu-link" to="/AguaZarca/publicar-propiedad">
-          <li className="menu-list menu-publish medium-menu-publish" >
+          <p className="menu-list menu-publish medium-menu-publish" >
             Publicar
-          </li>
+          </p>
         </Link>
         <Dowpdown />
       </div>
@@ -50,6 +49,7 @@ export const MediumMenu = () => {
 const Dowpdown = () => {
   let handleClick = () => {
     window.scrollTo(0,0)
+    setShow(false)
   }
   const [show, setShow] = useState();
   return (

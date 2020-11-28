@@ -2,14 +2,14 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 
 firebase.initializeApp({
-  apiKey: "AIzaSyCf7wR4-v4SZGz681Xb4jV3mKeYKssRswE",
-  authDomain: "aguazarca-d27a0.firebaseapp.com",
-  databaseURL: "https://aguazarca-d27a0.firebaseio.com",
-  projectId: "aguazarca-d27a0",
-  storageBucket: "aguazarca-d27a0.appspot.com",
-  messagingSenderId: "194875983516",
-  appId: "1:194875983516:web:da13d9b53f1a0dd1e24f59",
-  measurementId: "G-D1CHG5VLC1",
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket:process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APPID,
+  measurementId: process.env.REACT_APP_MEASUREMENTID,
 });
 const db = firebase.firestore()
 export {db}

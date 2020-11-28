@@ -15,14 +15,14 @@
   margin-right: 10px;
 }
 .contact-info-div {
-margin-top: 20px;
+  margin-top: 20px;
   margin-left: 30px;
   width: 50%;
 }
 
-.contact-form-form{
-    display: flex;
-    flex-direction: column;
+.contact-form-form {
+  display: flex;
+  flex-direction: column;
 }
 
 .form-subtitles {
@@ -42,25 +42,24 @@ margin-top: 20px;
 }
 
 .contact-field:hover {
-    background-color: white;
-    
+  background-color: white;
+
   border: 1px solid rgb(180, 180, 180);
 }
 
 .contact-field:focus {
-    background-color: white;
+  background-color: white;
   outline: 0;
   border: 1px solid rgb(128, 128, 128);
 }
 
-input {
+.contact-field-input {
   width: 100%;
   min-height: 25px;
   font-size: 20px;
 }
-textarea {
+.contact-field-textarea {
   resize: none;
-
   width: 100%;
 }
 
@@ -74,10 +73,9 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 .invalid {
-    border: 1px #a51a1a solid;
-    background-color: rgba(255, 137, 137, 0.068);
-  }
-
+  border: 1px #a51a1a solid;
+  background-color: rgba(255, 137, 137, 0.068);
+}
 
 .contact-info-subtitles {
   display: flex;
@@ -86,49 +84,46 @@ input[type="number"] {
 }
 
 .form-subtitles {
-    font-weight: 400;
-    margin-bottom: -5px;
-    color: rgb(61, 61, 61);
-  }
+  font-weight: 400;
+  margin-bottom: -5px;
+  color: rgb(61, 61, 61);
+}
 
-.contact-icons{
-    font-size: 20px;
+.contact-icons {
+  font-size: 20px;
   vertical-align: -8px;
   margin-right: 10px;
   color: rgb(58, 58, 58);
 }
 
-.contact-info-text{
-    margin-left: 30px;
-    color: rgb(68, 68, 68);
+.contact-info-text {
+  margin-left: 30px;
+  color: rgb(68, 68, 68);
 }
 
-.contact-form-submit{
-    padding: 10px 4px;
-    width: 100px;
-    border: none;
-    color: white;
-    background-color: #a51a1a;
+.contact-form-submit {
+  padding: 10px 4px;
+  width: 100px;
+  border: none;
+  color: white;
+  background-color: #a51a1a;
 }
 
-.contact-form-submit:focus{
-    outline: none;
-    background-color: #a51a1adc;
+.contact-form-submit:focus {
+  outline: none;
+  background-color: #a51a1adc;
 }
-
 
 @media (max-width: 756px) {
-    .contact-div {
-        padding: 10px;
-        flex-direction: column;
-        word-wrap: none;
-      }
-    .contact-background{
-        padding: 20px 10px;
-    }
-    .contact-form-div{
-        width: 100%;
-    }
-  
+  .contact-div {
+    padding: 10px;
+    flex-direction: column;
+    word-wrap: none;
   }
-  
+  .contact-background {
+    padding: 20px 10px;
+  }
+  .contact-form-div {
+    width: 100%;
+  }
+}

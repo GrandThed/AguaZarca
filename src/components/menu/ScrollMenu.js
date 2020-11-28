@@ -11,9 +11,14 @@ export const ScrollMenu = () => {
   }
 
   let handleScroll = () => {
-    setScrolled(
-      document.body.scrollTop > 80 || document.documentElement.scrollTop > 80
-    );
+    let isSubscribed = true;
+    if (isSubscribed){
+      setScrolled(
+        document.body.scrollTop > 80 || document.documentElement.scrollTop > 80
+      );
+    }
+    return () => (isSubscribed = false);
+
   };
   window.onscroll = () => handleScroll();
   return (
