@@ -3,6 +3,8 @@ import logo from "./logo-menu.png";
 import "./menu.css";
 import { Link } from "react-router-dom";
 
+import * as ROUTES from "../../routes";
+
 // Icons
 import { IconContext } from "react-icons";
 import { BiPhone } from "react-icons/bi";
@@ -18,7 +20,7 @@ export const MobileMenu = () => {
             <CgProfile />
           </li>
         </IconContext.Provider>
-        <Link className="menu-link" to="/AguaZarca/">
+        <Link className="menu-link" to={ROUTES.HOME}>
           <img
             src={logo}
             alt="logo"
@@ -37,7 +39,7 @@ export const MobileMenu = () => {
           </li>
         </IconContext.Provider>
       
-      <Link className="menu-link" to="/AguaZarca/publicar-propiedad">
+      <Link className="menu-link" to={ROUTES.PUBLICAR}>
           <li className="  mobile-menu-publish" >
             Publicar
           </li>
@@ -73,30 +75,30 @@ const Dropdown = () => {
             <Link className="medium-menu-link menu-link" to="/AguaZarca/">
               <li className="medium-menu-list medium-menu-list-first" onClick={handleClick}>Inicio</li>
             </Link>
-            <Link className="medium-menu-link menu-link" to="/AguaZarca/venta">
+            <Link className="medium-menu-link menu-link" to={ROUTES.VENTA}>
               <li className="medium-menu-list" onClick={handleClick}>Venta</li>
             </Link>
             <Link
               className="medium-menu-link menu-link"
-              to="/AguaZarca/alquiler-temporario"
+              to={ROUTES.ALQUILER_TEMPORAL}
             >
               <li className="medium-menu-list" onClick={handleClick}>Alquiler temporario</li>
             </Link>
             <Link
               className="medium-menu-link menu-link"
-              to="/AguaZarca/alquiler-anual"
+              to={ROUTES.ALQUILER_ANUAL}
             >
               <li className="medium-menu-list" onClick={handleClick}>Alquiler Anual</li>
             </Link>
             <Link
               className="medium-menu-link menu-link"
-              to="/AguaZarca/noticias"
+              to={ROUTES.NOTICIAS}
             >
               <li className="medium-menu-list" onClick={handleClick}>Noticias</li>
             </Link>
             <Link
               className="medium-menu-link menu-link"
-              to="/AguaZarca/contacto"
+              to={ROUTES.CONTACTO}
             >
               <li className="medium-menu-list" onClick={handleClick}>Contacto</li>
             </Link>

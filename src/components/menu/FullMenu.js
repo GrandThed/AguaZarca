@@ -4,6 +4,8 @@ import logo from "./logo-menu.png";
 import "./menu.css";
 import { Link } from "react-router-dom";
 
+import * as ROUTES from "../../routes";
+
 // Icons
 import { BiPhone,  } from "react-icons/bi";
 import { IconContext } from "react-icons";
@@ -16,7 +18,7 @@ export const FullMenu = () => {
   return (
     <div className="menu">
   
-        <Link className="menu-link" to="/AguaZarca/">
+        <Link className="menu-link" to={ROUTES.HOME}>
           <img
             src={logo}
             alt="logo"
@@ -25,23 +27,23 @@ export const FullMenu = () => {
           />
         </Link>
 
-        <Link className="menu-link" to="/AguaZarca/">
+        <Link className="menu-link" to={ROUTES.HOME}>
           <p className="menu-list menu-hover-efect">Inicio</p>
         </Link>
-        <Link className="menu-link" to="/AguaZarca/venta">
+        <Link className="menu-link" to={ROUTES.VENTA}>
           <p className="menu-list menu-hover-efect">Venta</p>
         </Link>
-        <Link className="menu-link" to="/AguaZarca/alquiler-temporario">
+        <Link className="menu-link" to={ROUTES.ALQUILER_TEMPORAL}>
           <p className="menu-list menu-hover-efect">Alquiler temporario</p>
         </Link>
-        <Link className="menu-link" to="/AguaZarca/alquiler-anual">
+        <Link className="menu-link" to={ROUTES.ALQUILER_ANUAL}>
           <p className="menu-list menu-hover-efect">Alquiler Anual</p>
         </Link>
-        <Link className="menu-link" to="/AguaZarca/noticias">
+        <Link className="menu-link" to={ROUTES.NOTICIAS}>
  
           <p className="menu-list menu-hover-efect">Noticias</p>
         </Link>
-        <Link className="menu-link" to="/AguaZarca/contacto">
+        <Link className="menu-link" to={ROUTES.CONTACTO}>
           <p className="menu-list menu-hover-efect">Contacto</p>
         </Link>
 
@@ -58,7 +60,7 @@ export const FullMenu = () => {
             <CgProfile />
           </p>
         </IconContext.Provider>
-        <Link className="menu-link" to="/AguaZarca/publicar-propiedad">
+        <Link className="menu-link" to={ROUTES.PUBLICAR}>
           <p className="menu-list menu-publish">Publicar</p>
         </Link>
   

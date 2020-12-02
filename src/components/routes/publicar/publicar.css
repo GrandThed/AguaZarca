@@ -7,16 +7,259 @@
     padding: 60px 50px;
     background-color: white;
     box-shadow: 0px 0px 20px #e9e9e9;
+    color: rgb(71, 71, 71);
 }
 
-.contact-field:hover {
-    background-color: white;
-    
-  border: 1px solid rgb(180, 180, 180);
+
+
+.publish-form-mercadolibre{
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 0;
+  padding: 10px 0;
 }
 
-.contact-field:focus {
-    background-color: white;
-  outline: 0;
-  border: 1px solid rgb(128, 128, 128);
+.publish-form-mercadolibre-in{
+  margin: 5px 4px 0;
+}
+
+.publish-form-mercadolibre-url{
+  margin-left: 4px;
+  margin-top: -3px;
+  padding: 4px;
+  color: rgb(95, 95, 95);
+
+}
+
+.publish-form-input{
+  border: 1px solid rgb(206, 206, 206);
+  transition: border 200ms ease;
+  border-radius: 2px;
+  padding: 7px 10px;
+  font-size: 14px;
+  color: gray;
+}
+
+.publish-form-input:focus{
+  outline: none;
+  border: 1px solid rgb(85, 85, 85);
+}
+
+.publish-form-title-price-div{
+  margin-top: -20px;
+}
+.publish-form-title-input{
+  width: 100%;
+  padding: 6px;
+}
+
+.publish-form-title-label{
+  font-size: 20px;
+}
+
+.publish-form-price-div{
+  display: flex;
+  align-items: center;
+}
+
+
+.publish-form-price-label{
+  font-size: 18px;
+  margin-right: 5px;
+}
+
+.publish-form-price-il-div{
+  margin-top: 14px;
+}
+.publish-form-price-input{
+  padding: 8px 6px 8px;
+  border: 1px solid rgb(179, 179, 179);
+  border-radius: 2px;
+}
+
+.publish-form-dropdow-currency{
+  font-size: 12px;
+  padding: 3px;
+  margin-top: 12px;
+  width: 100px;
+}
+
+.publish-form-dropdow-currency::after{
+  position: absolute;
+  left: 110%;
+  top: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  content: "*sin puntos ni comas";
+  color: rgb(167, 167, 167);
+}
+
+.publish-form-description-div{
+  margin-top: 10px;
+
+}
+
+.publish-form-description-div-textarea{
+  width: 100%;
+  height: 200px;
+  resize: vertical;
+}
+
+.publish-form-dropdown-div{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+}
+
+.publish-form-dropdown-type{
+  width: 48%;
+}
+
+.publish-form-location{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 20px 0;
+  padding: 10px 0 20px;
+  border: 1px solid silver;
+}
+
+.publish-form-location-div{
+  margin: 10px 14px 0 0;
+  flex: 1 0 100%;
+}
+
+.publish-candf-title{
+  flex: 1 0 100%;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight:400;
+}
+
+.publish-form-location-label{
+  margin: 10px 14px;
+}
+
+.publish-form-location-input{
+  width: 60%;
+}
+
+.publish-form-char{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.publish-form-char-div{
+  margin: 10px 10px 0 0;
+}
+
+.publish-form-char{
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid silver ;
+  border-bottom: none;
+  padding: 10px;
+}
+
+.publish-form-char-div{
+  margin: 10px 10px 0 0;
+}
+
+
+.publish-form-att{
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid silver ;
+  border-top: none;
+  padding: 10px;
+}
+
+
+
+.publish-form-att-div{
+  margin: 10px 20px 0 0;
+}
+
+.publish-form-att-label{
+  cursor: pointer;
+  user-select: none;
+}
+
+.publish-form-att-input{
+  margin-left: 3px;
+}
+
+.publish-form-images-dropzone{
+  margin: 20px 0;
+  padding: 30px;
+  text-align: center;
+  border: silver dotted;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.publish-form-images-div{
+  margin-bottom: 20px;
+}
+.publish-form-images-title{
+  margin-top: 20px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.publish-form-images-ul{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border: 1px solid silver;
+  border-radius: 2px;
+  min-height: 200px;
+}
+
+.publish-form-images-images{
+  width: 200px;
+  height: auto;
+  border-radius: 2px;
+}
+
+.publish-form-images-container{
+  list-style: none;
+  margin: 10px;
+}
+
+.publish-form-submit{
+  background-color: rgb(134, 35, 35);
+  border: 1px solid rgb(134, 35, 35);
+  font-size: 18px;
+  border-radius: 2px;
+  color: white;
+  padding: 10px;
+  margin: 10px 0;
+  transition: background 200ms ease;
+  cursor: pointer;
+}
+
+.publish-form-images-display-info{
+  position: absolute;
+  margin: 20px;
+  user-select: none;
+}
+
+input[type=checkbox]{
+  cursor: pointer;
+}
+
+.publish-form-submit:hover{
+  background-color: white;
+  color: rgb(134, 35, 35);;
+
+}
+
+@media (max-width: 756px) {
+  .publish-form {
+    margin: 10px;
+    padding: 10px;
+  }
+  
 }

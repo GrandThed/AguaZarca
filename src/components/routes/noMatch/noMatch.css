@@ -1,0 +1,20 @@
+.nomatch-div{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.nomatch-title{
+    font-size: 10em;
+    font-weight: 400;
+}
+
+.nomatch-subtitle{
+    font-size: 5em;
+    font-weight: 300;
+    text-align: center;
+}
+

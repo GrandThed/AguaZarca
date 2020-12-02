@@ -4,6 +4,8 @@ import logo from "./logo-menu.png";
 import { IconContext } from "react-icons";
 import "./menu.css";
 
+import * as ROUTES from "../../routes";
+
 export const ScrollMenu = () => {
   const [scrolled, setScrolled] = useState(false);
   let handleClick = () => {
@@ -24,35 +26,35 @@ export const ScrollMenu = () => {
   return (
     <div className="scrollmenu-div" style={{ top: scrolled ? "0" : "-85px" }}>
       <div className="scrollmenu-left">
-        <Link className="scrollmenu-image" onClick={handleClick} to="/AguaZarca/">
+        <Link className="scrollmenu-image" onClick={handleClick} to={ROUTES.HOME}>
           <img
             src={logo}
             alt="logo"
             className="scrollmenu-image"
           />
         </Link>
-        <Link className="menu-link scrollmenu-link" onClick={handleClick} to="/AguaZarca/">
+        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.HOME}>
           Inicio
         </Link>
-        <Link className="menu-link scrollmenu-link" onClick={handleClick} to="/AguaZarca/venta">
+        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.VENTA}>
           Venta
         </Link>
-        <Link className="menu-link scrollmenu-link" onClick={handleClick} to="/AguaZarca/alquiler-temporario">
+        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.ALQUILER_TEMPORAL}>
           Alquiler temporario
         </Link>
-        <Link className="menu-link scrollmenu-link" onClick={handleClick} to="/AguaZarca/alquiler-anual">
+        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.ALQUILER_ANUAL}>
           Alquiler Anual
         </Link>
-        <Link className="menu-link scrollmenu-link" onClick={handleClick} to="/AguaZarca/noticias">
+        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.NOTICIAS}>
           Noticias
         </Link>
-        <Link className="menu-link scrollmenu-link" onClick={handleClick} to="/AguaZarca/contacto">
+        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.CONTACTO}>
           Contacto
         </Link>
       </div>
       <div className="scrollmenu-right">
         <IconContext.Provider value={{ className: "" }}></IconContext.Provider>
-        <Link className="scrollmenu-publish" onClick={handleClick} to="/AguaZarca/publicar-propiedad">
+        <Link className="scrollmenu-publish" onClick={handleClick} to={ROUTES.PUBLICAR}>
           Publicar
         </Link>
       </div>

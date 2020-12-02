@@ -1,259 +1,51 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { PageTitle } from "./../../pageTitle/PageTitle";
-import axios from "axios";
 import Dropdown from "react-dropdown";
+import { useDropzone } from "react-dropzone";
 import "react-dropdown/style.css";
 import "./publicar.css";
+import * as CF from "./const_funct"; //all the constants and functions, the component started to see a little bit too load
+import { reducer } from "./reducer";
 
-/* 
-  ***************************         ******************************
-  *************************** Reducer ******************************
-  ***************************         ******************************
-*/
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "field":
-      return {
-        ...state,
-        [action.field]: action.value,
-      };
-    case "charact":
-      return {
-        ...state,
-        characteristics: {
-          ...state.characteristics,
-          [action.field]: action.value,
-        },
-      };
-    case "feature":
-      return {
-        ...state,
-        attributes: {
-          ...state.attributes,
-          [action.field]: action.value,
-        },
-      };
-    case "toggleField":
-      return {
-        ...state,
-        [action.field]: !state[action.field],
-      };
-    case "changeField":
-      return {
-        ...state,
-        [action.field]: action.value,
-      };
-    case "setLocation":
-      return {
-        ...state,
-        location: {
-          ...state.location,
-          [action.field]: action.value,
-        },
-      };
-    case "setPrice":
-      return {
-        ...state,
-        price: {
-          ...state.price,
-          [action.field]: action.value,
-        },
-      };
-    case "fullfilWithML":
-      return {
-        ...state,
-        ...action.value,
-      };
-    default:
-      return state;
-  }
-};
-
-/* 
-  ***************************                         ******************************
-  *************************** Functions and variables ******************************
-  ***************************                         ******************************
-*/
-const attributes = [
-  "Acceso a internet",
-  "Agua corriente",
-  "Aire acondicionado",
-  "Alarma",
-  "Altillo",
-  "Apto crédito",
-  "Apto profesional",
-  "Balcón",
-  "Calefacción",
-  "Chimenea",
-  "Cocina",
-  "Comedor",
-  "Dependencia de servicio",
-  "Dormitorio en suite",
-  "Estudio",
-  "Forestación",
-  "Gimnasio",
-  "Jacuzzi",
-  "Living",
-  "Gas natural",
-  "Luz eléctrica",
-  "Línea telefónica",
-  "Patio",
-  "Pileta",
-  "Placards",
-  "Playroom",
-  "Portón automático",
-  "Seguridad 24 horas",
-  "Terraza",
-  "Toilette",
-  "Vestidor",
-  "Parrilla",
-  "Tour virtual",
-  "Lavadero",
-];
-
-const characteristics = [
-  "Dormitorios",
-  "Superficie cubierta",
-  "Cantidad de pisos",
-  "Baños",
-  "Cocheras",
-  "Superficie total",
-  "Bodegas",
-];
-
-const setInitialState = (array, value) => {
-  return array.reduce((acc, e) => {
-    acc = { ...acc, [camelizeText(e)]: value };
-    return acc;
-  }, {});
-};
-const camelizeText = (str) => {
-  return str
-    .toLowerCase()
-    .replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
-};
-
-const convertObjToListInAttributes = (array) => {
-  let arrayKeys = array.reduce((acc, e) => {
-    acc = { ...acc, [camelizeText(e.name)]: e.value_name === "Sí" };
-    return acc;
-  }, {});
-  return arrayKeys;
-};
-
-const convertObjToListInCharacteristics = (array) => {
-  let arrayKeys = array.reduce((acc, e) => {
-    acc = { ...acc, [camelizeText(e.name)]: e.value_name };
-    return acc;
-  }, {});
-  return arrayKeys;
-};
-
-const initialState = {
-  mercadolibre: {
-    id: "",
-    link: "",
-  },
-  title: "",
-  description: "",
-  type: "",
-  comercialStatus: "",
-  locationShorcut: "",
-  price: {
-    value: 0,
-    currency: "",
-  },
-  images: [],
-  characteristics: setInitialState(characteristics, ""),
-  attributes: setInitialState(attributes, false),
-  featured: false,
-  revisorMesagge: "",
-  location: {
-    addressLine: "",
-    neighborhood: "",
-    city: "",
-    state: "Córdoba",
-    country: "Argentina",
-  },
-};
-
-const dropdownVariables = {
-  type: ["Departamento", "Hotel", "Local comercial"],
-  status: ["Alquiler temporal", "Alquiler anual", "vendido"],
-  correncyOptions: ["USD", "ARS", "EUR"],
-};
-
-const fetchEffect = async (itemId) => {
-  let response;
-  try {
-    response = await axios(`https://api.mercadolibre.com/items/${itemId}`);
-  } catch (e) {
-    response = e;
-  }
-  return response;
-};
-
-const mlFullfil = (data, att, chr) => {
-  let location = data.location;
-  let attributes = data.attributes;
-  let attListml = convertObjToListInAttributes([...attributes.slice(0, 30), attributes[41]]);
-  console.log(attListml)
-  console.log(setInitialState(att, false))
-  let charListml = convertObjToListInCharacteristics(attributes.slice(30, 37));
-
-  let filled = {
-    mercadolibre: {
-      id: data.id,
-      link: data.permalink,
-    },
-    title: data.title,
-    description: "",
-    type: attributes[39].value_name,
-    comercialStatus: attributes[37].value_name,
-    price: {
-      value: data.price,
-      currency: data.currency_id,
-    },
-    images: [],
-    characteristics: charListml,
-    attributes: attListml,
-    featured: false,
-    revisorMesagge: "",
-    location: {
-      addressLine: location.address_line,
-      neighborhood: location.neighborhood.name,
-      city: location.city.name,
-      state: location.state.name,
-      country: location.country.name,
-    },
-  };
-  return filled;
-};
-
-/* 
-  ***************************           ******************************
-  *************************** Component ******************************
-  ***************************           ******************************
-*/
+/*
+ ***************************           ******************************
+ *************************** Component ******************************
+ ***************************           ******************************
+ */
 
 export const Publicar = () => {
+  //basic states of publish conponent
   let [input, setInput] = useState("");
   let [autofill, setAutofill] = useState(false);
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, CF.initialState);
+
+  //images Dropzone
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+
+  useEffect(() => {
+    if (acceptedFiles) {
+      dispatch({ type: "addImagesArray", value: CF.urlFromFilesArray(acceptedFiles) });
+    }
+  }, [acceptedFiles]);
+
   useEffect(() => {
     let isSubscribed = true;
     const regexMLurl = /([A-Z]{3})-(\d+)/;
     let [itemIdurl] = input.match(regexMLurl) || [""];
     itemIdurl = itemIdurl.replace("-", "");
     if (itemIdurl) {
-      fetchEffect(itemIdurl).then((estate) => {
+      CF.fetchEffect(itemIdurl).then((estate) => {
         if (isSubscribed) {
           dispatch({
             type: "fullfilWithML",
-            value: mlFullfil(estate.data, attributes, characteristics),
+            value: CF.mlFullfil(estate.data, CF.attributes),
           });
-          // console.log(mlFullfil(estate.data));
+          estate.data.pictures.map(async (e) => {
+            let response = await fetch(e.url);
+            let blob = await response.blob();
+            const file = new File([blob], "image.jpg", { type: blob.type });
+            dispatch({type: "addImage", value: URL.createObjectURL(file)})
+          });
         }
       });
     }
@@ -263,39 +55,66 @@ export const Publicar = () => {
   return (
     <div className="publish-div">
       <PageTitle title="Publicar"></PageTitle>
-      {console.log(state)}
       <div className="publish-form">
-        <label htmlFor="autofill">AutoFill con Mercado libre</label>
-        <input
-          type="checkbox"
-          value={autofill}
-          onChange={(e) => setAutofill(e.target.checked)}
-          name="autofill"
-        />
-        {autofill ? (
-          <div>
-            <label htmlFor="mlurl">URL de MercadoLibre</label>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              name="mlurl"
-            />
-          </div>
-        ) : null}
+        <div className="publish-form-mercadolibre">
+          <label htmlFor="autofill">AutoFill con Mercado libre</label>
+          <input
+            className="publish-form-mercadolibre-in"
+            type="checkbox"
+            value={autofill}
+            onChange={(e) => setAutofill(e.target.checked)}
+            name="autofill"
+          />
 
-        <form>
-          <div className="publish-form-title-price-div">
+          {autofill ? (
             <div>
-              <label htmlFor="title">Título de la propiedad</label>
-              <input name="title" type="text" value={state.title} onChange={(e) => dispatch({type: "changeField", value: e.target.value})}/>
+              <input
+                className="publish-form-mercadolibre-url"
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                name="mlurl"
+              />
             </div>
-            <div className="publish-form-title-price">
-              <label htmlFor="price">Precio</label>
-              <input type="number" name="price" />
+          ) : null}
+        </div>
+        <form encType="multipart/form-data" className="publish-form-form">
+          <div className="publish-form-title-price-div">
+            <label className="publish-form-title-label" htmlFor="title">
+              Título de la propiedad
+            </label>
+            <div className="publish-form-title-div">
+              <input
+                className="publish-form-title-input publish-form-input"
+                name="title"
+                type="text"
+                value={state.title}
+                onChange={(e) => dispatch({ type: "field", field: "title", value: e.target.value })}
+              />
+            </div>
+            <div className="publish-form-price-div">
+              <div className="publish-form-price-il-div">
+                <label className="publish-form-price-label" htmlFor="price">
+                  Precio :
+                </label>
+                <input
+                  className="publish-form-price-input publish-form-input"
+                  type="number"
+                  name="price"
+                  value={state.price.value}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "setPrice",
+                      field: "value",
+                      value: e.value,
+                    })
+                  }
+                />
+              </div>
               <Dropdown
-                options={dropdownVariables.correncyOptions}
-                value={dropdownVariables.correncyOptions[0]}
+                className="publish-form-dropdow-currency"
+                options={CF.dropdownVariables.correncyOptions}
+                value={state.price.currency}
                 onChange={(e) =>
                   dispatch({
                     type: "setPrice",
@@ -303,139 +122,88 @@ export const Publicar = () => {
                     value: e.value,
                   })
                 }
-              ></Dropdown>
+              />
             </div>
           </div>
 
-          <label htmlFor="description">descripcion</label>
-          <textarea name="description" type="text" />
-          <Dropdown
-            options={dropdownVariables.type}
-            value={dropdownVariables.type[0]}
-            onChange={(e) =>
-              dispatch({ type: "changeField", field: "type", value: e.value })
-            }
-          ></Dropdown>
-          <Dropdown
-            options={dropdownVariables.status}
-            value={dropdownVariables.status[0]}
-            onChange={(e) =>
-              dispatch({
-                type: "changeField",
-                field: "comercialStatus",
-                value: e.value,
-              })
-            }
-          ></Dropdown>
-          <div className="publish-form-location">
-            <div className="publish-form-location-div">
-              <label
-                htmlFor="address_line"
-                className="publish-form-location-label publish-form-label"
-              >
-                Direccion
-              </label>
-              <input
-                type="text"
-                name="address_line"
-                value={state.location.addressLine}
-                onChange={(e) =>
-                  dispatch({
-                    type: "setLocation",
-                    field: "addressLine",
-                    value: e.target.value,
-                  })
-                }
+          <div className="publish-form-description-div">
+            <label className="publish-form-description-label publish-form-title-label" htmlFor="description">
+              Descripcion
+            </label>
+            <textarea
+              className="publish-form-description-div-textarea publish-form-input"
+              name="description"
+              type="text"
+              value={state.description}
+              onChange={(e) => dispatch({ type: "field", field: "description", value: e.target.value })}
+            />
+          </div>
+          <div className="publish-form-dropdown-div">
+            <div className="publish-form-dropdown-type">
+              <p>Tipo</p>
+              <Dropdown
+                options={CF.dropdownVariables.type}
+                value={state.type}
+                onChange={(e) => dispatch({ type: "field", field: "type", value: e.value })}
               />
             </div>
-            <div className="publish-form-location-div">
-              <label
-                htmlFor="neighborhood"
-                className="publish-form-location-label publish-form-label"
-              >
-                Barrio
-              </label>
-              <input
-                type="text"
-                name="neighborhood"
-                value={state.location.neighborhood}
+            <div className="publish-form-dropdown-type">
+              <p>Estado</p>
+              <Dropdown
+                options={CF.dropdownVariables.status}
+                value={state.comercialStatus}
                 onChange={(e) =>
                   dispatch({
-                    type: "setLocation",
-                    field: "neighborhood",
-                    value: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="publish-form-location-div">
-              <label
-                htmlFor="city"
-                className="publish-form-location-label publish-form-label"
-              >
-                Ciudad
-              </label>
-              <input
-                type="text"
-                name="city"
-                value={state.location.city}
-                onChange={(e) =>
-                  dispatch({
-                    type: "setLocation",
-                    field: "city",
-                    value: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="publish-form-location-div">
-              <label
-                htmlFor="state"
-                className="publish-form-location-label publish-form-label"
-              >
-                Provincia
-              </label>
-              <input
-                type="text"
-                name="state"
-                value={state.location.state}
-                onChange={(e) =>
-                  dispatch({
-                    type: "setLocation",
-                    field: "state",
-                    value: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="publish-form-location-div">
-              <label
-                htmlFor="country"
-                className="publish-form-location-label publish-form-label"
-              >
-                País
-              </label>
-              <input
-                type="text"
-                name="country"
-                value={state.location.country}
-                onChange={(e) =>
-                  dispatch({
-                    type: "setLocation",
-                    field: "country",
-                    value: e.target.value,
+                    type: "field",
+                    field: "comercialStatus",
+                    value: e.value,
                   })
                 }
               />
             </div>
           </div>
-          <div>
-            {characteristics.map((title) => {
-              let formatTitle = camelizeText(title);
+          <div className="publish-form-location">
+            <h2 className="publish-candf-title">Ubicación</h2>
+            {[
+              { dispatchField: "addressLine", name: "Dirección" },
+              { dispatchField: "neighborhood", name: "Barrio " },
+              { dispatchField: "city", name: "Ciudad " },
+              { dispatchField: "state", name: "Provincia" },
+              { dispatchField: "country", name: "País" },
+            ].map((fieldObj) => {
               return (
-                <div key={formatTitle}>
-                  <label htmlFor={formatTitle}>{title}</label>
+                <div className="publish-form-location-div" key={fieldObj.dispatchField}>
+                  <label htmlFor={fieldObj.dispatchField} className="publish-form-location-label publish-form-label">
+                    {fieldObj.name} :
+                  </label>
                   <input
+                    className="publish-form-input publish-form-location-input"
+                    type="text"
+                    name={fieldObj.dispatchField}
+                    value={state.location[fieldObj.dispatchField]}
+                    onChange={(e) =>
+                      dispatch({
+                        type: "setLocation",
+                        field: fieldObj.dispatchField,
+                        value: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <div className="publish-form-char">
+            <h2 className="publish-candf-title">Características y atributos</h2>
+            {CF.characteristics.map((title) => {
+              let formatTitle = CF.camelizeText(title);
+              return (
+                <div className="publish-form-char-div" key={formatTitle}>
+                  <label className="publish-form-char-label" htmlFor={formatTitle}>
+                    {title} :{" "}
+                  </label>
+                  <input
+                    className="publish-form-input publish-form-char-input"
                     value={state.characteristics[formatTitle]}
                     onChange={(e) =>
                       dispatch({
@@ -451,48 +219,71 @@ export const Publicar = () => {
               );
             })}
           </div>
-          <div>
-            {attributes.map((title) => {
-              let formatRef = camelizeText(title);
+          <div className="publish-form-att">
+            {CF.attributes.map((title) => {
+              let formatRef = CF.camelizeText(title);
               return (
-                <div key={formatRef}>
-                  <label htmlFor={formatRef}>{title}</label>
+                <div className="publish-form-att-div" key={formatRef}>
+                  <label
+                    onClick={(e) => {
+                      dispatch({
+                        type: "feature",
+                        value: !state.attributes[formatRef],
+                        field: formatRef,
+                      });
+                    }}
+                    className="publish-form-att-label"
+                    htmlFor={formatRef}
+                  >
+                    {title}
+                  </label>
                   <input
-                    onChange={(e) =>{
-                      // console.log(state.attributes[formatRef])
+                    className="publish-form-att-input"
+                    onChange={(e) => {
                       dispatch({
                         type: "feature",
                         value: e.target.checked,
                         field: formatRef,
-                      })}
-                    }
+                      });
+                    }}
                     name={formatRef}
                     type="checkbox"
-                    value={state.attributes[formatRef]}
+                    checked={state.attributes[formatRef]}
                   />
                 </div>
               );
             })}
           </div>
+          <div className="publish-form-images-div">
+            <h2 className="publish-form-images-title">Imagenes</h2>
+            <div {...getRootProps({ className: "publish-form-images-dropzone" })}>
+              <input {...getInputProps()} />
+              <p>Arrastra las imagenes aqui, o has click para seleccionar los archivos</p>
+            </div>
+            <aside>
+              <ul className="publish-form-images-ul">
+                <p className="publish-form-images-display-info">display de imagenes</p>
+                {CF.doImageList(state.images)}
+              </ul>
+            </aside>
+          </div>
           <div>
-            <label htmlFor="featured">
-              Marcar esta propiedad como propiedad destacada
-            </label>
             <input
-              name="featured"
+              value={state.featured}
+              onChange={(e) => dispatch({ type: "field", field: "featured", value: e.target.checked })}
+              name="terms"
               type="checkbox"
-              onChange={(e) =>
-                dispatch({ type: "toggleField", field: "featured" })
-              }
             />
+            <label htmlFor="terms">Propiedad destacada</label>
           </div>
           <div>
-            <label htmlFor="terms">
-              Acepte los términos y condiciones antes de enviar la propiedad.
-            </label>
             <input name="terms" type="checkbox" />
+            <label htmlFor="terms">Acepte los términos y condiciones antes de enviar la propiedad. (???)</label>
           </div>
-          <button type="submit">Enviar Propiedad</button>
+          <button className="publish-form-submit" type="submit">
+            Enviar Propiedad
+          </button>
+          <input type="file" name="asd" onChange={(e) => console.log(e.target.value)} />
         </form>
       </div>
     </div>
@@ -500,5 +291,6 @@ export const Publicar = () => {
 };
 
 export default Publicar;
+
 
 
