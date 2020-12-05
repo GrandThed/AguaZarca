@@ -13,6 +13,7 @@ import Home from "./components/routes/home/Home";
 import Noticias from "./components/routes/noticias/Noticias";
 import Publicar from "./components/routes/publicar/Publicar";
 import Propiedad from "./components/routes/propiedad/Propiedad";
+import Registro from "./components/routes/registro/Registro";
 import Venta from "./components/routes/venta/Venta";
 import NoMatch from "./components/routes/noMatch/NoMatch";
 
@@ -30,6 +31,7 @@ const App = () => {
           <Route path={ROUTES.CONTACTO} component={Contacto}></Route>
           <Route path={ROUTES.PUBLICAR} component={Publicar}></Route>
           <Route path={ROUTES.PRODUCTO} component={Propiedad}></Route>
+          <Route path={ROUTES.REGISTRO} component={Registro}></Route>
           <Route path={"*"} component={NoMatch}></Route>
         </Switch>
         <Footer />

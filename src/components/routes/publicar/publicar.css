@@ -228,6 +228,8 @@
   margin: 10px;
 }
 
+
+
 .publish-form-submit{
   background-color: rgb(134, 35, 35);
   border: 1px solid rgb(134, 35, 35);
@@ -254,6 +256,17 @@ input[type=checkbox]{
   background-color: white;
   color: rgb(134, 35, 35);;
 
+}
+
+.publish-form-delete-images{
+  position: absolute;
+  border: none;
+  background-color: rgba(206, 206, 206, 0.404);
+  border-radius: 4px;
+  margin: 2px;
+  padding: 2px 6px 3px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 @media (max-width: 756px) {

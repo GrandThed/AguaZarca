@@ -1,0 +1,40 @@
+.log-div {
+  position: absolute;
+}
+
+.log-form {
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 14px;
+}
+
+.log-input {
+  margin: 7px 0;
+  transition: border-color 200ms ease;
+}
+.log-input:invalid {
+  border-color: red;
+}
+.log-input:focus {
+  border-color: rgb(68, 68, 68);
+}
+
+.log-title {
+  color: rgb(68, 68, 68);
+  text-shadow: none;
+  text-align: center;
+}
+
+.log-button {
+  background-color: rgb(134, 35, 35);
+  border: 1px solid rgb(134, 35, 35);
+  font-size: 18px;
+  border-radius: 2px;
+  color: white;
+  padding: 10px;
+  margin: 10px 0;
+  transition: background 200ms ease;
+  cursor: pointer;
+}

@@ -8,4 +8,5 @@ export const NOTICIAS = prefix + "/noticias"
 export const CONTACTO = prefix + "/contacto"
 export const PUBLICAR = prefix + "/publicar-propiedad"
 export const PRODUCTO = prefix + "/producto/:id"
+export const REGISTRO = prefix + process.env.REACT_APP_SUPERSECRETEREGISTERROUTE
 

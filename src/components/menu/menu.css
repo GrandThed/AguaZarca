@@ -107,7 +107,6 @@
 
 .dropdown {
   position: absolute;
-  
   width: 200px;
   right: 0;
   border-radius: 0 0 0 8px;
@@ -115,6 +114,7 @@
   overflow: hidden;
   background-color: rgb(70, 70, 70);
   color: rgb(190, 190, 190);
+  top: 86px;
 }
 
 .medium-menu-list {

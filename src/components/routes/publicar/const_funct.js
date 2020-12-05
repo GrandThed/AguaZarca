@@ -155,16 +155,16 @@ export const mlFullfil = (data, att) => {
   return filled;
 };
 
-export const doImageList = (arrayofImagePath) => {
-  return arrayofImagePath.map((imageUrl) => {
+export const doImageListFromFiles = (files) => {
+  return files.map((file) => {
+    if (!file){
+      return null
+    }
     return (
-      <li className="publish-form-images-container" key={imageUrl}>
-        <img className="publish-form-images-images" src={imageUrl} alt="imagen no valida" />
+      <li className="publish-form-images-container" key={file.name}>
+        <img className="publish-form-images-images" src={(window.URL || window.webkitURL).createObjectURL(file)} alt="imagen no valida" />
       </li>
     );
   });
 };
 
-export const urlFromFilesArray = (filesArray) => {
-  return filesArray.map((file) => URL.createObjectURL(file));
-};

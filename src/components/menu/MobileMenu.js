@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import logo from "./logo-menu.png";
 import "./menu.css";
 import { Link } from "react-router-dom";
+import LogInForm from '../logInform/LogInForm'
 
 import * as ROUTES from "../../routes";
 
@@ -9,101 +10,41 @@ import * as ROUTES from "../../routes";
 import { IconContext } from "react-icons";
 import { BiPhone } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
+import { Dropdown } from "./Dropdown";
 
 export const MobileMenu = () => {
-  
+  const [showLog, setShowLog] = useState()
+
   return (
     <div className="mobile-menu">
       <div className="mobile-menu-top">
         <IconContext.Provider value={{ className: "menu-icon-profile" }}>
           <li className="menu-list">
-            <CgProfile />
+          <CgProfile onClick={() => setShowLog((e) => !e)} />
+            {showLog && <LogInForm/>}
           </li>
         </IconContext.Provider>
         <Link className="menu-link" to={ROUTES.HOME}>
-          <img
-            src={logo}
-            alt="logo"
-            className="menu-image"
-            width="200"
-            height="50"
-          />
+          <img src={logo} alt="logo" className="menu-image" width="200" height="50" />
         </Link>
-        <Dropdown/>
+        <Dropdown addClass="dropdown-mobile" />
       </div>
       <div className="mobile-menu-bottom">
-      <IconContext.Provider value={{ className: "medium-menu-icon-phone" }}>
+        <IconContext.Provider value={{ className: "medium-menu-icon-phone" }}>
           <li className="menu-list menu-list-icon">
             <BiPhone />
-            <a href="tel:35415659041" className="menu-phone"><span>35415659041</span></a>
+            <a href="tel:35415659041" className="menu-phone">
+              <span>35415659041</span>
+            </a>
           </li>
         </IconContext.Provider>
-      
-      <Link className="menu-link" to={ROUTES.PUBLICAR}>
-          <li className="  mobile-menu-publish" >
-            Publicar
-          </li>
+
+        <Link className="menu-link" to={ROUTES.PUBLICAR}>
+          <li className="  mobile-menu-publish">Publicar</li>
         </Link>
-        </div>
-      
+      </div>
     </div>
   );
 };
 
 
-
-const Dropdown = () => {
-  let handleClick = () => {
-    setShow(false)
-    window.scrollTo(0,0)
-  }
-  const [show, setShow] = useState();
-  return (
-    <>
-      <div
-          id="nav-icon"
-          className={show ? "open" : ""}
-          onClick={() => setShow(!show)}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        {show ? (
-          <ul className=" medium-menu-ul dropdown-mobile">
-            <Link className="medium-menu-link menu-link" to="/AguaZarca/">
-              <li className="medium-menu-list medium-menu-list-first" onClick={handleClick}>Inicio</li>
-            </Link>
-            <Link className="medium-menu-link menu-link" to={ROUTES.VENTA}>
-              <li className="medium-menu-list" onClick={handleClick}>Venta</li>
-            </Link>
-            <Link
-              className="medium-menu-link menu-link"
-              to={ROUTES.ALQUILER_TEMPORAL}
-            >
-              <li className="medium-menu-list" onClick={handleClick}>Alquiler temporario</li>
-            </Link>
-            <Link
-              className="medium-menu-link menu-link"
-              to={ROUTES.ALQUILER_ANUAL}
-            >
-              <li className="medium-menu-list" onClick={handleClick}>Alquiler Anual</li>
-            </Link>
-            <Link
-              className="medium-menu-link menu-link"
-              to={ROUTES.NOTICIAS}
-            >
-              <li className="medium-menu-list" onClick={handleClick}>Noticias</li>
-            </Link>
-            <Link
-              className="medium-menu-link menu-link"
-              to={ROUTES.CONTACTO}
-            >
-              <li className="medium-menu-list" onClick={handleClick}>Contacto</li>
-            </Link>
-          </ul>
-        ) : null}
-    </>
-  )
-        }

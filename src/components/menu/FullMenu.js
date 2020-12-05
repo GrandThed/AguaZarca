@@ -1,19 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 
 import logo from "./logo-menu.png";
 import "./menu.css";
 import { Link } from "react-router-dom";
-
+import LogInForm from '../logInform/LogInForm'
 import * as ROUTES from "../../routes";
 
 // Icons
 import { BiPhone,  } from "react-icons/bi";
 import { IconContext } from "react-icons";
 import { CgProfile } from "react-icons/cg";
-import { ScrollMenu } from "./ScrollMenu";
+// import { ScrollMenu } from "./ScrollMenu";
 
 export const FullMenu = () => {
-  
+  const [showLog, setShowLog] = useState()
 
   return (
     <div className="menu">
@@ -57,14 +57,15 @@ export const FullMenu = () => {
         </IconContext.Provider>
         <IconContext.Provider value={{ className: "menu-icon-profile" }}>
           <p className="menu-list">
-            <CgProfile />
+            <CgProfile onClick={() => setShowLog((e) => !e)} />
+            {showLog && <LogInForm/>}
           </p>
         </IconContext.Provider>
         <Link className="menu-link" to={ROUTES.PUBLICAR}>
           <p className="menu-list menu-publish">Publicar</p>
         </Link>
   
-      <ScrollMenu />
+      {/* <ScrollMenu /> */}
     </div>
   );
 };

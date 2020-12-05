@@ -1,5 +1,4 @@
 export const reducer = (state, action) => {
-  console.log(action);
   switch (action.type) {
     case "field":
       return {
@@ -55,6 +54,11 @@ export const reducer = (state, action) => {
       };
     case "fullfilWithML":
       return action.value;
+    case "deleteImages":
+      return {
+        ...state,
+        images: []
+      };
     default:
       return state;
   }
