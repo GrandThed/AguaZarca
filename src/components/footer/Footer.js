@@ -48,11 +48,11 @@ const Footer = () => {
       </div>
       <div className="footer-bottom">
         <div>
-          <p>© 2020. AguaZarca - Todos los derechos reservados.</p>
+          <p className="footer-margin-tb">© 2020. AguaZarca - Todos los derechos reservados.</p>
         </div>
         <div className="footer-credits">
-          <p>Diseñado por Mameluc.com.ar</p>
-          <p>Programado por Mameluc.com.ar</p>
+          <p className="footer-mameluc footer-margin-tb">Diseñado por Mameluc.com.ar</p>
+          <p className="footer-margin-tb">Programado por Benjamín Cañas</p>
         </div>
       </div>
     </div>
@@ -64,7 +64,7 @@ const FooterInfo = () => {
   return (
     <div className="footer-info-div">
       <IconContext.Provider value={{ className: "medium-menu-icon-phone" }}>
-        <p>
+        <p className="footer-margin-tb">
           <RiMapPinLine />{" "}
           <a
             href="https://www.google.com/maps/place/Villa+Carlos+Paz,+C%C3%B3rdoba/@-31.4121939,-64.5697769,12z/data=!3m1!4b1!4m5!3m4!1s0x942d6640d6777c71:0x75c24ab6cb121bed!8m2!3d-31.4207828!4d-64.4992141"
@@ -75,10 +75,10 @@ const FooterInfo = () => {
             Villa Carlos Paz
           </a>
         </p>
-        <p>
+        <p className="footer-margin-tb">
           <RiPhoneLine /> +543541659047
         </p>
-        <p>
+        <p className="footer-margin-tb">
           <RiMailLine />{" "}
           <a href="mailto:gillio.inmo@gmail.com" className="footer-email">
             gillio.inmo@gmail.com
@@ -93,20 +93,20 @@ export const FooterPropietiesTypes = () => {
   return (
     <div className="footer-types-div">
       <Link className="menu-link" to="/AguaZarca/">
-        <li className="footer-menu-li">Casa</li>
+        <li className="footer-menu-li footer-margin-tb">Casa</li>
       </Link>
       <Link className="menu-link" to="/AguaZarca/">
-        <li className="footer-menu-li">Departamento</li>
+        <li className="footer-menu-li footer-margin-tb">Departamento</li>
       </Link>
       <Link className="menu-link" to="/AguaZarca/">
-        <li className="footer-menu-li">Hotel</li>
+        <li className="footer-menu-li footer-margin-tb">Hotel</li>
       </Link>
       <Link className="menu-link" to="/AguaZarca/l">
-        <li className="footer-menu-li">Local Comercial</li>
+        <li className="footer-menu-li footer-margin-tb">Local Comercial</li>
       </Link>
       <Link className="menu-link" to="/AguaZarca/">
         {" "}
-        <li className="footer-menu-li">Lote/Terremp/Campo</li>
+        <li className="footer-menu-li footer-margin-tb">Lote/Terremp/Campo</li>
       </Link>
     </div>
   );
@@ -117,25 +117,25 @@ const FooterMenu = () => {
     <div className="footer-menu-div">
       <div className="footer-menu-left">
         <Link className="menu-link" to="/AguaZarca/">
-          <li className="footer-menu-li">Inicio</li>
+          <li className="footer-menu-li footer-margin-tb">Inicio</li>
         </Link>
         <Link className="menu-link" to="/AguaZarca/venta">
-          <li className="footer-menu-li">Venta</li>
+          <li className="footer-menu-li footer-margin-tb">Venta</li>
         </Link>
         <Link className="menu-link" to="/AguaZarca/alquiler-temporario">
-          <li className="footer-menu-li">Alquiler temporario</li>
+          <li className="footer-menu-li footer-margin-tb">Alquiler temporario</li>
         </Link>
       </div>
       <div className="footer-menu-left footer-menu-right">
         <Link className="menu-link" to="/AguaZarca/alquiler-anual">
-          <li className="footer-menu-li">Alquiler Anual</li>
+          <li className="footer-menu-li footer-margin-tb">Alquiler Anual</li>
         </Link>
         <Link className="menu-link" to="/AguaZarca/noticias">
           {" "}
-          <li className="footer-menu-li">Noticias</li>
+          <li className="footer-menu-li footer-margin-tb">Noticias</li>
         </Link>
         <Link className="menu-link" to="/AguaZarca/contacto">
-          <li className="footer-menu-li">Contacto</li>
+          <li className="footer-menu-li footer-margin-tb">Contacto</li>
         </Link>
       </div>
     </div>

@@ -42,23 +42,9 @@ export const reducer = (state, action) => {
           [action.field]: action.value,
         },
       };
-    case "addImagesArray":
-      return {
-        ...state,
-        images: [...action.value],
-      };
-    case "addImage":
-      return {
-        ...state,
-        images: [...state.images, action.value],
-      };
     case "fullfilWithML":
       return action.value;
-    case "deleteImages":
-      return {
-        ...state,
-        images: []
-      };
+
     default:
       return state;
   }

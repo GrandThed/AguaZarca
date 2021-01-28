@@ -1,6 +1,6 @@
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer } from "react";
 import "./registro.css";
-import { auth, firestore } from "../../../firebase";
+import { auth, firestore, storage } from "../../../firebase";
 import { Redirect } from "react-router-dom";
 import { HOME } from "../../../routes";
 
@@ -11,21 +11,22 @@ const Registro = () => {
     dispatch({ type: "field", field: e.target.name, value: e.target.value });
   };
 
-  useEffect(() => {
-    let { username, password, email } = state.form;
-    if (username || password || email) {
-      dispatch({ type: "disableState", value: false });
-    } else {
-      dispatch({ type: "disableState", value: true });
-    }
-  }, [state.form]);
   const handleSubmit = () => {
     let { email, password, username, phonenumber, wspnumber } = state.form;
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then(() => firestore.collection("usersInfo").add({ username, phonenumber, wspnumber, email }))
-      .then(() => dispatch({ type: "redirect", value: true }))
-      .catch((e) => console.log(e));
+    let ref = storage.ref(`images/${email.replace(/\W/, "_")}/`);
+    ref
+      .put(state.imageFile)
+      .then(
+        (snap) => dispatch({ type: "setImageURL", value: ref.getDownloadURL() }),
+        (error) => console.error(error.message)
+      )
+      .then(() =>
+        auth
+          .createUserWithEmailAndPassword(email, password)
+          .then(() => firestore.collection("usersInfo").add({ username, phonenumber, wspnumber, email }))
+          .then(() => dispatch({ type: "redirect", value: true }))
+          
+      ).catch((e) => console.error(e))
   };
 
   return (
@@ -34,6 +35,7 @@ const Registro = () => {
       <form className="register-form">
         <h3 className="register-title">Registrarse</h3>
         <input
+          require={true}
           onChange={handleChange}
           value={state.form.username}
           spellCheck={false}
@@ -43,6 +45,7 @@ const Registro = () => {
           placeholder="Nombre del agente"
         />
         <input
+          require={true}
           onChange={handleChange}
           value={state.form.password}
           spellCheck={false}
@@ -52,6 +55,7 @@ const Registro = () => {
           placeholder="Contraseña"
         />
         <input
+          require={true}
           onChange={handleChange}
           value={state.form.phonenumber}
           spellCheck={false}
@@ -61,6 +65,7 @@ const Registro = () => {
           placeholder="Numbero de telefono"
         />
         <input
+          require={true}
           onChange={handleChange}
           value={state.form.wspnumber}
           spellCheck={false}
@@ -70,6 +75,7 @@ const Registro = () => {
           placeholder="Numero de whatsapp"
         />
         <input
+          require={true}
           onChange={handleChange}
           value={state.form.email}
           spellCheck={false}
@@ -78,6 +84,15 @@ const Registro = () => {
           className="register-input"
           placeholder="Email del agente"
         />
+        <div className="register-profile-img-div">
+          <label>Imagen de perfil</label>
+          <input
+            required={true}
+            onChange={(e) => dispatch({ type: "setImageFile", value: e.target.value })}
+            value={state.imageFile}
+            type="file"
+          />
+        </div>
         <input
           onClick={handleSubmit}
           disabled={state.disableState}
@@ -101,10 +116,20 @@ const reducer = (state, action) => {
           [action.field]: action.value,
         },
       };
+    case "setImageFile":
+      return {
+        ...state,
+        imageFile: action.value,
+      };
     case "disableState":
       return {
         ...state,
         disableState: action.value,
+      };
+    case "setImageURL":
+      return {
+        ...state,
+        imageURL: action.value,
       };
     case "redirect":
       return {
@@ -123,13 +148,11 @@ const initialState = {
     phonenumber: "",
     wspnumber: "",
     email: "",
+    imageURL: "",
   },
+  imageFile: {},
   disableState: true,
   redirect: false,
 };
-
-// const storeUserExtraInfoInFirebase = (userInfo = {}) => {
-//   .then(e => e)
-// };
 
 export default Registro;

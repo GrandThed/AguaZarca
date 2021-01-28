@@ -56,10 +56,10 @@ export const FullMenu = () => {
           </p>
         </IconContext.Provider>
         <IconContext.Provider value={{ className: "menu-icon-profile" }}>
-          <p className="menu-list">
+          <div className="menu-list">
             <CgProfile onClick={() => setShowLog((e) => !e)} />
             {showLog && <LogInForm/>}
-          </p>
+          </div>
         </IconContext.Provider>
         <Link className="menu-link" to={ROUTES.PUBLICAR}>
           <p className="menu-list menu-publish">Publicar</p>

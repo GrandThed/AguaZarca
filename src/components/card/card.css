@@ -114,6 +114,19 @@
   color: gray;
 }
 
+.card-null{
+  width: 100%;
+  background-color: rgb(240, 240, 240);
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-null-loading{
+  margin: 0;
+}
+
 @media (max-width: 768px) {
   .card-div {
     width: 80%;

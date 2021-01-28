@@ -1,4 +1,3 @@
-
 /* img {
   width: 100vw;
   height: 100vh;
@@ -8,10 +7,10 @@
   height: 100vh;
 }
 .slides .slick-next {
-  right: 5%;
+  right: 2%;
 }
 .slides .slick-prev {
-  left: 5%;
+  left: 2%;
 }
 .slides .slick-prev,
 .slides .slick-next {
@@ -38,6 +37,16 @@
   outline: none;
 }
 
+.slider-loading{
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(221, 221, 221);
+}
+
+
 .image-div {
   width: 100%;
   height: 100vh;
@@ -46,8 +55,23 @@
   padding: 20px;
   background-size: cover;
   display: flex;
-  
+  background-position: center;
 }
+
+.image-link{
+  text-decoration: none;
+  color: rgb(63, 63, 63);
+}
+
+.image-link:visited{
+  color: rgb(63, 63, 63);
+}
+
+.image-link:active {
+  color: rgb(63, 63, 63);
+
+}
+
 .image-container-filler {
   width: 60%;
   height: 100px;
@@ -87,13 +111,13 @@
 
 .image-text-span {
   font-weight: 700;
-} 
+}
 
-.image-feat-p{
+.image-feat-p {
   white-space: nowrap;
 }
 
-.m2:after{
+.m2:after {
   position: absolute;
   padding: 0px 0 0 1px;
   content: " m2";
@@ -102,60 +126,74 @@
 
 .image-icons {
   color: #a51a1a;
-  vertical-align: -6px;
-
+  vertical-align: -8px;
+  margin-right: 3px;
   font-size: 26px;
 }
 
-.image-price-title{
+.image-price-title {
   text-transform: capitalize;
   color: rgb(82, 82, 82);
   padding-top: 10px;
 }
 
-.image-price{
+.image-price {
   font-weight: 400;
   font-size: 25px;
   color: #a51a1a;
 }
 
-@media (max-width: 768px) {
+.ps-container {
+  display: flex;
+  justify-content: center;
+  background-color: rgb(44, 44, 44);
+}
 
+.ps-img {
+  object-fit: cover;
+  height: 500px;
+  justify-self: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+@media (max-width: 768px) {
   .image-container-filler {
     display: none;
   }
-  .image-features{
+  .image-features {
     display: none;
   }
-  .image-ubication{
+  .image-ubication {
     display: none;
   }
-  .image-container{
-    margin:0;
+  .image-container {
+    margin: 0;
   }
-  .image-div{
+  .image-div {
     justify-content: center;
   }
-  .image-price-title{
+  .image-price-title {
     font-size: 14px;
     font-weight: 500;
-
   }
-  .image-price{
+  .image-price {
     font-size: 20px;
     font-weight: 400;
   }
-
 }
 
-@media (min-width : 769px) and (max-width : 1139px) {
-  .image-container{
+
+
+@media (min-width: 769px) and (max-width: 1139px) {
+  .image-container {
     width: 500px;
-    margin:0;
+    margin: 0;
   }
-  .image-div{
+  .image-div {
     padding-top: 0;
     padding-right: 80px;
   }
-  
 }

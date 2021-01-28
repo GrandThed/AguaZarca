@@ -36,6 +36,7 @@
 .register-input:invalid {
   outline: none;
   border: 1px solid rgb(255, 0, 0);
+  background-color: rgba(255, 0, 0, 0.171);
 }
 
 .register-submit {

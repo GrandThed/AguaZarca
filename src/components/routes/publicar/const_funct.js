@@ -1,8 +1,15 @@
 import axios from "axios";
+import { storage } from "../../../firebase";
 
 export const attributes = [
+  "Heladera",
+  "Microondas",
+  "Servicio de limpieza",
+  "Servicio de desayuno",
+  "Apto para familias con niños",
+  "Solo familias",
+  "Se admiten mascotas",
   "Acceso a internet",
-  "Agua corriente",
   "Aire acondicionado",
   "Alarma",
   "Altillo",
@@ -19,6 +26,7 @@ export const attributes = [
   "Forestación",
   "Gimnasio",
   "Jacuzzi",
+  "Jardín",
   "Living",
   "Gas natural",
   "Luz eléctrica",
@@ -27,14 +35,13 @@ export const attributes = [
   "Pileta",
   "Placards",
   "Playroom",
+  "Parrilla",
   "Portón automático",
   "Seguridad 24 horas",
   "Terraza",
   "Toilette",
   "Vestidor",
-  "Parrilla",
   "Lavadero",
-  "Tour virtual",
 ];
 
 export const characteristics = [
@@ -44,42 +51,29 @@ export const characteristics = [
   "Baños",
   "Cocheras",
   "Superficie total",
-  "Bodegas",
+  "Horario check out",
+  "Horario check in",
+  "Camas",
+  "Huéspedes",
+  "Estadía mínima (noches)",
 ];
+
+export const ubicationFields = [
+  { dispatchField: "addressLine", name: "Dirección" },
+  { dispatchField: "neighborhood", name: "Barrio " },
+  { dispatchField: "city", name: "Ciudad " },
+  { dispatchField: "state", name: "Provincia" },
+  { dispatchField: "country", name: "País" },
+]
 
 export const setInitialState = (array, value) => {
   return array.reduce((acc, e) => {
-    acc = { ...acc, [camelizeText(e)]: value };
+    acc = { ...acc, [e]: value };
     return acc;
   }, {});
-};
-export const camelizeText = (str) => {
-  return str
-    .toLowerCase()
-    .replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
-};
-
-export const convertObjToListInAttributes = (array) => {
-  let arrayKeys = array.reduce((acc, e) => {
-    acc = { ...acc, [camelizeText(e.name)]: e.value_name === "Sí" };
-    return acc;
-  }, {});
-  return arrayKeys;
-};
-
-export const convertObjToListInCharacteristics = (array) => {
-  let arrayKeys = array.reduce((acc, e) => {
-    acc = { ...acc, [camelizeText(e.name)]: e.value_name };
-    return acc;
-  }, {});
-  return arrayKeys;
 };
 
 export const initialState = {
-  mercadolibre: {
-    id: "",
-    link: "",
-  },
   title: "",
   description: "",
   type: "Departamento",
@@ -92,6 +86,8 @@ export const initialState = {
   characteristics: setInitialState(characteristics, ""),
   attributes: setInitialState(attributes, false),
   featured: false,
+  rentalFeatured: false,
+  slider: false,
   revisorMesagge: "",
   location: {
     addressLine: "",
@@ -100,12 +96,29 @@ export const initialState = {
     state: "Córdoba",
     country: "Argentina",
   },
+  video_id: ""
 };
 
 export const dropdownVariables = {
-  type: ["Departamento", "Hotel", "Local comercial"],
-  status: ["Alquiler temporal", "Alquiler anual", "vendido"],
+  type: ["Departamento", "Hotel", "Local comercial", "Casa"],
+  status: ["Alquiler temporal", "Alquiler anual", "Vendido"],
   correncyOptions: ["USD", "ARS", "EUR"],
+};
+
+export const convertObjToListInAttributes = (array) => {
+  let arrayKeys = array.reduce((acc, e) => {
+    acc = { ...acc, [e.name]: e.value_name === "Sí" };
+    return acc;
+  }, {});
+  return arrayKeys;
+};
+
+export const convertObjToListInCharacteristics = (array) => {
+  let arrayKeys = array.reduce((acc, e) => {
+    acc = { ...acc, [e.name]: e.value_name };
+    return acc;
+  }, {});
+  return arrayKeys;
 };
 
 export const fetchEffect = async (itemId) => {
@@ -113,27 +126,32 @@ export const fetchEffect = async (itemId) => {
 };
 
 export const mlFullfil = (data, att) => {
-  let location = data.location;
-  let attributes = data.attributes;
-  let attListml = convertObjToListInAttributes([...attributes.slice(0, 29), attributes[41], attributes[29]]);
+  const {id, permalink, title, price, currency_id, location, attributes, video_id} = data
+  const {address_line, neighborhood,city, state, country } = location
+  let attListml = convertObjToListInAttributes(
+    attributes.filter(
+      (e) =>
+        e.attribute_group_id === "AMBIENTES" ||
+        e.attribute_group_id === "OTHERS" ||
+        e.attribute_group_id === "CARACTERISTICAS"
+    )
+  );
   let attList = att.reduce((acc, e) => {
-    let camele = camelizeText(e);
-    let value = attListml[camele] || false;
-    return { ...acc, [camele]: value };
+    let value = attListml[e] || false;
+    return { ...acc, [e]: value };
   }, {});
-  let charListml = convertObjToListInCharacteristics(attributes.slice(30, 37));
-
-  let filled = {
+  let charListml = convertObjToListInCharacteristics(attributes.filter((e) => e.attribute_group_id === "FIND"));
+  return {
     mercadolibre: {
-      id: data.id,
-      link: data.permalink,
+      id,
+      link: permalink,
     },
-    title: data.title,
-    type: attributes[39].value_name,
-    comercialStatus: attributes[37].value_name,
+    title: title,
+    type: attributes.filter((e) => e.id === "PROPERTY_TYPE")[0].value_name,
+    comercialStatus: attributes.filter((e) => e.id === "OPERATION")[0].value_name,
     price: {
-      value: data.price,
-      currency: data.currency_id,
+      value: price,
+      currency: currency_id,
     },
     images: [],
     characteristics: charListml,
@@ -141,30 +159,46 @@ export const mlFullfil = (data, att) => {
     //this should be set on form.
     description: "",
     featured: false,
+    slider: false,
+    rentalFeatured: false,
     revisorMesagge: "",
     //this should be set on form. end
     location: {
-      addressLine: location.address_line,
-      neighborhood: location.neighborhood.name,
-      city: location.city.name,
-      state: location.state.name,
-      country: location.country.name,
+      addressLine: address_line,
+      neighborhood: neighborhood.name,
+      city: city.name,
+      state: state.name,
+      country: country.name,
     },
-  };
+    video_id
 
-  return filled;
+  };
 };
 
 export const doImageListFromFiles = (files) => {
   return files.map((file) => {
-    if (!file){
-      return null
+    if (!file) {
+      return null;
     }
     return (
       <li className="publish-form-images-container" key={file.name}>
-        <img className="publish-form-images-images" src={(window.URL || window.webkitURL).createObjectURL(file)} alt="imagen no valida" />
+        <img
+          className="publish-form-images-images"
+          src={(window.URL || window.webkitURL).createObjectURL(file)}
+          alt="imagen no valida"
+        />
       </li>
     );
   });
 };
 
+export const addImagesToFirebaseAndReturnUrl = (files, nameShorcut) => {
+  const path = `images/${nameShorcut}/`;
+  return files.map((file) => {
+    let ref = storage.ref(path + file.name);
+    return ref.put(file).then(
+      (snapshot) => ref.getDownloadURL(),
+      (error) => console.error(error.message)
+    );
+  });
+};

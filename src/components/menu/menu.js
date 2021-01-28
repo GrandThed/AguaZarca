@@ -12,7 +12,7 @@ const queries = {
   medium: "(min-width : 769px) and (max-width : 1139px)",
   large: "(min-width : 1140px)"
 };
-// setInterval(() => console.log(window.location), 8000)
+
 export const Menu = () => {
   return (
     <div id="menu">

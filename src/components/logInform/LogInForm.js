@@ -1,17 +1,24 @@
 import React, { useState } from "react";
-import {useAuthState} from 'react-firebase-hooks/auth'
+import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
 import "./loginform.css";
-
+import { Link } from "react-router-dom";
+import { DASHBOARD } from "../../routes";
 const LogInForm = () => {
-   const [user] =  useAuthState(auth)
+  const [user] = useAuthState(auth);
   return <div className="log-div">{user ? <LogOut /> : <LogInFormOn />}</div>;
 };
 
 const LogOut = () => {
   return (
-    <div >
-      <button className="log-button" onClick={(e) => auth.signOut()}>Cerrar sesión</button>
+    <div className="log-form">
+      <p className="log-email">{auth.currentUser.email}</p>
+      <Link to={DASHBOARD} className="log-dashboard">
+        Dashboard
+      </Link>
+      <button className="log-button" onClick={(e) => auth.signOut()}>
+        Cerrar sesión
+      </button>
     </div>
   );
 };

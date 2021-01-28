@@ -1,19 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "../../slider/Slider";
 import Card from "../../card/Card";
-import propiedad1 from "../../../propiedadejem";
 import logo from "./../../../images/vcp-panoramica.jpg";
+import { CONTACTO, PUBLICAR } from "../../../routes";
 import "./home.css";
 import { Link } from "react-router-dom";
-import { IconContext } from 'react-icons'
-import {BsChat, BsFillPeopleFill, BsHouseFill} from 'react-icons/bs'
-import {FaRegEye, FaFileContract, FaRegNewspaper } from 'react-icons/fa'
-
+import { IconContext } from "react-icons";
+import { BsChat, BsFillPeopleFill, BsHouseFill } from "react-icons/bs";
+import { FaRegEye, FaFileContract, FaRegNewspaper } from "react-icons/fa";
+import { firestore } from "../../../firebase";
 
 const Home = () => {
+  const [slider, setSlider] = useState([]);
+
+  useEffect(() => {
+    firestore
+      .collection("estates")
+      .where("slider", "==", true)
+      .get()
+      .then((e) =>
+        e.docs.forEach((doc) => {
+          console.log(doc)
+          setSlider((sl) => [...sl, doc]);
+        })
+      );
+  }, []);
+
   return (
     <div>
-      <Slider />
+      <Slider estates={slider} />
       <TitleHome
         pretitle="Propiedades disponibles"
         title="Destacados"
@@ -21,9 +36,9 @@ const Home = () => {
         hrWidth="60px"
       />
       <div className="home-card-container">
-        <Card propiedad={propiedad1}></Card>
-        <Card propiedad={propiedad1}></Card>
-        <Card propiedad={propiedad1}></Card>
+        <Card></Card>
+        <Card></Card>
+        <Card></Card>
       </div>
       <TitleInfoHome />
       <TitleHome
@@ -33,11 +48,10 @@ const Home = () => {
         hrWidth="0px"
       />
       <div className="home-card-container">
-        <Card propiedad={propiedad1}></Card>
-        <Card propiedad={propiedad1}></Card>
-        <Card propiedad={propiedad1}></Card>
+        <Card></Card>
+        <Card></Card>
+        <Card></Card>
       </div>
-      
 
       <ServicesHome />
     </div>
@@ -64,19 +78,13 @@ const TitleInfoHome = () => {
 
   return (
     <div className="titleinfohome-div" style={backgroundStyle}>
-      <h6 className="titleinfohome-subtitle">
-        ¿Queres publicar en nuestra inmobiliaria?
-      </h6>
-      <h1 className="titleinfohome-title">
-        Compra-Venta / Temporarios / Alquileres anuales
-      </h1>
+      <h6 className="titleinfohome-subtitle">¿Queres publicar en nuestra inmobiliaria?</h6>
+      <h1 className="titleinfohome-title">Compra-Venta / Temporarios / Alquileres anuales</h1>
       <div className="titleinfohome-buttons">
-        <Link className="menu-link" to="/AguaZarca/publicar-propiedad">
-          <button className="titleinfohome-button titleinfohome-button-black">
-            Publicar
-          </button>
+        <Link className="menu-link" to={PUBLICAR}>
+          <button className="titleinfohome-button titleinfohome-button-black">Publicar</button>
         </Link>
-        <Link className="menu-link" to="/AguaZarca/contacto">
+        <Link className="menu-link" to={CONTACTO}>
           <button className="titleinfohome-button">Contacto</button>
         </Link>
       </div>
@@ -92,37 +100,36 @@ const ServicesHome = () => {
         <h1 className="titlehome-title">Servicios</h1>
         <hr className="titlehome-separator" />
         <h4 className="titlehome-subtitle">
-          Desde 2005 hacemos operaciones de compra/venta, alquileres, tasaciones
-          y asesoramiento inmobiliario en la ciudad de Villa Carlos Paz y
-          alrededores.
+          Desde 2005 hacemos operaciones de compra/venta, alquileres, tasaciones y asesoramiento inmobiliario en la ciudad de Villa Carlos
+          Paz y alrededores.
         </h4>
       </div>
       <div className="serviceshome-feat">
-      <IconContext.Provider value={{ className: "serviceshome-icons" }}>
-        <div className="serviceshome-feat-item">
-          <BsChat />
-          <p className="serviceshome-feat-text">Consultas</p>
-        </div>
-        <div className="serviceshome-feat-item">
-          <FaRegEye />
-          <p className="serviceshome-feat-text">Tasación</p>
-        </div>
-        <div className="serviceshome-feat-item">
-          <BsFillPeopleFill />
-          <p className="serviceshome-feat-text">Intermediación</p>
-        </div>
-        <div className="serviceshome-feat-item">
-          <BsHouseFill />
-          <p className="serviceshome-feat-text">Administración de propiedades</p>
-        </div>
-        <div className="serviceshome-feat-item">
-          <FaFileContract />
-          <p className="serviceshome-feat-text">Contratos de Corretaje</p>
-        </div>
-        <div className="serviceshome-feat-item">
-          <FaRegNewspaper />
-          <p className="serviceshome-feat-text serviceshome-feat-extrainfo">Informes de estados de Dominio</p>
-        </div>
+        <IconContext.Provider value={{ className: "serviceshome-icons" }}>
+          <div className="serviceshome-feat-item">
+            <BsChat />
+            <p className="serviceshome-feat-text">Consultas</p>
+          </div>
+          <div className="serviceshome-feat-item">
+            <FaRegEye />
+            <p className="serviceshome-feat-text">Tasación</p>
+          </div>
+          <div className="serviceshome-feat-item">
+            <BsFillPeopleFill />
+            <p className="serviceshome-feat-text">Intermediación</p>
+          </div>
+          <div className="serviceshome-feat-item">
+            <BsHouseFill />
+            <p className="serviceshome-feat-text">Administración de propiedades</p>
+          </div>
+          <div className="serviceshome-feat-item">
+            <FaFileContract />
+            <p className="serviceshome-feat-text">Contratos de Corretaje</p>
+          </div>
+          <div className="serviceshome-feat-item">
+            <FaRegNewspaper />
+            <p className="serviceshome-feat-text serviceshome-feat-extrainfo">Informes de estados de Dominio</p>
+          </div>
         </IconContext.Provider>
       </div>
     </div>
