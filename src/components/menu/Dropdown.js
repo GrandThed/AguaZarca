@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import * as ROUTES from "../../routes";
+import "./menu.css";
 
-export const Dropdown = (props) => {
+const Dropdown = () => {
   let handleClick = () => {
     setShow(false);
     window.scrollTo(0, 0);
@@ -15,42 +16,32 @@ export const Dropdown = (props) => {
         <span></span>
         <span></span>
         <span></span>
-        {/* this is the dropdown icon */}
+        {/* this one is the dropdown icon */}
       </div>
       {show ? (
-        <ul className={`medium-menu-ul ${props.addClass}`}>
-          <Link className="medium-menu-link menu-link" to="/AguaZarca/">
-            <li className="medium-menu-list medium-menu-list-first" onClick={handleClick}>
-              Inicio
-            </li>
+        <div className="medium-menu-ul dropdown">
+          <Link className="dropdown-item menu-link" onClick={handleClick} to={ROUTES.HOME}>
+            Inicio
           </Link>
-          <Link className="medium-menu-link menu-link" to={ROUTES.VENTA}>
-            <li className="medium-menu-list" onClick={handleClick}>
-              Venta
-            </li>
+          <Link className="dropdown-item menu-link" onClick={handleClick} to={ROUTES.VENTA}>
+            Venta
           </Link>
-          <Link className="medium-menu-link menu-link" to={ROUTES.ALQUILER_TEMPORAL}>
-            <li className="medium-menu-list" onClick={handleClick}>
-              Alquiler temporario
-            </li>
+          <Link className="dropdown-item menu-link" onClick={handleClick} to={ROUTES.ALQUILER_TEMPORAL}>
+            Alquiler temporario
           </Link>
-          <Link className="medium-menu-link menu-link" to={ROUTES.ALQUILER_ANUAL}>
-            <li className="medium-menu-list" onClick={handleClick}>
-              Alquiler Anual
-            </li>
+          <Link className="dropdown-item menu-link" onClick={handleClick} to={ROUTES.ALQUILER_ANUAL}>
+            Alquiler Anual
           </Link>
-          <Link className="medium-menu-link menu-link" to={ROUTES.NOTICIAS}>
-            <li className="medium-menu-list" onClick={handleClick}>
-              Noticias
-            </li>
+          <Link className="dropdown-item menu-link" onClick={handleClick} to={ROUTES.NOTICIAS}>
+            Noticias
           </Link>
-          <Link className="medium-menu-link menu-link" to={ROUTES.CONTACTO}>
-            <li className="medium-menu-list" onClick={handleClick}>
-              Contacto
-            </li>
+          <Link className="dropdown-item menu-link" onClick={handleClick} to={ROUTES.CONTACTO}>
+            Contacto
           </Link>
-        </ul>
+        </div>
       ) : null}
     </>
   );
 };
+
+export default Dropdown;
