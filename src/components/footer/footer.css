@@ -92,6 +92,11 @@
   margin: 4px 0;
 }
 
+.footer-tel{
+  text-decoration: none;
+  color: unset;
+}
+
 @media (max-width: 768px) {
   .footer-div {
     padding: 10px;

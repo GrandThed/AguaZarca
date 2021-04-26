@@ -64,7 +64,7 @@ export const ubicationFields = [
   { dispatchField: "city", name: "Ciudad " },
   { dispatchField: "state", name: "Provincia" },
   { dispatchField: "country", name: "País" },
-]
+];
 
 export const setInitialState = (array, value) => {
   return array.reduce((acc, e) => {
@@ -96,12 +96,12 @@ export const initialState = {
     state: "Córdoba",
     country: "Argentina",
   },
-  video_id: ""
+  video_id: "",
 };
 
 export const dropdownVariables = {
-  type: ["Departamento", "Hotel", "Local comercial", "Casa"],
-  status: ["Alquiler temporal", "Alquiler anual", "Vendido"],
+  type: ["Departamento",  "Local comercial", "Casa","Hotel", "Terreno y lote", "Otro inmueble"],
+  status: ["Alquiler temporal", "Alquiler anual", "Venta"],
   correncyOptions: ["USD", "ARS", "EUR"],
 };
 
@@ -122,12 +122,14 @@ export const convertObjToListInCharacteristics = (array) => {
 };
 
 export const fetchEffect = async (itemId) => {
-  return await axios(`https://api.mercadolibre.com/items/${itemId}`);
+  const info = await axios(`https://api.mercadolibre.com/items/${itemId}`);
+  const description = await axios(`https://api.mercadolibre.com/items/${itemId}/description`);
+  return {info, description}
 };
 
-export const mlFullfil = (data, att) => {
-  const {id, permalink, title, price, currency_id, location, attributes, video_id} = data
-  const {address_line, neighborhood,city, state, country } = location
+export const mlFullfil = ({info, description}, att) => {
+  const { id, permalink, title, price, currency_id, location, attributes, video_id } = info.data;
+  const { address_line, neighborhood, city, state, country } = location;
   let attListml = convertObjToListInAttributes(
     attributes.filter(
       (e) =>
@@ -157,7 +159,7 @@ export const mlFullfil = (data, att) => {
     characteristics: charListml,
     attributes: attList,
     //this should be set on form.
-    description: "",
+    description: description.data.plain_text,
     featured: false,
     slider: false,
     rentalFeatured: false,
@@ -170,8 +172,7 @@ export const mlFullfil = (data, att) => {
       state: state.name,
       country: country.name,
     },
-    video_id
-
+    video_id,
   };
 };
 

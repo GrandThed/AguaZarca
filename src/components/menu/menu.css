@@ -89,7 +89,6 @@
 }
 .menu-phone-p {
   margin: 0 20px 0 0;
-  font-size: 1.1em;
   flex-wrap: nowrap;
 }
 
@@ -113,6 +112,9 @@
 /* Tablet only style */
 
 @media (max-width: 1200px) and (min-width: 756px) {
+  .menu-spacer{
+    margin-bottom: 86px;
+  }
   .menu-main {
     grid-template-areas: "mlogo mphone mlog mpub mdrop";
     grid-template-columns: auto 173px 65px 93px 80px;
@@ -158,6 +160,10 @@
 /* Mobile styles */
 
 @media (max-width: 756px) {
+  .menu-spacer{
+    margin-bottom: 125px;
+  }
+
   .menu-main {
     grid-template-areas:
       "mlog mlogo mdrop"
@@ -224,6 +230,15 @@
     z-index: 4;
     overflow: hidden;
     background-color: rgb(70, 70, 70);
+    width: 100%;
+    text-align: center;
+  }
+
+  
+
+
+  .dropdown-item {
+    border-top: 1px solid rgba(255, 255, 255, 0.555);
   }
 }
 

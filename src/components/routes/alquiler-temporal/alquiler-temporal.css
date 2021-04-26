@@ -1,0 +1,32 @@
+.temporal-search{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: -40px;
+    margin-bottom: 30px;
+}
+
+.temporal-dropdown-div{
+    background-color: white;
+    padding: 15px 10px;
+    border: 1px solid rgb(231, 231, 231);
+}
+
+.temporal-dropdown-div-right{
+    border-left: none;
+}
+
+.temporal-dropdown{
+    width: 300px;
+}
+
+.Dropdown-control{
+    border: none !important ;
+    /* pssss, don't look at the !important */
+}
+
+.temporal-dropwdown-description{
+    font-weight: 500;
+    margin: 0 0 0 8px;
+    
+}

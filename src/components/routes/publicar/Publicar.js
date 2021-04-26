@@ -4,6 +4,9 @@ import Dropdown from "react-dropdown";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDropzone } from "react-dropzone";
 import "react-dropdown/style.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import "./publicar.css";
 import * as CF from "./const_funct"; //all the constants and functions, the component started to be a little bit too load
 import { auth, firestore } from "../../../firebase";
@@ -17,28 +20,53 @@ import { PROPIEDAD } from "../../../routes";
 export const Publicar = () => {
   // ************* hooks *************
   const [input, setInput] = useState("");
-  const [autofill, setAutofill] = useState(false);
+  const [autofill, setAutofill] = useState(true);
   const [filesArrayRaw, setFilesArrayRaw] = useState([]);
   const [user] = useAuthState(auth);
   const [state, dispatch] = useReducer(reducer, CF.initialState);
   const [redirect, setRedirect] = useState("");
+  const [switchImage, setSwitchImage] = useState(0);
+
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const nameShorcut = state.title.slice(0, 21).replace(/\W/, "-");
     Promise.all(CF.addImagesToFirebaseAndReturnUrl(filesArrayRaw, nameShorcut)).then((imageUrlArray) => {
       firestore
         .collection("usersInfo")
         .where("email", "==", auth.currentUser.email)
         .get()
-        .then((e) => {
-          firestore.collection("estates").add({ ...state, images: imageUrlArray, agent: { ...e.docs[0].data() } });
-        })
-        .then((savedEstate) => {
-          console.log(savedEstate);
-        });
+        .then((e) =>
+          firestore
+            .collection("estates")
+            .add({ ...state, created: new Date(), images: imageUrlArray, agent: { ...e.docs[0].data() } })
+            .then((prop) => {
+              setRedirect(prop.id);
+              console.log(redirect);
+              toast.success("Propiedad subida correctamente", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+              setTimeout(() => window.location.reload(), 200);
+            })
+            .catch((err) =>
+              toast.warn("Error", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              })
+            )
+        );
     });
   };
 
@@ -52,6 +80,7 @@ export const Publicar = () => {
 
   // useEfect for Mercado Libre input
   useEffect(() => {
+    dispatch({ type: "field", field: "images", value: [] });
     let isSubscribed = true;
     const regexMLurl = /([A-Z]{3})-(\d+)/;
     let [itemIdurl] = input.match(regexMLurl) || [""];
@@ -61,29 +90,31 @@ export const Publicar = () => {
         if (isSubscribed) {
           dispatch({
             type: "fullfilWithML",
-            value: CF.mlFullfil(estate.data, CF.attributes),
+            value: CF.mlFullfil(estate, CF.attributes),
           });
-          estate.data.pictures.forEach((e) => {
+          estate.info.data.pictures.forEach((e, index) => {
             fetch(e.secure_url)
               .then((e) => e.blob())
               .then((b) => new File([b], `${b.size}`, { type: b.type }))
-              .then((file) => setFilesArrayRaw((prefiles) => [...prefiles, file]))
-              .catch((error) => console.error(error));
+              .then((file) =>
+                setFilesArrayRaw((prefiles) => (index === switchImage ? [file, ...prefiles] : [...prefiles, file]))
+              );
           });
         }
       });
     }
     return () => (isSubscribed = false);
-  }, [input]);
+  }, [input, switchImage]);
 
-  // ************* the hole page as a single component, you can cry if you want *************
+  // ************* the whole page as a single component, you can cry if you want *************
 
   return (
     <div className="publish-div">
       <PageTitle title="Publicar" />
-      {redirect && <Redirect to={PROPIEDAD + redirect} />}
+      {/* {false && <Redirect to={PROPIEDAD + redirect} />} */}
       {user ? (
         <div className="publish-form">
+          <ToastContainer />
           <div className="publish-form-mercadolibre">
             <label htmlFor="autofill"> AutoFill con Mercado libre </label>
             <input
@@ -268,6 +299,13 @@ export const Publicar = () => {
             </div>
             <div className="publish-form-images-div">
               <h2 className="publish-form-images-title"> Imagenes y videos</h2>
+              <p
+                onClick={() => {
+                  setSwitchImage((e) => (e ? 0 : 1));
+                }}
+              >
+                asd
+              </p>
               <div {...getRootProps({ className: "publish-form-images-dropzone" })}>
                 <input {...getInputProps()} />
                 <p> Arrastra las imagenes aqui, o has click para seleccionar los archivos </p>
@@ -285,14 +323,16 @@ export const Publicar = () => {
                   dispatch({ type: "field", field: "video_id", value: e.target.value.match(/(?<=watch\?v=)[\w-]+/) })
                 }
               />
-              {state.video_id && <iframe
-                className="publish-form-video-iframe"
-                src={`https://www.youtube.com/embed/${state.video_id}`}
-                frameborder="0"
-                allow="autoplay; encrypted-media"
-                allowfullscreen
-                title="video"
-              />}
+              {state.video_id && (
+                <iframe
+                  className="publish-form-video-iframe"
+                  src={`https://www.youtube.com/embed/${state.video_id}`}
+                  frameBorder="0"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                  title="video"
+                />
+              )}
             </div>
             <div>
               <input
@@ -307,7 +347,7 @@ export const Publicar = () => {
                 onChange={(e) => dispatch({ type: "field", field: "rentalFeatured", value: e.target.checked })}
                 type="checkbox"
               />
-              <label> Propiedad destacada en Alquiler </label>
+              <label> Propiedad destacada en Alquiler Temporal </label>
               <br />
               <input
                 value={state.featured}
@@ -319,16 +359,21 @@ export const Publicar = () => {
             </div>
             <div>
               <input name="terms" type="checkbox" />
-              <label htmlFor="terms"> Acepte los términos y condiciones antes de enviar la propiedad.( ? ? ? ) </label>
+              <label htmlFor="terms"> Acepte los términos y condiciones antes de enviar la propiedad. ( ? ? ? ) </label>
             </div>
             <button className="publish-form-submit" onClick={handleSubmit}>
               Enviar Propiedad
-            </button>
+            </button>{" "}
+            <br />
           </form>
-          <button onClick={() => console.log(state)}> state </button>
         </div>
       ) : (
-        <p className="publish-sorry-not-alowed">Tienes que ingresar en una cuenta para podes publicar una propiedad</p>
+        <div>
+          {false && <Redirect to={PROPIEDAD + redirect} />}
+          <p className="publish-sorry-not-alowed">
+            Tienes que ingresar en una cuenta para podes publicar una propiedad
+          </p>
+        </div>
       )}
     </div>
   );

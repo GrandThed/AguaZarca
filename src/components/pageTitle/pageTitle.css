@@ -8,19 +8,30 @@
   margin-left: 100px;
   color: white;
   font-size: 70px;
-  text-shadow: 1px 1px 8px rgb(93, 93, 93);
+  text-shadow: 2px 2px 8px rgb(46, 46, 46);
   font-weight: 400;
 }
 
-@media (max-width: 664px) {
+@media (max-width: 756px) {
   .pagetitle-title {
-    justify-self: center;
     margin-left: 0;
   }
   .pagetitle-div {
+    margin: 125px 0 0 0;
     height: 30vh;
     display: flex;
     align-items: center;
+    justify-content: center;
     background-size: cover;
+  }
+}
+
+@media (max-width: 1200px) and (min-width: 756px) {  
+  .pagetitle-div {
+    margin: 86px 0 0 0;
+  }
+
+  .pagetitle-title {
+    font-size: 6em;
   }
 }

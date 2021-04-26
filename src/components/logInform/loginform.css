@@ -39,3 +39,22 @@
   transition: background 200ms ease;
   cursor: pointer;
 }
+
+.log-email {
+  color: rgb(134, 35, 35);
+  font-weight: 600;
+}
+
+.log-dashboard{
+  background-color: rgb(134, 35, 35);
+  border: 1px solid rgb(134, 35, 35);
+  font-size: 18px;
+  border-radius: 2px;
+  color: white;
+  padding: 10px;
+  margin-top: 10px;
+  transition: background 200ms ease;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}

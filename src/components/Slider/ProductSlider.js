@@ -14,7 +14,7 @@ const settings = {
   centerPadding: "0px",
 };
 
-const ProductSlider = ({ images }) => {
+const ProductSlider = ({ images, video }) => {
   return (
     <SliderProvider className="slider-main" {...settings}>
       {images.map((url) => (

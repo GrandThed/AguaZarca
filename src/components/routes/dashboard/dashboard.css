@@ -1,0 +1,42 @@
+.db-div{
+    display: flex;
+    flex-direction: row;
+}
+
+.db-body{
+    flex-grow: 1; 
+    padding: 25px;
+    margin: 5px 5px 5px 0;
+    border: 1px solid #c4c4c4;
+}
+
+.db-aside{
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    margin: 5px;
+    border: 1px solid #c4c4c4;
+    align-self: baseline;
+    
+}
+
+.db-aside-h1{
+    font-size: 1.3em;
+    font-weight: 400;
+    
+}
+.db-aside-h2{
+    font-size: 1em;
+    font-weight: 400;
+    margin-top: 30px;
+}
+
+.db-aside-filter{
+    display: flex;
+    flex-direction: column;
+}
+
+.db-aside-label{
+ margin-top: 10px;
+}

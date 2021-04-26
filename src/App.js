@@ -16,12 +16,16 @@ import Propiedad from "./components/routes/propiedad/Propiedad";
 import Registro from "./components/routes/registro/Registro";
 import Dashboard from "./components/routes/dashboard/Dashboard";
 import Venta from "./components/routes/venta/Venta";
+import Type from "./components/routes/tipo-de-propiedad/Type";
 import NoMatch from "./components/routes/noMatch/NoMatch";
+import GlobalSearch from "./components/routes/global-search/GlobalSearch";
 
 const App = () => {
   return (
     <div className="App">
       <Router>
+        {/* menu spacer for the responsive menu */}
+        <div className="menu-spacer" />
         <Menu />
         <Switch>
           <Route path={ROUTES.HOME} exact component={Home}></Route>
@@ -34,6 +38,8 @@ const App = () => {
           <Route path={ROUTES.PRODUCTO} component={Propiedad}></Route>
           <Route path={ROUTES.REGISTRO} component={Registro}></Route>
           <Route path={ROUTES.DASHBOARD} component={Dashboard}></Route>
+          <Route path={ROUTES.TIPO_DE_PROPIEDAD} component={Type}></Route>
+          <Route path={ROUTES.BUSQUEDA_GLOBAL} component={GlobalSearch}></Route>
           <Route path={"*"} component={NoMatch}></Route>
         </Switch>
         <Footer />
