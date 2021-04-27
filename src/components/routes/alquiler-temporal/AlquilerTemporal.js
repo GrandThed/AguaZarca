@@ -56,7 +56,7 @@ const AlquilerTemporal = () => {
           propieties
             .filter((d) => filterSearch.type === "Cualquiera" || d.data().type === filterSearch.type)
             .filter((d) => filterSearch.locations === "Cualquiera" || d.data().location.city === filterSearch.locations)
-            .map((p) => <Card propiedad={p} key={p.id} />)
+            .map((p, i) => <Card propiedad={p} key={i} />)
         ) : (
           <>
             <Card />

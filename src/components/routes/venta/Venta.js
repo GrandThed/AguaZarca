@@ -21,13 +21,13 @@ const Venta = () => {
       .where("comercialStatus", "==", "Venta")
       .get()
       .then((e) => {
-        console.log(e);
         e.docs.forEach((doc) => {
           setPropieties((sl) => [...sl, doc]);
           setLocations((ps) => (ps.indexOf(doc.data().location.city) === -1 ? [...ps, doc.data().location.city] : ps));
         });
       });
   }, []);
+  
   return (
     <div>
       <PageTitle title="Venta"></PageTitle>
@@ -57,7 +57,7 @@ const Venta = () => {
           propieties
             .filter((d) => filterSearch.type === "Cualquiera" || d.data().type === filterSearch.type)
             .filter((d) => filterSearch.locations === "Cualquiera" || d.data().location.city === filterSearch.locations)
-            .map((p) => <Card key={p.uid} propiedad={p} />)
+            .map((p, i) => <Card key={i} propiedad={p} />)
         ) : (
           <>
             <Card />

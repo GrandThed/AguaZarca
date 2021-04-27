@@ -5,9 +5,11 @@ import { PageTitle } from "../../pageTitle/PageTitle";
 import { HorizontalCard } from "../../card/Card";
 import { firestore, auth } from "../../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { ToastContainer } from "react-toastify";
 // import { useAuthState } from "react-firebase-hooks/auth";
 const Dashboard = () => {
   const [propieties, setPropieties] = useState([]);
+  const [pausedPropieties, setPausedPropieties] = useState([]);
   const [filter, setFilter] = useState({
     venta: true,
     anual: true,
@@ -35,13 +37,22 @@ const Dashboard = () => {
             setPropieties((sl) => [...sl, doc]);
           });
         });
+      firestore
+        .collection("pausedEstates")
+        .where("agent.email", "==", user.email)
+        .get()
+        .then((e) => {
+          e.docs.forEach((doc) => {
+            setPausedPropieties((sl) => [...sl, doc]);
+          });
+        });
     }
   }, [user]);
 
   return (
     <div>
       <PageTitle title="Dashboard"></PageTitle>
-
+      <ToastContainer />
       <div className="db-div">
         <aside className="db-aside">
           <h1 className="db-aside-h1">Filtros</h1>
@@ -161,6 +172,7 @@ const Dashboard = () => {
           </div>
         </aside>
         <div className="db-body">
+          {pausedPropieties[0] && pausedPropieties.map((p) => <HorizontalCard propiedad={p} key={p.id} paused />)}
           {propieties[0] &&
             propieties
               .filter((e) => {
@@ -185,7 +197,7 @@ const Dashboard = () => {
                 if (filter.noFeatured && !data.slider && !data.rentalFeatured && !data.featured) return true;
                 return false;
               })
-              .map((p) => <HorizontalCard propiedad={p} key={p.uid} />)}
+              .map((p) => <HorizontalCard propiedad={p} key={p.id} />)}
         </div>
       </div>
     </div>

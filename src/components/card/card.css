@@ -162,7 +162,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 50%;
-  margin: 4px 40px 4px 4px;
+  margin: 4px 10px 4px 4px;
 }
 
 .hc-title{
@@ -184,4 +184,26 @@
   flex-grow: 1;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.hc-control{
+  display: flex;
+  flex-direction: column;
+  margin: 0 20px 0 0;
+}
+
+/* .hc-control-icons{
+  
+} */
+
+.hc-control-button{
+  background: none;
+  border: 1px solid rgb(199, 199, 199);
+  margin-top: 5px;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.hc-main-paused{
+  border: 1px solid rgb(218, 106, 106);
 }

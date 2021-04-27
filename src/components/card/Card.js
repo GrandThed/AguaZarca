@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { IconContext } from "react-icons";
 import { BiCamera } from "react-icons/bi";
+import { AiOutlineDelete, AiOutlinePauseCircle, AiOutlinePlayCircle } from "react-icons/ai";
+import { MdSystemUpdateAlt } from "react-icons/md";
 import "./card.css";
 import { icons } from "../slider/Slider";
 import { Link } from "react-router-dom";
 import { PROPIEDAD } from "../../routes";
 import { firestore } from "../../firebase";
+import { fetchEffect, mlFullfil } from "../routes/publicar/const_funct";
+import { toast } from "react-toastify";
 
 const Card = ({ propiedad }) => {
   const data = propiedad ? propiedad.data() : false;
@@ -91,7 +95,7 @@ const CardContent = ({ propiedad }) => {
   );
 };
 
-export const HorizontalCard = ({ propiedad }) => {
+export const HorizontalCard = ({ propiedad, paused }) => {
   const {
     images,
     comercialStatus,
@@ -99,7 +103,7 @@ export const HorizontalCard = ({ propiedad }) => {
     location,
     price,
     featured,
-    mercadoLibre,
+    mercadolibre,
     rentalFeatured,
     slider,
     title,
@@ -111,72 +115,172 @@ export const HorizontalCard = ({ propiedad }) => {
     rentalFeatured,
     slider,
   });
+  const [deleted, setDeleted] = useState(false);
 
   const date = new Date(created.seconds * 1000);
 
-  const handleFirebaseUpdate = (updateTerm) => {
+  const handleFirebaseUpdate = (updateTerm, value) => {
     firestore
       .collection("estates")
-      .doc(propiedad.uid)
-      .get()
-      .then((e) => console.log(e));
+      .doc(propiedad.id)
+      .update({ [updateTerm]: value })
+      .then((e) => {
+        setWhereFreat((e) => ({ ...e, [updateTerm]: value }));
+        toast.success("Propiedad actualizada correctamente", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+  };
+
+  const handleDelete = (collection) => {
+    if (window.confirm("Estas seguro de que quieres borrar esta propiedad")) {
+      firestore
+        .collection(collection)
+        .doc(propiedad.id)
+        .delete()
+        .then((e) => {
+          setDeleted(true);
+          toast.success("Propiedad borrada correctamente", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        })
+        .catch((e) => window.alert("Hubo un error con el servidor " + e.error));
+    }
+  };
+
+  const handlePause = (state) => {
+    const isPaused = state === "pause";
+    firestore
+      .collection(isPaused ? "pausedEstates" : "estates")
+      .doc(propiedad.id)
+      .set(propiedad.data())
+      .then(() => {
+        firestore
+          .collection(isPaused ? "estates" : "pausedEstates")
+          .doc(propiedad.id)
+          .delete()
+          .then((e) => {
+            setDeleted(true);
+            toast.success("Propiedad pausada correctamente", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          });
+      });
+  };
+
+  const handleUpdate = (collection) => {
+    if (mercadolibre.id) {
+      fetchEffect(mercadolibre.id).then((estate) => {
+        firestore
+          .collection(collection)
+          .doc(propiedad.id)
+          .update(mlFullfil(estate))
+          .then(() => {
+            toast.success("Propiedad actializada correctamente", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          })
+          .catch((e) => console.log(e));
+      });
+    }
   };
 
   return (
-    <div className="hc-main">
-      <div className="hc-image" style={{ backgroundImage: `url(${images[0]})` }}></div>
-      <div className="hc-body">
-        <div className="hc-info">
-          <div className="hc-title-div">
-            <h2 className="hc-title">{title}</h2>
-          </div>
-          <div className="hc-status">
-            <p className="hc-status-p">
-              <span className="hc-status-span">{comercialStatus}</span>
-              <span className="hc-status-span">{type}</span>
-            </p>
-          </div>
-          <div className="hc-price">
-            <p className="hc-price-p">
-              <span className="hc-price-span">{price.value}</span>
-              <span className="hc-price-span">{price.currency}</span>
-              <span className="hc-date">{date.toLocaleDateString()}</span>
-            </p>
-          </div>
-          <div className="hc-price">
-            <p className="hc-price-p">
-              {`${location.addressLine}, ${location.neighborhood}, ${location.city}, ${location.state}, ${location.country}`}
-            </p>
+    <>
+      {!deleted && (
+        <div className={`hc-main${paused ? " hc-main-paused" : ""}`}>
+          <div className="hc-image" style={{ backgroundImage: `url(${images[0]})` }} />
+          <IconContext.Provider value={{ className: "hc-control-icons" }}>
+            <div className="hc-control">
+              <button className="hc-control-button" onClick={() => handleDelete(paused ? "pausedEstates" : "estates")}>
+                <AiOutlineDelete />
+              </button>
+              <button className="hc-control-button" onClick={() => handlePause(paused ? false : "pause")}>
+                {paused ? <AiOutlinePlayCircle /> : <AiOutlinePauseCircle />}
+              </button>
+              <button className="hc-control-button" onClick={() => handleUpdate(paused ? "pausedEstates" : "estates")}>
+                <MdSystemUpdateAlt />
+              </button>
+            </div>
+          </IconContext.Provider>
+          <div className="hc-body">
+            <div className="hc-info">
+              <div className="hc-title-div">
+                <h2 className="hc-title">{title}</h2>
+              </div>
+              <div className="hc-status">
+                <p className="hc-status-p">
+                  <span className="hc-status-span">{comercialStatus}</span>
+                  <span className="hc-status-span">{type}</span>
+                </p>
+              </div>
+              <div className="hc-price">
+                <p className="hc-price-p">
+                  <span className="hc-price-span">{price.value}</span>
+                  <span className="hc-price-span">{price.currency}</span>
+                  <span className="hc-date">{date.toLocaleDateString()}</span>
+                </p>
+              </div>
+              <div className="hc-price">
+                <p className="hc-price-p">
+                  {`${location.addressLine}, ${location.neighborhood}, ${location.city}, ${location.state}, ${location.country}`}
+                </p>
+              </div>
+            </div>
+            <div className="hc-tracks">
+              <div className="hc-track-item">
+                <label>SL</label>
+                <input
+                  type="checkbox"
+                  checked={whereFreat.slider}
+                  onChange={(e) => handleFirebaseUpdate("slider", e.target.checked)}
+                />
+              </div>
+              <div className="hc-track-item">
+                <label>RF</label>
+                <input
+                  type="checkbox"
+                  checked={whereFreat.rentalFeatured}
+                  onChange={(e) => handleFirebaseUpdate("rentalFeatured", e.target.checked)}
+                />
+              </div>
+              <div className="hc-track-item">
+                <label>FR</label>
+                <input
+                  type="checkbox"
+                  checked={whereFreat.featured}
+                  onChange={(e) => handleFirebaseUpdate("featured", e.target.checked)}
+                />
+              </div>
+            </div>
           </div>
         </div>
-        <div className="hc-tracks">
-          <div className="hc-track-item">
-            <label>SL</label>
-            <input
-              type="checkbox"
-              checked={whereFreat.slider}
-              onChange={(e) => handleFirebaseUpdate("slider", e.target.checked)}
-            />
-          </div>
-          <div className="hc-track-item">
-            <label>RF</label>
-            <input
-              type="checkbox"
-              checked={whereFreat.rentalFeatured}
-              onChange={(e) => handleFirebaseUpdate("rentalFeatured", e.target.checked)}
-            />
-          </div>
-          <div className="hc-track-item">
-            <label>FR</label>
-            <input
-              type="checkbox"
-              checked={whereFreat.featured}
-              onChange={(e) => handleFirebaseUpdate("featured", e.target.checked)}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

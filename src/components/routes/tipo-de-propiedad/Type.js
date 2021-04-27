@@ -24,7 +24,6 @@ const Type = () => {
       .where("type", "==", type)
       .get()
       .then((e) => {
-        console.log(e);
         e.docs.forEach((doc) => {
           setPropieties((sl) => [...sl, doc]);
           setLocations((ps) => (ps.indexOf(doc.data().location.city) === -1 ? [...ps, doc.data().location.city] : ps));

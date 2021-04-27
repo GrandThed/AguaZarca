@@ -100,7 +100,7 @@ export const initialState = {
 };
 
 export const dropdownVariables = {
-  type: ["Departamento",  "Local comercial", "Casa","Hotel", "Terreno y lote", "Otro inmueble"],
+  type: ["Departamento", "Local comercial", "Casa", "Hotel", "Terreno y lote", "Otro inmueble"],
   status: ["Alquiler temporal", "Alquiler anual", "Venta"],
   correncyOptions: ["USD", "ARS", "EUR"],
 };
@@ -124,10 +124,10 @@ export const convertObjToListInCharacteristics = (array) => {
 export const fetchEffect = async (itemId) => {
   const info = await axios(`https://api.mercadolibre.com/items/${itemId}`);
   const description = await axios(`https://api.mercadolibre.com/items/${itemId}/description`);
-  return {info, description}
+  return { info, description };
 };
 
-export const mlFullfil = ({info, description}, att) => {
+export const mlFullfil = ({ info, description }, att = attributes) => {
   const { id, permalink, title, price, currency_id, location, attributes, video_id } = info.data;
   const { address_line, neighborhood, city, state, country } = location;
   let attListml = convertObjToListInAttributes(
@@ -155,7 +155,6 @@ export const mlFullfil = ({info, description}, att) => {
       value: price,
       currency: currency_id,
     },
-    images: [],
     characteristics: charListml,
     attributes: attList,
     //this should be set on form.

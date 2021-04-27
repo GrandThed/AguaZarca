@@ -83,7 +83,7 @@ const FooterInfo = () => {
 
 export const FooterPropietiesTypes = () => {
   return (
-    <div className="footer-types-div">
+    <ul className="footer-types-div">
       <Link className="menu-link" to={ROUTES.TIPO_DE_PROPIEDAD_SIMPLE_URL + "Casa"}>
         <li className="footer-menu-li footer-margin-tb">Casa</li>
       </Link>
@@ -99,13 +99,13 @@ export const FooterPropietiesTypes = () => {
       <Link className="menu-link" to={ROUTES.TIPO_DE_PROPIEDAD_SIMPLE_URL + "Terreno y lote"}>
         <li className="footer-menu-li footer-margin-tb">Lote/Terreno/Campo</li>
       </Link>
-    </div>
+    </ul>
   );
 };
 
 const FooterMenu = () => {
   return (
-    <div className="footer-menu-div">
+    <ul className="footer-menu-div">
       <div className="footer-menu-left">
         <Link className="menu-link" to={ROUTES.HOME}>
           <li className="footer-menu-li footer-margin-tb">Inicio</li>
@@ -122,14 +122,13 @@ const FooterMenu = () => {
           <li className="footer-menu-li footer-margin-tb">Alquiler Anual</li>
         </Link>
         <Link className="menu-link" to={ROUTES.NOTICIAS}>
-          {" "}
           <li className="footer-menu-li footer-margin-tb">Noticias</li>
         </Link>
         <Link className="menu-link" to={ROUTES.CONTACTO}>
           <li className="footer-menu-li footer-margin-tb">Contacto</li>
         </Link>
       </div>
-    </div>
+    </ul>
   );
 };
 

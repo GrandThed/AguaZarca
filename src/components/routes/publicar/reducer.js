@@ -43,7 +43,7 @@ export const reducer = (state, action) => {
         },
       };
     case "fullfilWithML":
-      return action.value;
+      return {...state, ...action.value};
 
     default:
       return state;

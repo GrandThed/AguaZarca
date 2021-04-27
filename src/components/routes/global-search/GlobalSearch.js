@@ -38,7 +38,7 @@ const GlobalSearch = () => {
             .filter(
               (d) => filterSearch.operation === "Cualquiera" || d.data().comercialStatus === filterSearch.operation
             )
-            .map((p) => <Card propiedad={p} key={p.data().uid} />)
+            .map((p, i) => <Card propiedad={p} key={i} />)
         ) : (
           <>
             <Card />

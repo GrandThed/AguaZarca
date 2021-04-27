@@ -30,12 +30,10 @@ const ContactForm = () => {
   const handleInvalid = (invalid) => {
     invalid.preventDefault();
     invalid.target.classList.add("invalid");
-    console.log(invalid);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(event.target.name.value);
   };
   const resetInvalid = (event) => {
     if (event.target.value !== "") {

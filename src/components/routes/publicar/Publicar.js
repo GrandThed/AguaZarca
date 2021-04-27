@@ -43,7 +43,6 @@ export const Publicar = () => {
             .add({ ...state, created: new Date(), images: imageUrlArray, agent: { ...e.docs[0].data() } })
             .then((prop) => {
               setRedirect(prop.id);
-              console.log(redirect);
               toast.success("Propiedad subida correctamente", {
                 position: "top-right",
                 autoClose: 5000,
