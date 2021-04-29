@@ -1,27 +1,27 @@
 {
   "files": {
-    "main.css": "/AguaZarca/static/css/main.8a99361e.chunk.css",
-    "main.js": "/AguaZarca/static/js/main.d475dd71.chunk.js",
-    "main.js.map": "/AguaZarca/static/js/main.d475dd71.chunk.js.map",
-    "runtime-main.js": "/AguaZarca/static/js/runtime-main.a54f01c8.js",
-    "runtime-main.js.map": "/AguaZarca/static/js/runtime-main.a54f01c8.js.map",
+    "main.css": "/AguaZarca/static/css/main.5d38a214.chunk.css",
+    "main.js": "/AguaZarca/static/js/main.23897edf.chunk.js",
+    "main.js.map": "/AguaZarca/static/js/main.23897edf.chunk.js.map",
+    "runtime-main.js": "/AguaZarca/static/js/runtime-main.49cb079e.js",
+    "runtime-main.js.map": "/AguaZarca/static/js/runtime-main.49cb079e.js.map",
     "static/css/2.48756d00.chunk.css": "/AguaZarca/static/css/2.48756d00.chunk.css",
-    "static/js/2.985d6863.chunk.js": "/AguaZarca/static/js/2.985d6863.chunk.js",
-    "static/js/2.985d6863.chunk.js.map": "/AguaZarca/static/js/2.985d6863.chunk.js.map",
-    "static/js/3.f943fda1.chunk.js": "/AguaZarca/static/js/3.f943fda1.chunk.js",
-    "static/js/3.f943fda1.chunk.js.map": "/AguaZarca/static/js/3.f943fda1.chunk.js.map",
+    "static/js/2.c43f7cae.chunk.js": "/AguaZarca/static/js/2.c43f7cae.chunk.js",
+    "static/js/2.c43f7cae.chunk.js.map": "/AguaZarca/static/js/2.c43f7cae.chunk.js.map",
+    "static/js/3.ae9badaa.chunk.js": "/AguaZarca/static/js/3.ae9badaa.chunk.js",
+    "static/js/3.ae9badaa.chunk.js.map": "/AguaZarca/static/js/3.ae9badaa.chunk.js.map",
     "index.html": "/AguaZarca/index.html",
     "static/css/2.48756d00.chunk.css.map": "/AguaZarca/static/css/2.48756d00.chunk.css.map",
-    "static/css/main.8a99361e.chunk.css.map": "/AguaZarca/static/css/main.8a99361e.chunk.css.map",
-    "static/js/2.985d6863.chunk.js.LICENSE.txt": "/AguaZarca/static/js/2.985d6863.chunk.js.LICENSE.txt",
+    "static/css/main.5d38a214.chunk.css.map": "/AguaZarca/static/css/main.5d38a214.chunk.css.map",
+    "static/js/2.c43f7cae.chunk.js.LICENSE.txt": "/AguaZarca/static/js/2.c43f7cae.chunk.js.LICENSE.txt",
     "static/media/slick-theme.css": "/AguaZarca/static/media/slick.c94f7671.ttf",
     "static/media/vcp-panoramica.4b50f3d1.jpg": "/AguaZarca/static/media/vcp-panoramica.4b50f3d1.jpg"
   },
   "entrypoints": [
-    "static/js/runtime-main.a54f01c8.js",
+    "static/js/runtime-main.49cb079e.js",
     "static/css/2.48756d00.chunk.css",
-    "static/js/2.985d6863.chunk.js",
-    "static/css/main.8a99361e.chunk.css",
-    "static/js/main.d475dd71.chunk.js"
+    "static/js/2.c43f7cae.chunk.js",
+    "static/css/main.5d38a214.chunk.css",
+    "static/js/main.23897edf.chunk.js"
   ]
 }
