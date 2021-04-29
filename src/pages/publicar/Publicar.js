@@ -52,7 +52,7 @@ export const Publicar = () => {
                 draggable: true,
                 progress: undefined,
               });
-              setTimeout(() => window.location.reload(), 200);
+              setTimeout(() => window?.location.reload(), 200);
             })
             .catch((err) =>
               toast.warn("Error", {

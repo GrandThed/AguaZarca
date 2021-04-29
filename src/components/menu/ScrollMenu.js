@@ -9,7 +9,7 @@ import * as ROUTES from "../../routes";
 export const ScrollMenu = () => {
   const [scrolled, setScrolled] = useState(false);
   let handleClick = () => {
-    window.scrollTo(0,0)
+    window?.scrollTo(0,0)
   }
 
   let handleScroll = () => {

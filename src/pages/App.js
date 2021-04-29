@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import { Menu } from "./components/menu/menu";
-import Footer from "./components/footer/Footer";
+import { Menu } from "../components/menu/menu";
+import Footer from "../components/footer/Footer";
 
 import * as ROUTES from "./routes";
 // routes
