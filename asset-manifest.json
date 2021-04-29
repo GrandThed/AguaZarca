@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/AguaZarca/static/css/main.5d38a214.chunk.css",
-    "main.js": "/AguaZarca/static/js/main.23897edf.chunk.js",
-    "main.js.map": "/AguaZarca/static/js/main.23897edf.chunk.js.map",
+    "main.js": "/AguaZarca/static/js/main.12d669dd.chunk.js",
+    "main.js.map": "/AguaZarca/static/js/main.12d669dd.chunk.js.map",
     "runtime-main.js": "/AguaZarca/static/js/runtime-main.49cb079e.js",
     "runtime-main.js.map": "/AguaZarca/static/js/runtime-main.49cb079e.js.map",
     "static/css/2.48756d00.chunk.css": "/AguaZarca/static/css/2.48756d00.chunk.css",
@@ -22,6 +22,6 @@
     "static/css/2.48756d00.chunk.css",
     "static/js/2.c43f7cae.chunk.js",
     "static/css/main.5d38a214.chunk.css",
-    "static/js/main.23897edf.chunk.js"
+    "static/js/main.12d669dd.chunk.js"
   ]
 }
