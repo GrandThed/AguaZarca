@@ -207,3 +207,9 @@
 .hc-main-paused{
   border: 1px solid rgb(218, 106, 106);
 }
+
+abbr[title]{
+  text-decoration: none;
+  margin-right: 4px;
+  cursor: default;
+}

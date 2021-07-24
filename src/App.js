@@ -19,6 +19,8 @@ import Venta from "./components/routes/venta/Venta";
 import Type from "./components/routes/tipo-de-propiedad/Type";
 import NoMatch from "./components/routes/noMatch/NoMatch";
 import GlobalSearch from "./components/routes/global-search/GlobalSearch";
+import ScrollToTop from "./components/scrollToTop/ScrollToTop";
+
 
 const App = () => {
   return (
@@ -27,6 +29,7 @@ const App = () => {
         {/* menu spacer for the responsive menu */}
         <div className="menu-spacer" />
         <Menu />
+        <ScrollToTop></ScrollToTop>
         <Switch>
           <Route path={ROUTES.HOME} exact component={Home}></Route>
           <Route path={ROUTES.VENTA} component={Venta}></Route>

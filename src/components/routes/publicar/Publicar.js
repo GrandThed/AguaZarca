@@ -86,6 +86,7 @@ export const Publicar = () => {
     itemIdurl = itemIdurl.replace("-", "");
     if (itemIdurl) {
       CF.fetchEffect(itemIdurl).then((estate) => {
+        console.log(estate)
         if (isSubscribed) {
           dispatch({
             type: "fullfilWithML",

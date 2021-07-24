@@ -4,7 +4,7 @@ import { BiCamera } from "react-icons/bi";
 import { AiOutlineDelete, AiOutlinePauseCircle, AiOutlinePlayCircle } from "react-icons/ai";
 import { MdSystemUpdateAlt } from "react-icons/md";
 import "./card.css";
-import { icons } from "../slider/Slider";
+import { icons } from "../Slider/Slider";
 import { Link } from "react-router-dom";
 import { PROPIEDAD } from "../../routes";
 import { firestore } from "../../firebase";
@@ -253,7 +253,7 @@ export const HorizontalCard = ({ propiedad, paused }) => {
             </div>
             <div className="hc-tracks">
               <div className="hc-track-item">
-                <label>SL</label>
+                <abbr title="Destacado Slider" >SL</abbr>
                 <input
                   type="checkbox"
                   checked={whereFreat.slider}
@@ -261,7 +261,7 @@ export const HorizontalCard = ({ propiedad, paused }) => {
                 />
               </div>
               <div className="hc-track-item">
-                <label>RF</label>
+                <abbr title="Destacado en alquiler" >RF</abbr>
                 <input
                   type="checkbox"
                   checked={whereFreat.rentalFeatured}
@@ -269,7 +269,7 @@ export const HorizontalCard = ({ propiedad, paused }) => {
                 />
               </div>
               <div className="hc-track-item">
-                <label>FR</label>
+                <abbr title="Destacado general" >FR</abbr>
                 <input
                   type="checkbox"
                   checked={whereFreat.featured}

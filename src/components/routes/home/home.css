@@ -146,14 +146,6 @@
   font-size: 60px;
 }
 
-.serviceshome-feat-extrainfo::after{
-  text-align: center;
-  margin-top: 20px;
-  display: block;
-  content: "*Solicite con el número Matrícula – Costo $ 300 por hoja";
-  font-size: small;
-  z-index: 2;
-}
 
 .temporal-search-menu{
   margin-top: 30px;
@@ -215,3 +207,8 @@
     font-size: xx-large;
   }
 }
+
+.map-container {
+  width: 100%;
+  height: 400px;
+  }

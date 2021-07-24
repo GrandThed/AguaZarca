@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { firestore } from "../../../firebase";
 import mapboxgl from "mapbox-gl";
-import ProductSlider from "../../slider/ProductSlider";
+import ProductSlider from "../../Slider/ProductSlider";
 import "./propiedad.css";
-import { icons } from "../../slider/Slider";
+import { icons } from "../../Slider/Slider";
 import { IconContext } from "react-icons";
 
 import { GoCheck } from "react-icons/go";
