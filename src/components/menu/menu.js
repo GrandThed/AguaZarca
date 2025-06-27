@@ -44,6 +44,9 @@ export const Menu = () => {
         <Link className="menu-link" to={ROUTES.NOTICIAS}>
           <p className="menu-list menu-hover-efect">Noticias</p>
         </Link>
+        <Link className="menu-link" to={ROUTES.BLOGS}>
+          <p className="menu-list menu-hover-efect">Blog</p>
+        </Link>
         <Link className="menu-link" to={ROUTES.CONTACTO}>
           <p className="menu-list menu-hover-efect">Contacto</p>
         </Link>

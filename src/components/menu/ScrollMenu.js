@@ -48,6 +48,9 @@ export const ScrollMenu = () => {
         <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.NOTICIAS}>
           Noticias
         </Link>
+        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.BLOGS}>
+          Blog
+        </Link>
         <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.CONTACTO}>
           Contacto
         </Link>
