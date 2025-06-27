@@ -192,12 +192,15 @@ export const doImageListFromFiles = (files) => {
   });
 };
 
+import { compressImage } from "../../../utils/imageOptim";
+
 export const addImagesToFirebaseAndReturnUrl = (files, nameShorcut) => {
   const path = `images/${nameShorcut}/`;
-  return files.map((file) => {
-    let ref = storage.ref(path + file.name);
-    return ref.put(file).then(
-      (snapshot) => ref.getDownloadURL(),
+  return files.map(async (file) => {
+    const compressed = await compressImage(file);
+    let ref = storage.ref(path + compressed.name);
+    return ref.put(compressed).then(
+      () => ref.getDownloadURL(),
       (error) => console.error(error.message)
     );
   });
