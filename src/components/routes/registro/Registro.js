@@ -3,6 +3,7 @@ import "./registro.css";
 import { auth, firestore, storage } from "../../../firebase";
 import { Redirect } from "react-router-dom";
 import { HOME } from "../../../routes";
+import { compressImage } from "../../../utils/imageOptim";
 
 const Registro = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -11,22 +12,26 @@ const Registro = () => {
     dispatch({ type: "field", field: e.target.name, value: e.target.value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let { email, password, username, phonenumber, wspnumber } = state.form;
     let ref = storage.ref(`images/${email.replace(/\W/, "_")}/`);
+    const compressed = await compressImage(state.imageFile);
     ref
-      .put(state.imageFile)
+      .put(compressed)
       .then(
-        (snap) => dispatch({ type: "setImageURL", value: ref.getDownloadURL() }),
+        () => dispatch({ type: "setImageURL", value: ref.getDownloadURL() }),
         (error) => console.error(error.message)
       )
       .then(() =>
         auth
           .createUserWithEmailAndPassword(email, password)
-          .then(() => firestore.collection("usersInfo").add({ username, phonenumber, wspnumber, email }))
+          .then(() =>
+            firestore.collection("usersInfo").add({ username, phonenumber, wspnumber, email })
+          )
           .then(() => dispatch({ type: "redirect", value: true }))
-          
-      ).catch((e) => console.error(e))
+
+      )
+      .catch((e) => console.error(e));
   };
 
   return (
@@ -88,8 +93,7 @@ const Registro = () => {
           <label>Imagen de perfil</label>
           <input
             required={true}
-            onChange={(e) => dispatch({ type: "setImageFile", value: e.target.value })}
-            value={state.imageFile}
+            onChange={(e) => dispatch({ type: "setImageFile", value: e.target.files[0] })}
             type="file"
           />
         </div>
