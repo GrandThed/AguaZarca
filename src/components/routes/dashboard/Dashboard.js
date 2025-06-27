@@ -6,6 +6,8 @@ import { HorizontalCard } from "../../card/Card";
 import { firestore, auth } from "../../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { ToastContainer } from "react-toastify";
+import { Link } from "react-router-dom";
+import * as ROUTES from "../../../routes";
 // import { useAuthState } from "react-firebase-hooks/auth";
 const Dashboard = () => {
   const [propieties, setPropieties] = useState([]);
@@ -52,6 +54,9 @@ const Dashboard = () => {
   return (
     <div>
       <PageTitle title="Dashboard"></PageTitle>
+      <div className="db-blog-create-link">
+        <Link to={ROUTES.BLOG_CREATE}>Crear Blog</Link>
+      </div>
       <ToastContainer />
       <div className="db-div">
         <aside className="db-aside">

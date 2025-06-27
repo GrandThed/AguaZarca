@@ -40,3 +40,10 @@
 .db-aside-label{
  margin-top: 10px;
 }
+
+.db-blog-create-link{
+    margin: 10px 25px;
+}
+.db-blog-create-link a{
+    color: #0000ee;
+}
