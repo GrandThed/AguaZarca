@@ -67,8 +67,8 @@ const FooterInfo = () => {
             Villa Carlos Paz
           </a>
         </p>
-        <a href="tel:+5435415659041" className="footer-margin-tb footer-tel">
-          <RiPhoneLine /> +54 3541 659-047
+        <a href="https://wa.me/5493517896825" target="_blank" rel="noreferrer" className="footer-margin-tb footer-tel">
+          <RiPhoneLine /> +54 351 789-6825
         </a>
         <p className="footer-margin-tb">
           <RiMailLine />{" "}

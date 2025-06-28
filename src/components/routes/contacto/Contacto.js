@@ -116,7 +116,7 @@ const ContactInfo = () => {
             <RiWhatsappLine></RiWhatsappLine>
             <h4 className="contact-info-title">Whatsapp</h4>
           </div>
-          <p className="contact-info-text">+54 9 3517896825</p>
+          <p className="contact-info-text">+54 9 351 789-6825</p>
         </div>
         <div className="contact-info-container">
           <div className="contact-info-subtitles">
