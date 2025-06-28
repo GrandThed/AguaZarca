@@ -153,6 +153,7 @@
 
 .temporal-search-button{
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   border: none;
@@ -160,6 +161,12 @@
   padding: 0 30px 0;
   font-size: 50px;
   cursor: pointer;
+}
+
+.temporal-search-count{
+  font-size: 12px;
+  color: white;
+  margin-top: 4px;
 }
 
 .temporal-search-link{

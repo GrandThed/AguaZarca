@@ -4,6 +4,7 @@ import "./venta.css";
 import React, { useState, useEffect } from "react";
 import { firestore } from "../../../firebase";
 import Card from "../../card/Card";
+import EmptyState from "../../emptyState/EmptyState";
 import "react-dropdown/style.css";
 import Dropdown from "react-dropdown";
 
@@ -53,12 +54,16 @@ const Venta = () => {
         </div>
       </div>
       <div className="venta-list">
-        {propieties[0] ? (
-          propieties
+        {propieties[0] ? (() => {
+          const filtered = propieties
             .filter((d) => filterSearch.type === "Cualquiera" || d.data().type === filterSearch.type)
-            .filter((d) => filterSearch.locations === "Cualquiera" || d.data().location.city === filterSearch.locations)
-            .map((p, i) => <Card key={i} propiedad={p} />)
-        ) : (
+            .filter((d) => filterSearch.locations === "Cualquiera" || d.data().location.city === filterSearch.locations);
+          return filtered.length ? (
+            filtered.map((p, i) => <Card key={i} propiedad={p} />)
+          ) : (
+            <EmptyState />
+          );
+        })() : (
           <>
             <Card />
             <Card />
