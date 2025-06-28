@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { IconContext } from "react-icons";
 import { BiCamera } from "react-icons/bi";
-import { AiOutlineDelete, AiOutlinePauseCircle, AiOutlinePlayCircle } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlinePauseCircle, AiOutlinePlayCircle, AiOutlineEdit } from "react-icons/ai";
 import { MdSystemUpdateAlt } from "react-icons/md";
 import "./card.css";
 import { icons } from "../slider/Slider";
 import { Link } from "react-router-dom";
-import { PROPIEDAD } from "../../routes";
-import { firestore } from "../../firebase";
+import { PROPIEDAD, EDITAR_PROPIEDAD } from "../../routes";
+import { firestore, auth } from "../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { isAdmin } from "../../utils/auth";
 import { fetchEffect, mlFullfil } from "../routes/publicar/const_funct";
 import { toast } from "react-toastify";
 
@@ -116,6 +118,7 @@ export const HorizontalCard = ({ propiedad, paused }) => {
     slider,
   });
   const [deleted, setDeleted] = useState(false);
+  const [user] = useAuthState(auth);
 
   const date = new Date(created.seconds * 1000);
 
@@ -225,6 +228,14 @@ export const HorizontalCard = ({ propiedad, paused }) => {
               <button className="hc-control-button" onClick={() => handleUpdate(paused ? "pausedEstates" : "estates")}>
                 <MdSystemUpdateAlt />
               </button>
+              {isAdmin(user) && (
+                <Link
+                  className="hc-control-button"
+                  to={EDITAR_PROPIEDAD.replace(":id", propiedad.id)}
+                >
+                  <AiOutlineEdit />
+                </Link>
+              )}
             </div>
           </IconContext.Provider>
           <div className="hc-body">

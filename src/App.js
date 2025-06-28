@@ -45,6 +45,7 @@ const App = () => {
           <Route path={ROUTES.REGISTRO} component={Registro}></Route>
           <Route path={ROUTES.DASHBOARD} component={Dashboard}></Route>
           <Route path={ROUTES.BLOG_CREATE} component={BlogCreate}></Route>
+          <Route path={ROUTES.EDITAR_PROPIEDAD} component={Publicar}></Route>
           <Route path={ROUTES.TIPO_DE_PROPIEDAD} component={Type}></Route>
           <Route path={ROUTES.BUSQUEDA_GLOBAL} component={GlobalSearch}></Route>
           <Route path={"*"} component={NoMatch}></Route>

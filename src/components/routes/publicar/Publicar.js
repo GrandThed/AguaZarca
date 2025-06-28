@@ -11,7 +11,7 @@ import "./publicar.css";
 import * as CF from "./const_funct"; //all the constants and functions, the component started to be a little bit too load
 import { auth, firestore } from "../../../firebase";
 import { reducer } from "./reducer";
-import { Redirect, Link } from "react-router-dom";
+import { Redirect, Link, useParams } from "react-router-dom";
 import LogInForm from "../../logInform/LogInForm";
 import { PROPIEDAD, CONTACTO } from "../../../routes";
 /*
@@ -19,6 +19,8 @@ import { PROPIEDAD, CONTACTO } from "../../../routes";
  */
 
 export const Publicar = () => {
+  const { id } = useParams();
+  const editing = Boolean(id);
   // ************* hooks *************
   const [input, setInput] = useState("");
   const [autofill, setAutofill] = useState(true);
@@ -28,10 +30,54 @@ export const Publicar = () => {
   const [redirect, setRedirect] = useState("");
   const [switchImage, setSwitchImage] = useState(0);
 
+  useEffect(() => {
+    if (editing) {
+      firestore
+        .collection("estates")
+        .doc(id)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            dispatch({ type: "setAll", value: doc.data() });
+          }
+        });
+    }
+  }, [editing, id]);
+
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (editing) {
+      firestore
+        .collection("estates")
+        .doc(id)
+        .update(state)
+        .then(() => {
+          setRedirect(id);
+          toast.success("Propiedad actualizada correctamente", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        })
+        .catch(() =>
+          toast.warn("Error", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+        );
+      return;
+    }
     const nameShorcut = state.title.slice(0, 21).replace(/\W/, "-");
     Promise.all(CF.addImagesToFirebaseAndReturnUrl(filesArrayRaw, nameShorcut)).then((imageUrlArray) => {
       firestore
@@ -55,7 +101,7 @@ export const Publicar = () => {
               });
               setTimeout(() => window.location.reload(), 200);
             })
-            .catch((err) =>
+            .catch(() =>
               toast.warn("Error", {
                 position: "top-right",
                 autoClose: 5000,
@@ -111,8 +157,8 @@ export const Publicar = () => {
 
   return (
     <div className="publish-div">
-      <PageTitle title="Publicar" />
-      {/* {false && <Redirect to={PROPIEDAD + redirect} />} */}
+      <PageTitle title={editing ? "Editar" : "Publicar"} />
+      {redirect && <Redirect to={PROPIEDAD + redirect} />}
       {user ? (
         <div className="publish-form">
           <ToastContainer />
@@ -370,7 +416,7 @@ export const Publicar = () => {
               <label htmlFor="terms"> Acepte los términos y condiciones antes de enviar la propiedad. ( ? ? ? ) </label>
             </div>
             <button className="publish-form-submit" onClick={handleSubmit}>
-              Enviar Propiedad
+              {editing ? "Guardar Cambios" : "Enviar Propiedad"}
             </button>{" "}
             <br />
           </form>
