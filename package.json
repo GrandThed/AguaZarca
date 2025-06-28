@@ -19,7 +19,7 @@
     "react-firebase-hooks": "^3.0.4",
     "react-icons": "^3.11.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.0",
+    "react-scripts": "^5.0.1",
     "react-slick": "^0.27.12",
     "react-toastify": "^7.0.3",
     "slick-carousel": "^1.8.1",

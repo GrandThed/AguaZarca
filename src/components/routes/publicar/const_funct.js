@@ -1,5 +1,6 @@
 import axios from "axios";
 import { storage } from "../../../firebase";
+import { compressImage } from "../../../utils/imageOptim";
 
 export const attributes = [
   "Heladera",
@@ -192,7 +193,6 @@ export const doImageListFromFiles = (files) => {
   });
 };
 
-import { compressImage } from "../../../utils/imageOptim";
 
 export const addImagesToFirebaseAndReturnUrl = (files, nameShorcut) => {
   const path = `images/${nameShorcut}/`;

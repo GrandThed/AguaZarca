@@ -4,7 +4,7 @@ import { BiCamera } from "react-icons/bi";
 import { AiOutlineDelete, AiOutlinePauseCircle, AiOutlinePlayCircle } from "react-icons/ai";
 import { MdSystemUpdateAlt } from "react-icons/md";
 import "./card.css";
-import { icons } from "../Slider/Slider";
+import { icons } from "../slider/Slider";
 import { Link } from "react-router-dom";
 import { PROPIEDAD } from "../../routes";
 import { firestore } from "../../firebase";
