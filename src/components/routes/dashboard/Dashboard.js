@@ -12,6 +12,10 @@ import * as ROUTES from "../../../routes";
 const Dashboard = () => {
   const [propieties, setPropieties] = useState([]);
   const [pausedPropieties, setPausedPropieties] = useState([]);
+  const [lastActive, setLastActive] = useState(null);
+  const [hasMoreActive, setHasMoreActive] = useState(false);
+  const [lastPaused, setLastPaused] = useState(null);
+  const [hasMorePaused, setHasMorePaused] = useState(false);
   const [filter, setFilter] = useState({
     venta: true,
     anual: true,
@@ -30,26 +34,66 @@ const Dashboard = () => {
   useEffect(() => {
     if (user) {
       setPropieties([]);
-      firestore
+      setPausedPropieties([]);
+      const activeQuery = firestore
         .collection("estates")
         .where("agent.email", "==", user.email)
-        .get()
-        .then((e) => {
-          e.docs.forEach((doc) => {
-            setPropieties((sl) => [...sl, doc]);
-          });
+        .limit(10);
+      activeQuery.get().then((e) => {
+        e.docs.forEach((doc) => {
+          setPropieties((sl) => [...sl, doc]);
         });
-      firestore
+        setLastActive(e.docs[e.docs.length - 1]);
+        setHasMoreActive(e.docs.length === 10);
+      });
+
+      const pausedQuery = firestore
         .collection("pausedEstates")
         .where("agent.email", "==", user.email)
-        .get()
-        .then((e) => {
-          e.docs.forEach((doc) => {
-            setPausedPropieties((sl) => [...sl, doc]);
-          });
+        .limit(10);
+      pausedQuery.get().then((e) => {
+        e.docs.forEach((doc) => {
+          setPausedPropieties((sl) => [...sl, doc]);
         });
+        setLastPaused(e.docs[e.docs.length - 1]);
+        setHasMorePaused(e.docs.length === 10);
+      });
     }
   }, [user]);
+
+  const loadMoreActive = () => {
+    if (!lastActive) return;
+    firestore
+      .collection("estates")
+      .where("agent.email", "==", user.email)
+      .startAfter(lastActive)
+      .limit(10)
+      .get()
+      .then((e) => {
+        e.docs.forEach((doc) => {
+          setPropieties((sl) => [...sl, doc]);
+        });
+        setLastActive(e.docs[e.docs.length - 1]);
+        setHasMoreActive(e.docs.length === 10);
+      });
+  };
+
+  const loadMorePaused = () => {
+    if (!lastPaused) return;
+    firestore
+      .collection("pausedEstates")
+      .where("agent.email", "==", user.email)
+      .startAfter(lastPaused)
+      .limit(10)
+      .get()
+      .then((e) => {
+        e.docs.forEach((doc) => {
+          setPausedPropieties((sl) => [...sl, doc]);
+        });
+        setLastPaused(e.docs[e.docs.length - 1]);
+        setHasMorePaused(e.docs.length === 10);
+      });
+  };
 
   return (
     <div>
@@ -178,6 +222,11 @@ const Dashboard = () => {
         </aside>
         <div className="db-body">
           {pausedPropieties[0] && pausedPropieties.map((p) => <HorizontalCard propiedad={p} key={p.id} paused />)}
+          {hasMorePaused && (
+            <button className="db-load-more" onClick={loadMorePaused}>
+              Cargar más
+            </button>
+          )}
           {propieties[0] &&
             propieties
               .filter((e) => {
@@ -203,6 +252,11 @@ const Dashboard = () => {
                 return false;
               })
               .map((p) => <HorizontalCard propiedad={p} key={p.id} />)}
+          {hasMoreActive && (
+            <button className="db-load-more" onClick={loadMoreActive}>
+              Cargar más
+            </button>
+          )}
         </div>
       </div>
     </div>

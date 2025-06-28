@@ -47,3 +47,10 @@
 .db-blog-create-link a{
     color: #0000ee;
 }
+
+.db-load-more{
+    margin: 20px auto;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: block;
+}
