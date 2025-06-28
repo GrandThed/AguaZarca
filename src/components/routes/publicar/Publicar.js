@@ -117,26 +117,33 @@ export const Publicar = () => {
         <div className="publish-form">
           <ToastContainer />
           <div className="publish-form-mercadolibre">
-            <label htmlFor="autofill"> AutoFill con Mercado libre </label>
             <input
+              id="autofill"
               className="publish-form-mercadolibre-in"
               type="checkbox"
-              value={autofill}
+              checked={autofill}
               onChange={(e) => setAutofill(e.target.checked)}
               name="autofill"
             />
-            {autofill && (
-              <div>
-                <input
-                  className="publish-form-mercadolibre-url"
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  name="mlurl"
-                />
-              </div>
-            )}
+            <label htmlFor="autofill" className="publish-form-mercadolibre-label">
+              Autocompletar con MercadoLibre
+            </label>
           </div>
+          {autofill && (
+            <div className="publish-form-mercadolibre-url-div">
+              <input
+                className="publish-form-mercadolibre-url"
+                type="text"
+                placeholder="Pega aquí la URL de la publicación de MercadoLibre"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                name="mlurl"
+              />
+              <small className="publish-form-mercadolibre-help">
+                Se completarán automáticamente los datos si la URL es válida
+              </small>
+            </div>
+          )}
           <form encType="multipart/form-data" className="publish-form-form">
             <div className="publish-form-title-price-div">
               <label className="publish-form-title-label" htmlFor="title">
