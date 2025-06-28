@@ -295,5 +295,26 @@ input[type=checkbox]{
     margin: 10px;
     padding: 10px;
   }
-  
+
+}
+
+.publish-not-logged {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 10px;
+}
+
+.publish-login-wrapper .log-div {
+  position: static;
+}
+
+.publish-contact-text {
+  margin-top: 10px;
+}
+
+.publish-sorry-not-alowed {
+  font-size: 18px;
+  color: rgb(71, 71, 71);
+  margin-bottom: 20px;
 }
