@@ -1,4 +1,4 @@
-const prefix = "/AguaZarca"
+const prefix = ""
 
 export const HOME = prefix + "/"
 export const VENTA = prefix + "/venta"
