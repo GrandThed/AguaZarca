@@ -103,14 +103,11 @@ const ImageSlider = ({ propiedad, uid }) => {
 };
 
 export const Loader = () => (
-  <div key="load2">
-    <div className="slider-loading">
-      <div className="loading">
-        <div className="dot dot-1"></div>
-        <div className="dot dot-2"></div>
-        <div className="dot dot-3"></div>
-        <div className="dot dot-4"></div>
-      </div>
+  <div className="slider-loading">
+    <div className="loading-modern">
+      <div className="dot"></div>
+      <div className="dot"></div>
+      <div className="dot"></div>
     </div>
   </div>
 );

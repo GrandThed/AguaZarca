@@ -24,6 +24,7 @@ const Home = () => {
   const [locations, setLocations] = useState([]);
   const [featureds, setFeatureds] = useState([]);
   const [rentalFeatureds, setRentalFeatureds] = useState([]);
+  const [resultsCount, setResultsCount] = useState(0);
 
   useEffect(() => {
     firestore
@@ -55,9 +56,23 @@ const Home = () => {
       });
   }, []);
 
+  useEffect(() => {
+    let query = firestore.collection("estates");
+    if (filterSearch.operation !== "Cualquiera") {
+      query = query.where("comercialStatus", "==", filterSearch.operation);
+    }
+    if (filterSearch.type !== "Cualquiera") {
+      query = query.where("type", "==", filterSearch.type);
+    }
+    if (filterSearch.locations !== "Cualquiera") {
+      query = query.where("location.city", "==", filterSearch.locations);
+    }
+    query.get().then((snap) => setResultsCount(snap.size));
+  }, [filterSearch]);
+
   return (
     <div>
-      <Slider estates={slider} />
+      {slider.length > 0 && <Slider estates={slider} />}
       <div className="temporal-search temporal-search-menu">
         <div className="temporal-dropdown-div">
           <p className="temporal-dropwdown-description">Operación</p>
@@ -86,16 +101,17 @@ const Home = () => {
             onChange={(e) => setFilterSearch({ ...filterSearch, locations: e.value })}
           />
         </div>
-        <div className="temporal-search-button">
-          <Link
-            to={`${BUSQUEDA_GLOBAL}?operation=${filterSearch.operation}&type=${filterSearch.type}&location=${filterSearch.locations}`}
-            className="temporal-search-link"
-          >
+        <Link
+          to={`${BUSQUEDA_GLOBAL}?operation=${filterSearch.operation}&type=${filterSearch.type}&location=${filterSearch.locations}`}
+          className="temporal-search-link"
+        >
+          <div className="temporal-search-button">
             <IconContext.Provider value={{ className: "temporal-search-icons" }}>
               <BiSearch />
             </IconContext.Provider>
-          </Link>
-        </div>
+            <span className="temporal-search-count">{resultsCount} resultados</span>
+          </div>
+        </Link>
       </div>
       <TitleHome
         pretitle="Propiedades disponibles"

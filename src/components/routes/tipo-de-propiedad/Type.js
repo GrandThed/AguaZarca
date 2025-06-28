@@ -3,6 +3,7 @@ import { firestore } from "../../../firebase";
 import { PageTitle } from "./../../pageTitle/PageTitle";
 import { useParams } from "react-router-dom";
 import Card from "../../card/Card";
+import EmptyState from "../../emptyState/EmptyState";
 import "react-dropdown/style.css";
 import Dropdown from "react-dropdown";
 
@@ -55,13 +56,26 @@ const Type = () => {
           </div>
         </div>
         <div className="venta-list">
-          {propieties[0] &&
-            propieties
-              .filter((d) => filterSearch.operation === "Cualquiera" || d.data().comercialStatus === filterSearch.operation)
-              .filter(
-                (d) => filterSearch.locations === "Cualquiera" || d.data().location.city === filterSearch.locations
-              )
-              .map((p) => <Card propiedad={p} />)}
+          {propieties[0] ? (
+            (() => {
+              const filtered = propieties
+                .filter((d) => filterSearch.operation === "Cualquiera" || d.data().comercialStatus === filterSearch.operation)
+                .filter(
+                  (d) => filterSearch.locations === "Cualquiera" || d.data().location.city === filterSearch.locations
+                );
+              return filtered.length ? (
+                filtered.map((p, i) => <Card propiedad={p} key={i} />)
+              ) : (
+                <EmptyState />
+              );
+            })()
+          ) : (
+            <>
+              <Card />
+              <Card />
+              <Card />
+            </>
+          )}
         </div>
       </div>
     </div>
