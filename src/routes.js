@@ -18,4 +18,6 @@ export const REGISTRO = prefix + process.env.REACT_APP_SUPERSECRETEREGISTERROUTE
 export const BLOGS = prefix + "/blog"
 export const BLOG_CREATE = prefix + "/dashboard/crear-blog"
 
+export const EDITAR_PROPIEDAD = prefix + "/dashboard/editar-propiedad/:id"
+
  

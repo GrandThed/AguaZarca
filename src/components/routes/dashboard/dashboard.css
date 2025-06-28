@@ -40,6 +40,10 @@
 .db-aside-label{
  margin-top: 10px;
 }
+.db-aside-label input[type="checkbox"]{
+  transform: scale(1.2);
+  margin-right: 6px;
+}
 
 .db-blog-create-link{
     margin: 10px 25px;
@@ -53,4 +57,11 @@
     padding: 10px 20px;
     cursor: pointer;
     display: block;
+    background-color: #1976d2;
+    border: none;
+    color: white;
+    border-radius: 4px;
+}
+.db-load-more:hover{
+    background-color: #125a9c;
 }

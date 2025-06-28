@@ -200,8 +200,12 @@
   background: none;
   border: 1px solid rgb(199, 199, 199);
   margin-top: 5px;
-  padding: 2px;
+  padding: 4px;
+  border-radius: 4px;
   cursor: pointer;
+}
+.hc-control-button:hover{
+  background-color: #f0f0f0;
 }
 
 .hc-main-paused{
