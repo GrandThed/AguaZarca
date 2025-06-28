@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { firestore } from "../../../firebase";
 import Card from "../../card/Card";
 import { useLocation } from "react-router-dom";
+import EmptyState from "../../emptyState/EmptyState";
 
 const useQuery = () => new URLSearchParams(useLocation().search);
 
@@ -27,18 +28,23 @@ const GlobalSearch = () => {
         });
       });
   }, []);
+  const filtered = propieties
+    .filter((d) => filterSearch.type === "Cualquiera" || d.data().type === filterSearch.type)
+    .filter((d) => filterSearch.locations === "Cualquiera" || d.data().location.city === filterSearch.locations)
+    .filter(
+      (d) => filterSearch.operation === "Cualquiera" || d.data().comercialStatus === filterSearch.operation
+    );
+
   return (
-    <div >
+    <div>
       <PageTitle title="Resultados de busqueda"></PageTitle>
       <div className="venta-list gs-div">
         {propieties[0] ? (
-          propieties
-            .filter((d) => filterSearch.type === "Cualquiera" || d.data().type === filterSearch.type)
-            .filter((d) => filterSearch.locations === "Cualquiera" || d.data().location.city === filterSearch.locations)
-            .filter(
-              (d) => filterSearch.operation === "Cualquiera" || d.data().comercialStatus === filterSearch.operation
-            )
-            .map((p, i) => <Card propiedad={p} key={i} />)
+          filtered.length ? (
+            filtered.map((p, i) => <Card propiedad={p} key={i} />)
+          ) : (
+            <EmptyState />
+          )
         ) : (
           <>
             <Card />
