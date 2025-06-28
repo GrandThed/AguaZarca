@@ -25,7 +25,7 @@
     "slick-carousel": "^1.8.1",
     "web-vitals": "^0.2.4"
   },
-  "homepage": "https://grandthed.github.io/AguaZarca/",
+  "homepage": "https://www.aguazarca.com.ar/",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
