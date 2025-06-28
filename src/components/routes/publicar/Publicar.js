@@ -11,8 +11,9 @@ import "./publicar.css";
 import * as CF from "./const_funct"; //all the constants and functions, the component started to be a little bit too load
 import { auth, firestore } from "../../../firebase";
 import { reducer } from "./reducer";
-import { Redirect } from "react-router-dom";
-import { PROPIEDAD } from "../../../routes";
+import { Redirect, Link } from "react-router-dom";
+import LogInForm from "../../logInform/LogInForm";
+import { PROPIEDAD, CONTACTO } from "../../../routes";
 /*
  *************************** Component ******************************
  */
@@ -368,11 +369,17 @@ export const Publicar = () => {
           </form>
         </div>
       ) : (
-        <div>
+        <div className="publish-not-logged">
           {false && <Redirect to={PROPIEDAD + redirect} />}
           <p className="publish-sorry-not-alowed">
-            Tienes que ingresar en una cuenta para podes publicar una propiedad
+            Tienes que ingresar en una cuenta para poder publicar una propiedad
           </p>
+          <div className="publish-login-wrapper">
+            <LogInForm />
+            <p className="publish-contact-text">
+              ¿No tienes cuenta? <Link to={CONTACTO}>Contáctanos para publicar</Link>
+            </p>
+          </div>
         </div>
       )}
     </div>
