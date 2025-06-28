@@ -10,23 +10,41 @@
     color: rgb(71, 71, 71);
 }
 
-.publish-form-mercadolibre{
+.publish-form-mercadolibre {
   display: flex;
-  justify-content: flex-end;
-  margin: 10px 0;
-  padding: 10px 0;
+  align-items: center;
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 20px;
 }
 
-.publish-form-mercadolibre-in{
-  margin: 5px 4px 0;
+.publish-form-mercadolibre-in {
+  margin-right: 8px;
 }
 
-.publish-form-mercadolibre-url{
-  margin-left: 4px;
-  margin-top: -3px;
-  padding: 4px;
+.publish-form-mercadolibre-label {
+  flex: 1 1 auto;
+  font-weight: 500;
+}
+
+.publish-form-mercadolibre-url-div {
+  margin-top: 10px;
+}
+
+.publish-form-mercadolibre-url {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
   color: rgb(95, 95, 95);
+}
 
+.publish-form-mercadolibre-help {
+  display: block;
+  font-size: 12px;
+  color: rgb(120, 120, 120);
+  margin-top: 4px;
 }
 
 .publish-form-input{
