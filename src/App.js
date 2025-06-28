@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
 
 import { Menu } from "./components/menu/menu";
 import Footer from "./components/footer/Footer";
@@ -27,7 +27,7 @@ import ScrollToTop from "./components/scrollToTop/ScrollToTop";
 const App = () => {
   return (
     <div className="App">
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         {/* menu spacer for the responsive menu */}
         <div className="menu-spacer" />
         <Menu />
