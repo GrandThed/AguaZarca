@@ -72,7 +72,7 @@ const Home = () => {
 
   return (
     <div>
-      <Slider estates={slider} />
+      {slider.length > 0 && <Slider estates={slider} />}
       <div className="temporal-search temporal-search-menu">
         <div className="temporal-dropdown-div">
           <p className="temporal-dropwdown-description">Operación</p>
