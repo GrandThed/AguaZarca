@@ -336,3 +336,24 @@ input[type=checkbox]{
   color: rgb(71, 71, 71);
   margin-bottom: 20px;
 }
+
+.publish-form-dates {
+  margin-top: 20px;
+}
+
+.publish-form-dates-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.publish-form-dates-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.publish-form-dates-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

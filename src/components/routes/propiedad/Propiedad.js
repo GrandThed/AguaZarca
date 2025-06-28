@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { firestore } from "../../../firebase";
 import mapboxgl from "mapbox-gl";
 import ProductSlider from "../../Slider/ProductSlider";
+import AvailableDatesSlider from "../../Slider/AvailableDatesSlider";
 import "./propiedad.css";
 import { icons } from "../../Slider/Slider";
 import { IconContext } from "react-icons";
@@ -62,6 +63,12 @@ const InmuebleBody = (props) => {
       <div className="inm-slider">
         <ProductSlider images={images} />
       </div>
+      {comercialStatus === "Alquiler temporal" && props.document.availableDates && (
+        <div className="inm-dates-slider">
+          <h2 className="inm-dates-title">Fechas disponibles</h2>
+          <AvailableDatesSlider dates={props.document.availableDates} />
+        </div>
+      )}
       <div className="inm-placement">
         <div className="inm-body">
           <div className="inm-body-char">

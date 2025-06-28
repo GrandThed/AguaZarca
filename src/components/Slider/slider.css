@@ -197,3 +197,14 @@
     padding-right: 80px;
   }
 }
+
+.dates-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  margin: 10px;
+  font-size: 16px;
+}

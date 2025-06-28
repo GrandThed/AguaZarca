@@ -27,6 +27,7 @@ export const Publicar = () => {
   const [state, dispatch] = useReducer(reducer, CF.initialState);
   const [redirect, setRedirect] = useState("");
   const [switchImage, setSwitchImage] = useState(0);
+  const [newDate, setNewDate] = useState("");
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
@@ -249,7 +250,7 @@ export const Publicar = () => {
                     }
                   />
                 </div>
-              ))}
+              ))
             </div>
             <div className="publish-form-char">
               <h2 className="publish-candf-title"> Características y atributos</h2>
@@ -341,6 +342,38 @@ export const Publicar = () => {
                   title="video"
                 />
               )}
+            </div>
+            <div className="publish-form-dates">
+              <h2 className="publish-candf-title">Fechas Disponibles</h2>
+              <div className="publish-form-dates-input">
+                <input
+                  type="date"
+                  value={newDate}
+                  onChange={(e) => setNewDate(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (newDate)
+                      dispatch({ type: "addDate", value: newDate });
+                  }}
+                >
+                  Agregar
+                </button>
+              </div>
+              <ul className="publish-form-dates-list">
+                {state.availableDates.map((d) => (
+                  <li key={d} className="publish-form-dates-item">
+                    {d}
+                    <button
+                      type="button"
+                      onClick={() => dispatch({ type: "removeDate", value: d })}
+                    >
+                      x
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
             <div>
               <input

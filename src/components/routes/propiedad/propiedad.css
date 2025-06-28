@@ -189,6 +189,10 @@
     margin: 0;
   }
 
+  .inm-dates-slider {
+    margin: 20px 0;
+  }
+
   .inm-placement {
     flex-direction: column;
     margin: 10px;
@@ -256,6 +260,9 @@
     margin-right: 30px;
     margin-left: 30px;
   }
+  .inm-dates-slider {
+    margin: 20px 30px;
+  }
   .inm-placement {
     flex-direction: column;
   }
@@ -312,4 +319,13 @@
   to {
     transform: rotate(1turn);
   }
+}
+
+.inm-dates-slider {
+  margin: 20px 100px;
+}
+
+.inm-dates-title {
+  font-weight: 400;
+  margin-bottom: 10px;
 }

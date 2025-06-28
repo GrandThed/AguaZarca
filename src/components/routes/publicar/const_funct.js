@@ -97,6 +97,7 @@ export const initialState = {
     country: "Argentina",
   },
   video_id: "",
+  availableDates: [],
 };
 
 export const dropdownVariables = {

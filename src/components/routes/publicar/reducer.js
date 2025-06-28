@@ -44,6 +44,17 @@ export const reducer = (state, action) => {
       };
     case "fullfilWithML":
       return {...state, ...action.value};
+    case "addDate":
+      if (state.availableDates.includes(action.value)) return state;
+      return {
+        ...state,
+        availableDates: [...state.availableDates, action.value],
+      };
+    case "removeDate":
+      return {
+        ...state,
+        availableDates: state.availableDates.filter((d) => d !== action.value),
+      };
 
     default:
       return state;
