@@ -57,8 +57,8 @@ export const Menu = () => {
           <IconContext.Provider value={{ className: "menu-icon-phone" }}>
             <BiPhone />
           </IconContext.Provider>
-          <a href="tel:+5435415659041" className="menu-phone-a">
-            <span>3541 5659-041</span>
+          <a href="https://wa.me/5493517896825" target="_blank" rel="noopener noreferrer" className="menu-phone-a">
+            <span>3541 7896-825</span>
           </a>
         </p>
       </div>

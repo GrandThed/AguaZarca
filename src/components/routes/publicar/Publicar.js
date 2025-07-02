@@ -14,11 +14,13 @@ import { reducer } from "./reducer";
 import { Redirect, Link, useParams } from "react-router-dom";
 import LogInForm from "../../logInform/LogInForm";
 import { PROPIEDAD, CONTACTO } from "../../../routes";
+import LoginMeli from "./meli_login";
 /*
  *************************** Component ******************************
  */
 
 export const Publicar = () => {
+  const REDIRECT_URI = "https://tu-proyecto.glitch.me/auth/callback"; // backend en Glitch
   const { id } = useParams();
   const editing = Boolean(id);
   // ************* hooks *************
@@ -29,7 +31,7 @@ export const Publicar = () => {
   const [state, dispatch] = useReducer(reducer, CF.initialState);
   const [redirect, setRedirect] = useState("");
   const [switchImage, setSwitchImage] = useState(0);
-
+  const [token, setToken] = useState(null);
   useEffect(() => {
     if (editing) {
       firestore
@@ -43,6 +45,8 @@ export const Publicar = () => {
         });
     }
   }, [editing, id]);
+
+
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
@@ -132,8 +136,19 @@ export const Publicar = () => {
     let [itemIdurl] = input.match(regexMLurl) || [""];
     itemIdurl = itemIdurl.replace("-", "");
     if (itemIdurl) {
-      CF.fetchEffect(itemIdurl).then((estate) => {
-        console.log(estate)
+      if (!token) {
+        toast.warn("No hay token de MercadoLibre, por favor ingrese con su cuenta de MercadoLibre", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+      CF.fetchEffect(itemIdurl, token).then((estate) => {
+        console.log(estate);
         if (isSubscribed) {
           dispatch({
             type: "fullfilWithML",
@@ -151,9 +166,26 @@ export const Publicar = () => {
       });
     }
     return () => (isSubscribed = false);
-  }, [input, switchImage]);
+  }, [input, switchImage, token]);
 
-  // ************* the whole page as a single component, you can cry if you want *************
+   useEffect(() => {
+    // Si hay un token en la URL, lo guardamos en el estado y en localStorage
+    const url = new URL(window.location.href);
+    const t = url.searchParams.get("token");
+    if (t) {
+      setToken(t);
+      localStorage.setItem("meli_token", t);
+      // podés limpiar el token de la URL si querés:
+      window.history.replaceState({}, "", "/");
+    }
+    // Si no hay token, intentamos obtenerlo de localStorage
+    else {
+      const token = localStorage.getItem("meli_token");
+      if (token) {
+        setToken(token);
+      }
+    }
+  }, []);
 
   return (
     <div className="publish-div">
@@ -162,6 +194,7 @@ export const Publicar = () => {
       {user ? (
         <div className="publish-form">
           <ToastContainer />
+          <LoginMeli />
           <div className="publish-form-mercadolibre">
             <input
               id="autofill"

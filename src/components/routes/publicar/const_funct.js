@@ -122,9 +122,16 @@ export const convertObjToListInCharacteristics = (array) => {
   return arrayKeys;
 };
 
-export const fetchEffect = async (itemId) => {
-  const info = await axios(`https://api.mercadolibre.com/items/${itemId}`);
-  const description = await axios(`https://api.mercadolibre.com/items/${itemId}/description`);
+export const fetchEffect = async (itemId, token) => {
+  // add brearer token to requirest header
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  const axiosProvider = (url) => {
+    return axios.get(url, { headers });
+  };
+  const info = await axiosProvider(`https://api.mercadolibre.com/items/${itemId}`);
+  const description = await axiosProvider(`https://api.mercadolibre.com/items/${itemId}/description`);
   return { info, description };
 };
 
