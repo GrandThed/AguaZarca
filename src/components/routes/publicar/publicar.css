@@ -338,3 +338,21 @@ input[type=checkbox]{
   color: rgb(71, 71, 71);
   margin-bottom: 20px;
 }
+
+.meli-login-link {
+  text-decoration: none;
+}
+
+.meli-login-button {
+  background-color: #ffe600;
+  color: #333;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.meli-login-button:hover {
+  background-color: #ffcc00;
+}

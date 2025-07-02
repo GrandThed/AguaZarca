@@ -7,12 +7,9 @@ const LoginMeli = () => {
   )}`;
 
   return (
-    <div>
-      <h2>Login con Mercado Libre</h2>
-      <a href={loginUrl}>
-        <button>Iniciar sesión con Mercado Libre</button>
-      </a>
-    </div>
+    <a href={loginUrl} className="meli-login-link">
+      <button className="meli-login-button">Iniciar sesión con Mercado Libre</button>
+    </a>
   );
 };
 

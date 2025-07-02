@@ -15,6 +15,8 @@ import { Redirect, Link, useParams } from "react-router-dom";
 import LogInForm from "../../logInform/LogInForm";
 import { PROPIEDAD, CONTACTO } from "../../../routes";
 import LoginMeli from "./meli_login";
+
+const TOKEN_LIFETIME = 6 * 60 * 60 * 1000; // 6 horas
 /*
  *************************** Component ******************************
  */
@@ -25,7 +27,7 @@ export const Publicar = () => {
   const editing = Boolean(id);
   // ************* hooks *************
   const [input, setInput] = useState("");
-  const [autofill, setAutofill] = useState(true);
+  const [autofill, setAutofill] = useState(false);
   const [filesArrayRaw, setFilesArrayRaw] = useState([]);
   const [user] = useAuthState(auth);
   const [state, dispatch] = useReducer(reducer, CF.initialState);
@@ -136,17 +138,44 @@ export const Publicar = () => {
     let [itemIdurl] = input.match(regexMLurl) || [""];
     itemIdurl = itemIdurl.replace("-", "");
     if (itemIdurl) {
-      if (!token) {
-        toast.warn("No hay token de MercadoLibre, por favor ingrese con su cuenta de MercadoLibre", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+      const stored = localStorage.getItem("meli_token");
+      if (!token || !stored) {
+        toast.warn(
+          "No hay token de MercadoLibre, por favor ingrese con su cuenta de MercadoLibre",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          }
+        );
+        return;
       }
+      try {
+        const { expiresAt } = JSON.parse(stored);
+        if (expiresAt && Date.now() > expiresAt) {
+          localStorage.removeItem("meli_token");
+          setToken(null);
+          setAutofill(false);
+          toast.warn(
+            "Token expirado, por favor inicie sesión nuevamente.",
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            }
+          );
+          return;
+        }
+      } catch {}
+
       CF.fetchEffect(itemIdurl, token).then((estate) => {
         console.log(estate);
         if (isSubscribed) {
@@ -168,22 +197,36 @@ export const Publicar = () => {
     return () => (isSubscribed = false);
   }, [input, switchImage, token]);
 
-   useEffect(() => {
-    // Si hay un token en la URL, lo guardamos en el estado y en localStorage
+  useEffect(() => {
     const url = new URL(window.location.href);
     const t = url.searchParams.get("token");
+
     if (t) {
       setToken(t);
-      localStorage.setItem("meli_token", t);
-      // podés limpiar el token de la URL si querés:
+      setAutofill(true);
+      const info = { token: t, expiresAt: Date.now() + TOKEN_LIFETIME };
+      localStorage.setItem("meli_token", JSON.stringify(info));
       window.history.replaceState({}, "", "/");
+      return;
     }
-    // Si no hay token, intentamos obtenerlo de localStorage
-    else {
-      const token = localStorage.getItem("meli_token");
-      if (token) {
-        setToken(token);
+
+    const stored = localStorage.getItem("meli_token");
+    if (stored) {
+      try {
+        const { token: savedToken, expiresAt } = JSON.parse(stored);
+        if (expiresAt && Date.now() > expiresAt) {
+          localStorage.removeItem("meli_token");
+          setAutofill(false);
+        } else {
+          setToken(savedToken || stored);
+          setAutofill(true);
+        }
+      } catch {
+        setToken(stored);
+        setAutofill(true);
       }
+    } else {
+      setAutofill(false);
     }
   }, []);
 
@@ -201,6 +244,7 @@ export const Publicar = () => {
               className="publish-form-mercadolibre-in"
               type="checkbox"
               checked={autofill}
+              disabled={!token}
               onChange={(e) => setAutofill(e.target.checked)}
               name="autofill"
             />
