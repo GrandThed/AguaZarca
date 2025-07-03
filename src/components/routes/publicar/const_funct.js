@@ -132,6 +132,8 @@ export const fetchEffect = async (itemId, token) => {
   };
   const info = await axiosProvider(`https://api.mercadolibre.com/items/${itemId}`);
   const description = await axiosProvider(`https://api.mercadolibre.com/items/${itemId}/description`);
+  console.log("info", info);
+  console.log("description", description);
   return { info, description };
 };
 

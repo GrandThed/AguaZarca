@@ -22,10 +22,9 @@ const TOKEN_LIFETIME = 6 * 60 * 60 * 1000; // 6 horas
  */
 
 export const Publicar = () => {
-  const REDIRECT_URI = "https://tu-proyecto.glitch.me/auth/callback"; // backend en Glitch
+  // ************* hooks *************
   const { id } = useParams();
   const editing = Boolean(id);
-  // ************* hooks *************
   const [input, setInput] = useState("");
   const [autofill, setAutofill] = useState(false);
   const [filesArrayRaw, setFilesArrayRaw] = useState([]);
@@ -33,7 +32,7 @@ export const Publicar = () => {
   const [state, dispatch] = useReducer(reducer, CF.initialState);
   const [redirect, setRedirect] = useState("");
   const [switchImage, setSwitchImage] = useState(0);
-  const [token, setToken] = useState(null);
+  const [mlToken, setMLToken] = useState(null);
   useEffect(() => {
     if (editing) {
       firestore
@@ -47,8 +46,6 @@ export const Publicar = () => {
         });
     }
   }, [editing, id]);
-
-
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
@@ -139,10 +136,25 @@ export const Publicar = () => {
     itemIdurl = itemIdurl.replace("-", "");
     if (itemIdurl) {
       const stored = localStorage.getItem("meli_token");
-      if (!token || !stored) {
-        toast.warn(
-          "No hay token de MercadoLibre, por favor ingrese con su cuenta de MercadoLibre",
-          {
+      if (!mlToken || !stored) {
+        toast.warn("No hay token de MercadoLibre, por favor ingrese con su cuenta de MercadoLibre", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        return;
+      }
+      try {
+        const { expiresAt } = JSON.parse(stored);
+        if (expiresAt && Date.now() > expiresAt) {
+          localStorage.removeItem("meli_token");
+          setMLToken(null);
+          setAutofill(false);
+          toast.warn("Token expirado, por favor inicie sesión nuevamente.", {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -150,33 +162,12 @@ export const Publicar = () => {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-          }
-        );
-        return;
-      }
-      try {
-        const { expiresAt } = JSON.parse(stored);
-        if (expiresAt && Date.now() > expiresAt) {
-          localStorage.removeItem("meli_token");
-          setToken(null);
-          setAutofill(false);
-          toast.warn(
-            "Token expirado, por favor inicie sesión nuevamente.",
-            {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            }
-          );
+          });
           return;
         }
       } catch {}
 
-      CF.fetchEffect(itemIdurl, token).then((estate) => {
+      CF.fetchEffect(itemIdurl, mlToken).then((estate) => {
         console.log(estate);
         if (isSubscribed) {
           dispatch({
@@ -195,16 +186,15 @@ export const Publicar = () => {
       });
     }
     return () => (isSubscribed = false);
-  }, [input, switchImage, token]);
+  }, [input, switchImage, mlToken]);
 
   useEffect(() => {
-    const url = new URL(window.location.href);
-    const t = url.searchParams.get("token");
+    const queryToken = getTokenFromHash();
 
-    if (t) {
-      setToken(t);
+    if (queryToken) {
+      setMLToken(queryToken);
       setAutofill(true);
-      const info = { token: t, expiresAt: Date.now() + TOKEN_LIFETIME };
+      const info = { token: queryToken, expiresAt: Date.now() + TOKEN_LIFETIME };
       localStorage.setItem("meli_token", JSON.stringify(info));
       window.history.replaceState({}, "", "/");
       return;
@@ -218,11 +208,11 @@ export const Publicar = () => {
           localStorage.removeItem("meli_token");
           setAutofill(false);
         } else {
-          setToken(savedToken || stored);
+          setMLToken(savedToken || stored);
           setAutofill(true);
         }
       } catch {
-        setToken(stored);
+        setMLToken(stored);
         setAutofill(true);
       }
     } else {
@@ -230,9 +220,20 @@ export const Publicar = () => {
     }
   }, []);
 
+  function getTokenFromHash() {
+    const hash = window.location.hash; // ejemplo: "#/publicar-propiedad?token=abc123"
+    const queryStart = hash.indexOf("?");
+    if (queryStart === -1) return null;
+
+    const queryString = hash.substring(queryStart + 1);
+    const params = new URLSearchParams(queryString);
+    return params.get("token");
+  }
+
   return (
     <div className="publish-div">
       <PageTitle title={editing ? "Editar" : "Publicar"} />
+      <p>token: {mlToken}</p>
       {redirect && <Redirect to={PROPIEDAD + redirect} />}
       {user ? (
         <div className="publish-form">
@@ -244,7 +245,7 @@ export const Publicar = () => {
               className="publish-form-mercadolibre-in"
               type="checkbox"
               checked={autofill}
-              disabled={!token}
+              disabled={!mlToken}
               onChange={(e) => setAutofill(e.target.checked)}
               name="autofill"
             />
