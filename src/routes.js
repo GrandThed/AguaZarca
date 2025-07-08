@@ -12,12 +12,12 @@ export const PRODUCTO = prefix + "/producto/:id"  //reminder: change the name of
 export const TIPO_DE_PROPIEDAD_SIMPLE_URL = prefix + "/tipo/"
 export const TIPO_DE_PROPIEDAD = prefix + "/tipo/:type"
 export const BUSQUEDA_GLOBAL = prefix + "/busqueda"
+export const BLOG_CREATE = prefix + "/crear-blog"
+
+export const EDITAR_PROPIEDAD = prefix + "/editar-propiedad/:id"
 export const DASHBOARD = prefix + "/dashboard/"
 export const REGISTRO = prefix + process.env.REACT_APP_SUPERSECRETEREGISTERROUTE
 
 export const BLOGS = prefix + "/blog"
-export const BLOG_CREATE = prefix + "/dashboard/crear-blog"
-
-export const EDITAR_PROPIEDAD = prefix + "/dashboard/editar-propiedad/:id"
 
  
