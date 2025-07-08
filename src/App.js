@@ -15,6 +15,7 @@ import Publicar from "./components/routes/publicar/Publicar";
 import Propiedad from "./components/routes/propiedad/Propiedad";
 import Blogs from "./components/routes/blogs/Blogs";
 import BlogCreate from "./components/routes/blogs/BlogCreate";
+import BlogView from "./components/routes/blogs/BlogView";
 import Registro from "./components/routes/registro/Registro";
 import Dashboard from "./components/routes/dashboard/Dashboard";
 import Venta from "./components/routes/venta/Venta";
@@ -22,7 +23,6 @@ import Type from "./components/routes/tipo-de-propiedad/Type";
 import NoMatch from "./components/routes/noMatch/NoMatch";
 import GlobalSearch from "./components/routes/global-search/GlobalSearch";
 import ScrollToTop from "./components/scrollToTop/ScrollToTop";
-
 
 const App = () => {
   return (
@@ -38,7 +38,8 @@ const App = () => {
           <Route path={ROUTES.ALQUILER_TEMPORAL} component={AlquilerTemporal}></Route>
           <Route path={ROUTES.ALQUILER_ANUAL} component={AlquilerAnual}></Route>
           <Route path={ROUTES.NOTICIAS} component={Noticias}></Route>
-          <Route path={ROUTES.BLOGS} component={Blogs}></Route>
+          <Route path={ROUTES.BLOG_VIEW} component={BlogView}></Route>
+          <Route exact path={ROUTES.BLOGS} component={Blogs}></Route>
           <Route path={ROUTES.CONTACTO} component={Contacto}></Route>
           <Route path={ROUTES.PUBLICAR} component={Publicar}></Route>
           <Route path={ROUTES.PRODUCTO} component={Propiedad}></Route>

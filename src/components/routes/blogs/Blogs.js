@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { firestore } from "../../../firebase";
 import { PageTitle } from "../../pageTitle/PageTitle";
+import { Link } from "react-router-dom";
+import * as ROUTES from "../../../routes";
 import "./blogs.css";
 
 const Blogs = () => {
@@ -18,15 +20,20 @@ const Blogs = () => {
       });
   }, []);
 
+  const summary = (html) => html.replace(/<[^>]+>/g, "").slice(0, 100) + (html.length > 100 ? "..." : "");
+
   return (
     <div>
       <PageTitle title="Blog" />
-      <div className="blog-list">
+      <div className="blog-card-container">
         {posts.map((post) => (
-          <div key={post.id} className="blog-post">
-            <h2>{post.title}</h2>
-            <p>{post.content}</p>
-          </div>
+          <Link to={ROUTES.BLOG_VIEW.replace(":id", post.id)} key={post.id} className="blog-card">
+            {post.image && <div className="blog-card-image" style={{ backgroundImage: `url(${post.image})` }} />}
+            <div className="blog-card-content">
+              <h2>{post.title}</h2>
+              <p>{summary(post.content)}</p>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
