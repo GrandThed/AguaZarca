@@ -357,3 +357,20 @@ input[type=checkbox]{
 .meli-login-button:hover {
   background-color: #ffcc00;
 }
+
+.c-loader {
+  margin: 20% auto;
+  width: 100px;
+  height: 100px;
+  border: 3px solid #e5e5e5;
+  border-top-color: #a51a1a;
+  display: block;
+  animation: is-rotating 1s infinite;
+  border-radius: 50%;
+}
+
+@keyframes is-rotating {
+  to {
+    transform: rotate(1turn);
+  }
+}

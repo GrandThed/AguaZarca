@@ -33,6 +33,8 @@ export const Publicar = () => {
   const [redirect, setRedirect] = useState("");
   const [switchImage, setSwitchImage] = useState(0);
   const [mlToken, setMLToken] = useState(null);
+  const [token, setToken] = useState(null);
+  const [checkingMeli, setCheckingMeli] = useState(true);
   useEffect(() => {
     if (editing) {
       firestore
@@ -167,26 +169,54 @@ export const Publicar = () => {
         }
       } catch {}
 
-      CF.fetchEffect(itemIdurl, mlToken).then((estate) => {
-        console.log(estate);
-        if (isSubscribed) {
-          dispatch({
-            type: "fullfilWithML",
-            value: CF.mlFullfil(estate, CF.attributes),
-          });
-          estate.info.data.pictures.forEach((e, index) => {
-            fetch(e.secure_url)
-              .then((e) => e.blob())
-              .then((b) => new File([b], `${b.size}`, { type: b.type }))
-              .then((file) =>
-                setFilesArrayRaw((prefiles) => (index === switchImage ? [file, ...prefiles] : [...prefiles, file]))
-              );
-          });
-        }
-      });
+      CF.fetchEffect(itemIdurl, token)
+        .then((estate) => {
+          if (isSubscribed) {
+            dispatch({
+              type: "fullfilWithML",
+              value: CF.mlFullfil(estate, CF.attributes),
+            });
+            estate.info.data.pictures.forEach((e, index) => {
+              fetch(e.secure_url)
+                .then((e) => e.blob())
+                .then((b) => new File([b], `${b.size}`, { type: b.type }))
+                .then((file) =>
+                  setFilesArrayRaw((prefiles) =>
+                    index === switchImage ? [file, ...prefiles] : [...prefiles, file]
+                  )
+                );
+            });
+          }
+        })
+        .catch((err) => {
+          if (err.response && err.response.status === 403) {
+            toast.warn("Sesión de MercadoLibre expirada, inicie sesión nuevamente", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+            localStorage.removeItem("meli_token");
+            setToken(null);
+            setAutofill(false);
+          } else {
+            toast.warn("Error al obtener datos de MercadoLibre", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          }
+        });
     }
     return () => (isSubscribed = false);
-  }, [input, switchImage, mlToken]);
+  }, [input, switchImage, mlToken, token]);
 
   useEffect(() => {
     const queryToken = getTokenFromHash();
@@ -197,6 +227,7 @@ export const Publicar = () => {
       const info = { token: queryToken, expiresAt: Date.now() + TOKEN_LIFETIME };
       localStorage.setItem("meli_token", JSON.stringify(info));
       window.history.replaceState({}, "", "/");
+      setCheckingMeli(false);
       return;
     }
 
@@ -218,6 +249,7 @@ export const Publicar = () => {
     } else {
       setAutofill(false);
     }
+    setCheckingMeli(false);
   }, []);
 
   function getTokenFromHash() {
@@ -238,7 +270,11 @@ export const Publicar = () => {
       {user ? (
         <div className="publish-form">
           <ToastContainer />
-          <LoginMeli />
+          {checkingMeli ? (
+            <div className="c-loader" />
+          ) : (
+            !token && <LoginMeli />
+          )}
           <div className="publish-form-mercadolibre">
             <input
               id="autofill"
