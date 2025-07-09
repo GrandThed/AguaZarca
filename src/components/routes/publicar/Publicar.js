@@ -334,7 +334,7 @@ export const Publicar = () => {
                       dispatch({
                         type: "setPrice",
                         field: "value",
-                        value: e.value,
+                        value: e.target.value,
                       })
                     }
                   />
