@@ -200,8 +200,13 @@ export const doImageListFromFiles = (files, remove) => {
     if (!file) {
       return null;
     }
+    const src =
+      typeof file === "string"
+        ? file
+        : (window.URL || window.webkitURL).createObjectURL(file);
+    const key = file.name || index;
     return (
-      <li className="publish-form-images-container" key={file.name}>
+      <li className="publish-form-images-container" key={key}>
         <button
           type="button"
           className="publish-form-delete-images"
@@ -211,7 +216,7 @@ export const doImageListFromFiles = (files, remove) => {
         </button>
         <img
           className="publish-form-images-images"
-          src={(window.URL || window.webkitURL).createObjectURL(file)}
+          src={src}
           alt="imagen no valida"
         />
       </li>
