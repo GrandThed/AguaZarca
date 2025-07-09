@@ -49,7 +49,14 @@ export const Publicar = () => {
     }
   }, [editing, id]);
 
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: (files) =>
+      setFilesArrayRaw((prevFiles) => [...prevFiles, ...files]),
+  });
+
+  const handleRemoveImage = (index) => {
+    setFilesArrayRaw((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -122,12 +129,6 @@ export const Publicar = () => {
   };
 
   // ************* effects *************
-
-  useEffect(() => {
-    if (acceptedFiles) {
-      setFilesArrayRaw(acceptedFiles);
-    }
-  }, [acceptedFiles]);
 
   // useEfect for Mercado Libre input
   useEffect(() => {
@@ -479,7 +480,7 @@ export const Publicar = () => {
                 <p> Arrastra las imagenes aqui, o has click para seleccionar los archivos </p>
               </div>
               <aside>
-                <ul className="publish-form-images-ul"> {CF.doImageListFromFiles(filesArrayRaw)} </ul>
+                <ul className="publish-form-images-ul"> {CF.doImageListFromFiles(filesArrayRaw, handleRemoveImage)} </ul>
               </aside>
             </div>
             <div className="publish-form-video-div">
