@@ -123,21 +123,31 @@ export const convertObjToListInCharacteristics = (array) => {
 };
 
 export const fetchEffect = async (itemId, token) => {
-  // add brearer token to requirest header
   const headers = {
     Authorization: `Bearer ${token}`,
   };
-  const axiosProvider = (url) => {
-    return axios.get(url, { headers });
-  };
-  const info = await axiosProvider(`https://api.mercadolibre.com/items/${itemId}`);
-  const description = await axiosProvider(`https://api.mercadolibre.com/items/${itemId}/description`);
-  console.log("info", info);
-  console.log("description", description);
-  return { info, description };
+  const axiosProvider = (url) => axios.get(url, { headers });
+
+  const [infoRes, descRes] = await Promise.allSettled([
+    axiosProvider(`https://api.mercadolibre.com/items/${itemId}`),
+    axiosProvider(`https://api.mercadolibre.com/items/${itemId}/description`),
+  ]);
+
+  const result = {};
+  if (infoRes.status === "fulfilled") result.info = infoRes.value;
+  if (descRes.status === "fulfilled") result.description = descRes.value;
+
+  if (!result.info && !result.description) {
+    throw new Error("Failed to fetch MercadoLibre info and description");
+  }
+  return result;
 };
 
 export const mlFullfil = ({ info, description }, att = attributes) => {
+  if (!info) {
+    return { description: description ? description.data.plain_text : "" };
+  }
+
   const { id, permalink, title, price, currency_id, location, attributes, video_id } = info.data;
   const { address_line, neighborhood, city, state, country } = location;
   let attListml = convertObjToListInAttributes(
@@ -168,7 +178,7 @@ export const mlFullfil = ({ info, description }, att = attributes) => {
     characteristics: charListml,
     attributes: attList,
     //this should be set on form.
-    description: description.data.plain_text,
+    description: description ? description.data.plain_text : "",
     featured: false,
     slider: false,
     rentalFeatured: false,
@@ -185,13 +195,20 @@ export const mlFullfil = ({ info, description }, att = attributes) => {
   };
 };
 
-export const doImageListFromFiles = (files) => {
-  return files.map((file) => {
+export const doImageListFromFiles = (files, remove) => {
+  return files.map((file, index) => {
     if (!file) {
       return null;
     }
     return (
       <li className="publish-form-images-container" key={file.name}>
+        <button
+          type="button"
+          className="publish-form-delete-images"
+          onClick={() => remove(index)}
+        >
+          ×
+        </button>
         <img
           className="publish-form-images-images"
           src={(window.URL || window.webkitURL).createObjectURL(file)}
