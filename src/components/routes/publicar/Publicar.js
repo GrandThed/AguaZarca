@@ -43,7 +43,11 @@ export const Publicar = () => {
         .get()
         .then((doc) => {
           if (doc.exists) {
-            dispatch({ type: "setAll", value: doc.data() });
+            const data = { ...CF.initialState, ...doc.data() };
+            dispatch({ type: "setAll", value: data });
+            if (Array.isArray(data.images)) {
+              setFilesArrayRaw(data.images);
+            }
           }
         });
     }
@@ -488,6 +492,7 @@ export const Publicar = () => {
                 className="publish-form-video-input"
                 type="text"
                 placeholder="Enlace video YouTube..."
+                value={state.video_id || ""}
                 onChange={(e) =>
                   dispatch({ type: "field", field: "video_id", value: e.target.value.match(/(?<=watch\?v=)[\w-]+/) })
                 }
@@ -505,21 +510,21 @@ export const Publicar = () => {
             </div>
             <div>
               <input
-                value={state.featured}
+                checked={state.featured}
                 onChange={(e) => dispatch({ type: "field", field: "featured", value: e.target.checked })}
                 type="checkbox"
               />
               <label> Propiedad destacada </label>
               <br />
               <input
-                value={state.rentalFeatured}
+                checked={state.rentalFeatured}
                 onChange={(e) => dispatch({ type: "field", field: "rentalFeatured", value: e.target.checked })}
                 type="checkbox"
               />
               <label> Propiedad destacada en Alquiler Temporal </label>
               <br />
               <input
-                value={state.featured}
+                checked={state.slider}
                 onChange={(e) => dispatch({ type: "field", field: "slider", value: e.target.checked })}
                 name="terms"
                 type="checkbox"
