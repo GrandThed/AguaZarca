@@ -130,7 +130,7 @@ export const fetchEffect = async (itemId, token) => {
 
   const [infoRes, descRes] = await Promise.allSettled([
     axiosProvider(`https://api.mercadolibre.com/items/${itemId}`),
-    axiosProvider(`https://api.mercadolibre.com/items/${itemId}/description`),
+    axiosProvider(`https://aguazarca.com.ar/api/get_item_description.php?item=${itemId}`),
   ]);
 
   const result = {};
