@@ -129,17 +129,13 @@ export const fetchEffect = async (itemId, token) => {
   const axiosProvider = (url) => axios.get(url, { headers });
 
   const [infoRes, descRes] = await Promise.allSettled([
-    axiosProvider(`https://api.mercadolibre.com/items/${itemId}`),
+    axiosProvider(`https://aguazarca.com.ar/api/get_item.php?item=${itemId}`),
     axiosProvider(`https://aguazarca.com.ar/api/get_item_description.php?item=${itemId}`),
   ]);
 
   const result = {};
   if (infoRes.status === "fulfilled") result.info = infoRes.value;
   if (descRes.status === "fulfilled") result.description = descRes.value;
-
-  if (!result.info && !result.description) {
-    throw new Error("Failed to fetch MercadoLibre info and description");
-  }
   return result;
 };
 
@@ -200,30 +196,18 @@ export const doImageListFromFiles = (files, remove) => {
     if (!file) {
       return null;
     }
-    const src =
-      typeof file === "string"
-        ? file
-        : (window.URL || window.webkitURL).createObjectURL(file);
+    const src = typeof file === "string" ? file : (window.URL || window.webkitURL).createObjectURL(file);
     const key = file.name || index;
     return (
       <li className="publish-form-images-container" key={key}>
-        <button
-          type="button"
-          className="publish-form-delete-images"
-          onClick={() => remove(index)}
-        >
+        <button type="button" className="publish-form-delete-images" onClick={() => remove(index)}>
           ×
         </button>
-        <img
-          className="publish-form-images-images"
-          src={src}
-          alt="imagen no valida"
-        />
+        <img className="publish-form-images-images" src={src} alt="imagen no valida" />
       </li>
     );
   });
 };
-
 
 export const addImagesToFirebaseAndReturnUrl = (files, nameShorcut) => {
   const path = `images/${nameShorcut}/`;

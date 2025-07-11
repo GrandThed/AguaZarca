@@ -15,6 +15,7 @@ import { Redirect, Link, useParams } from "react-router-dom";
 import LogInForm from "../../logInform/LogInForm";
 import { PROPIEDAD, CONTACTO } from "../../../routes";
 import LoginMeli from "./meli_login";
+import { useVerifyMeliToken } from "./useVerifyMeliUser";
 
 const TOKEN_LIFETIME = 6 * 60 * 60 * 1000; // 6 horas
 /*
@@ -35,6 +36,7 @@ export const Publicar = () => {
   const [mlToken, setMLToken] = useState(null);
   const [token, setToken] = useState(null);
   const [checkingMeli, setCheckingMeli] = useState(true);
+  const { meliUser, valid, error } = useVerifyMeliToken(mlToken);
   useEffect(() => {
     if (editing) {
       firestore
@@ -54,8 +56,7 @@ export const Publicar = () => {
   }, [editing, id]);
 
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (files) =>
-      setFilesArrayRaw((prevFiles) => [...prevFiles, ...files]),
+    onDrop: (files) => setFilesArrayRaw((prevFiles) => [...prevFiles, ...files]),
   });
 
   const handleRemoveImage = (index) => {
@@ -174,7 +175,7 @@ export const Publicar = () => {
         }
       } catch {}
 
-      CF.fetchEffect(itemIdurl, token)
+      CF.fetchEffect(itemIdurl, mlToken)
         .then((estate) => {
           if (isSubscribed) {
             dispatch({
@@ -186,9 +187,7 @@ export const Publicar = () => {
                 .then((e) => e.blob())
                 .then((b) => new File([b], `${b.size}`, { type: b.type }))
                 .then((file) =>
-                  setFilesArrayRaw((prefiles) =>
-                    index === switchImage ? [file, ...prefiles] : [...prefiles, file]
-                  )
+                  setFilesArrayRaw((prefiles) => (index === switchImage ? [file, ...prefiles] : [...prefiles, file]))
                 );
             });
           }
@@ -275,11 +274,12 @@ export const Publicar = () => {
       {user ? (
         <div className="publish-form">
           <ToastContainer />
-          {checkingMeli ? (
-            <div className="c-loader" />
-          ) : (
-            !token && <LoginMeli />
-          )}
+          <div>
+            <p>✅ Token válido</p>
+            <p>Usuario: {meliUser?.nickname}</p>
+            <p>ID: {meliUser?.id}</p>
+          </div>
+          {checkingMeli ? <div className="c-loader" /> : !mlToken && <LoginMeli />}
           <div className="publish-form-mercadolibre">
             <input
               id="autofill"
@@ -484,7 +484,10 @@ export const Publicar = () => {
                 <p> Arrastra las imagenes aqui, o has click para seleccionar los archivos </p>
               </div>
               <aside>
-                <ul className="publish-form-images-ul"> {CF.doImageListFromFiles(filesArrayRaw, handleRemoveImage)} </ul>
+                <ul className="publish-form-images-ul">
+                  {" "}
+                  {CF.doImageListFromFiles(filesArrayRaw, handleRemoveImage)}{" "}
+                </ul>
               </aside>
             </div>
             <div className="publish-form-video-div">
