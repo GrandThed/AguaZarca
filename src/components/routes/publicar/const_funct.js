@@ -148,21 +148,21 @@ export const mlFullfil = ({ info, description }, att = attributes) => {
     return { description: description ? description.data.plain_text : "" };
   }
 
-  const { id, permalink, title, price, currency_id, location, attributes, video_id } = info.data;
+  const { id, permalink, title, price, currency_id, location, attributes: mlAttributes, video_id } = info.data;
   const { address_line, neighborhood, city, state, country } = location;
+
+  // MercadoLibre ya no provee attribute_group_id. Filtramos por nombre.
   let attListml = convertObjToListInAttributes(
-    attributes.filter(
-      (e) =>
-        e.attribute_group_id === "AMBIENTES" ||
-        e.attribute_group_id === "OTHERS" ||
-        e.attribute_group_id === "CARACTERISTICAS"
-    )
+    mlAttributes.filter((e) => att.includes(e.name))
   );
   let attList = att.reduce((acc, e) => {
-    let value = attListml[e] || false;
+    const value = attListml[e] || false;
     return { ...acc, [e]: value };
   }, {});
-  let charListml = convertObjToListInCharacteristics(attributes.filter((e) => e.attribute_group_id === "FIND"));
+
+  let charListml = convertObjToListInCharacteristics(
+    mlAttributes.filter((e) => characteristics.includes(e.name))
+  );
   return {
     mercadolibre: {
       id,
