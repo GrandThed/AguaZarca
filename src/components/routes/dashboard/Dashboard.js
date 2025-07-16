@@ -8,6 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 import * as ROUTES from "../../../routes";
+import { PROPERTY_TYPES } from "../../../constants/propertyTypes";
 // import { useAuthState } from "react-firebase-hooks/auth";
 const Dashboard = () => {
   const [propieties, setPropieties] = useState([]);
@@ -20,9 +21,7 @@ const Dashboard = () => {
     venta: true,
     anual: true,
     temporal: true,
-    casa: true,
-    departamento: true,
-    lote: true,
+    types: PROPERTY_TYPES.reduce((acc, type) => ({ ...acc, [type]: true }), {}),
     featured: true,
     rentalFeatured: true,
     slider: true,
@@ -137,33 +136,22 @@ const Dashboard = () => {
           </div>
           <div className="db-aside-filter">
             <h2 className="db-aside-h2">Tipo de propiedad</h2>
-            <label htmlFor="casa" className="db-aside-label">
-              <input
-                type="checkbox"
-                name="casa"
-                checked={filter.casa}
-                onChange={(e) => setFilter((prev) => ({ ...prev, casa: e.target.checked }))}
-              />
-              Casa
-            </label>
-            <label htmlFor="departamento" className="db-aside-label">
-              <input
-                type="checkbox"
-                name="departamento"
-                checked={filter.departamento}
-                onChange={(e) => setFilter((prev) => ({ ...prev, departamento: e.target.checked }))}
-              />
-              Departamento
-            </label>
-            <label htmlFor="lote" className="db-aside-label">
-              <input
-                type="checkbox"
-                name="lote"
-                checked={filter.lote}
-                onChange={(e) => setFilter((prev) => ({ ...prev, lote: e.target.checked }))}
-              />
-              Terreno y lote
-            </label>
+            {PROPERTY_TYPES.map((type) => (
+              <label key={type} className="db-aside-label">
+                <input
+                  type="checkbox"
+                  name={type}
+                  checked={filter.types[type]}
+                  onChange={(e) =>
+                    setFilter((prev) => ({
+                      ...prev,
+                      types: { ...prev.types, [type]: e.target.checked },
+                    }))
+                  }
+                />
+                {type}
+              </label>
+            ))}
           </div>
           <div className="db-aside-filter">
             <h2 className="db-aside-h2">
@@ -236,13 +224,7 @@ const Dashboard = () => {
                 if (filter.anual && status === "Alquiler") return true;
                 return false;
               })
-              .filter((e) => {
-                const status = e.data().type;
-                if (filter.casa && status === "Casa") return true;
-                if (filter.departamento && status === "Departamento") return true;
-                if (filter.lote && status === "Terreno y lote") return true;
-                return false;
-              })
+              .filter((e) => filter.types[e.data().type])
               .filter((e) => {
                 const data = e.data();
                 if (filter.featured && data.featured) return true;

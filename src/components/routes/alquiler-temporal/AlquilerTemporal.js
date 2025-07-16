@@ -5,6 +5,7 @@ import "./alquiler-temporal.css";
 import Dropdown from "react-dropdown";
 import React, { useState, useEffect } from "react";
 import { firestore } from "../../../firebase";
+import { PROPERTY_TYPES } from "../../../constants/propertyTypes";
 import Card from "../../card/Card";
 import EmptyState from "../../emptyState/EmptyState";
 
@@ -36,7 +37,7 @@ const AlquilerTemporal = () => {
           <p className="temporal-dropwdown-description">Tipo de propiedad</p>
           <Dropdown
             className="temporal-dropdown"
-            options={["Cualquiera", "Casa", "Departamento"]}
+            options={["Cualquiera", ...PROPERTY_TYPES]}
             value={filterSearch.type}
             onChange={(e) => setFilterSearch({ ...filterSearch, type: e.value })}
           />

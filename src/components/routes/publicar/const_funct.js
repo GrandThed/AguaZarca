@@ -1,6 +1,7 @@
 import axios from "axios";
 import { storage } from "../../../firebase";
 import { compressImage } from "../../../utils/imageOptim";
+import { PROPERTY_TYPES } from "../../../constants/propertyTypes";
 
 export const attributes = [
   "Heladera",
@@ -101,7 +102,7 @@ export const initialState = {
 };
 
 export const dropdownVariables = {
-  type: ["Departamento", "Local comercial", "Casa", "Hotel", "Terreno y lote", "Otro inmueble"],
+  type: PROPERTY_TYPES,
   status: ["Alquiler temporal", "Alquiler anual", "Venta"],
   correncyOptions: ["USD", "ARS", "EUR"],
 };

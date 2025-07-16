@@ -6,6 +6,7 @@ import Card from "../../card/Card";
 import EmptyState from "../../emptyState/EmptyState";
 import "react-dropdown/style.css";
 import Dropdown from "react-dropdown";
+import { PROPERTY_TYPES } from "../../../constants/propertyTypes";
 
 const AlquilerAnual = () => {
   const [propieties, setPropieties] = useState([]);
@@ -34,7 +35,7 @@ const AlquilerAnual = () => {
           <p className="temporal-dropwdown-description">Tipo de propiedad</p>
           <Dropdown
             className="temporal-dropdown"
-            options={["Cualquiera", "Casa", "Departamento", "Local"]}
+            options={["Cualquiera", ...PROPERTY_TYPES]}
             value={filterSearch.type}
             onChange={(e) => setFilterSearch({ ...filterSearch, type: e.value })}
           />
