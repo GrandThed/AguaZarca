@@ -13,6 +13,7 @@ import { firestore } from "../../../firebase";
 import "react-dropdown/style.css";
 import Dropdown from "react-dropdown";
 import { BUSQUEDA_GLOBAL } from "../../../routes";
+import { PROPERTY_TYPES } from "../../../constants/propertyTypes";
 
 const Home = () => {
   const [slider, setSlider] = useState([]);
@@ -87,7 +88,7 @@ const Home = () => {
           <p className="temporal-dropwdown-description">Tipo de propiedad</p>
           <Dropdown
             className="temporal-dropdown"
-            options={["Cualquiera", "Casa", "Departamento", "Terreno y lote"]}
+            options={["Cualquiera", ...PROPERTY_TYPES]}
             value={filterSearch.type}
             onChange={(e) => setFilterSearch({ ...filterSearch, type: e.value })}
           />
