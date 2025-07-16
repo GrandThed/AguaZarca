@@ -312,8 +312,8 @@ export const Publicar = () => {
           <form encType="multipart/form-data" className="publish-form-form">
             <div className="publish-form-title-price-div">
               <label className="publish-form-title-label" htmlFor="title">
-                Título de la propiedad{" "}
-              </label>{" "}
+                Título de la propiedad
+              </label>
               <div className="publish-form-title-div">
                 <input
                   required={true}

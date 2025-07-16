@@ -10,7 +10,7 @@ export const PROPERTY_TYPES = [
   "Locales",
   "Oficinas",
   "Otros Inmuebles",
-  "PH",
+  "Ph",
   "Parcelas, Nichos y Bóvedas",
   "Terrenos y Lotes",
   "Tiempo Compartido"

@@ -229,10 +229,7 @@ export const HorizontalCard = ({ propiedad, paused }) => {
                 <MdSystemUpdateAlt />
               </button>
               {isAdmin(user) && (
-                <Link
-                  className="hc-control-button"
-                  to={EDITAR_PROPIEDAD.replace(":id", propiedad.id)}
-                >
+                <Link className="hc-control-button" to={EDITAR_PROPIEDAD.replace(":id", propiedad.id)}>
                   <AiOutlineEdit />
                 </Link>
               )}
@@ -245,14 +242,14 @@ export const HorizontalCard = ({ propiedad, paused }) => {
               </div>
               <div className="hc-status">
                 <p className="hc-status-p">
-                  <span className="hc-status-span">{comercialStatus}</span>
+                  <span className="hc-status-span">{comercialStatus} - </span>
                   <span className="hc-status-span">{type}</span>
                 </p>
               </div>
               <div className="hc-price">
                 <p className="hc-price-p">
                   <span className="hc-price-span">{price.value}</span>
-                  <span className="hc-price-span">{price.currency}</span>
+                  <span className="hc-price-span">{price.currency} - </span>
                   <span className="hc-date">{date.toLocaleDateString()}</span>
                 </p>
               </div>
@@ -264,7 +261,7 @@ export const HorizontalCard = ({ propiedad, paused }) => {
             </div>
             <div className="hc-tracks">
               <div className="hc-track-item">
-                <abbr title="Destacado Slider" >SL</abbr>
+                <abbr title="Destacado Slider">SL</abbr>
                 <input
                   type="checkbox"
                   checked={whereFreat.slider}
@@ -272,7 +269,7 @@ export const HorizontalCard = ({ propiedad, paused }) => {
                 />
               </div>
               <div className="hc-track-item">
-                <abbr title="Destacado en alquiler" >RF</abbr>
+                <abbr title="Destacado en alquiler">RF</abbr>
                 <input
                   type="checkbox"
                   checked={whereFreat.rentalFeatured}
@@ -280,7 +277,7 @@ export const HorizontalCard = ({ propiedad, paused }) => {
                 />
               </div>
               <div className="hc-track-item">
-                <abbr title="Destacado general" >FR</abbr>
+                <abbr title="Destacado general">FR</abbr>
                 <input
                   type="checkbox"
                   checked={whereFreat.featured}
