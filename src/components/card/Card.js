@@ -88,7 +88,13 @@ const CardContent = ({ propiedad }) => {
             </div>
             <h3 className="card-cont-price-title">{comercialStatus}</h3>
             <p className="card-cont-price">
-              ${currencyFormat.format(price.value)} <span className="card-currency">{price.currency}</span>
+              {Number(price.value) > 0 ? (
+                <>
+                  {currencyFormat.format(price.value)} <span className="card-currency">{price.currency}</span>
+                </>
+              ) : (
+                "--"
+              )}
             </p>
           </IconContext.Provider>
         </div>
@@ -251,8 +257,12 @@ export const HorizontalCard = ({ propiedad, paused }) => {
               </div>
               <div className="hc-price">
                 <p className="hc-price-p">
-                  <span className="hc-price-span">{price.value}</span>
-                  <span className="hc-price-span">{price.currency}</span>
+                  <span className="hc-price-span">
+                    {Number(price.value) > 0 ? price.value : "--"}
+                  </span>
+                  {Number(price.value) > 0 && (
+                    <span className="hc-price-span">{price.currency}</span>
+                  )}
                   <span className="hc-date">{date.toLocaleDateString()}</span>
                 </p>
               </div>

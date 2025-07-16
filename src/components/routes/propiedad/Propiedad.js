@@ -56,7 +56,11 @@ const InmuebleBody = (props) => {
         </div>
         <div className="inm-title-right">
           <h5 className="inm-type">{comercialStatus}</h5>
-          <p className="inm-price">{`$ ${formatter.format(price.value)} ${price.currency}`}</p>
+          <p className="inm-price">
+            {Number(price.value) > 0
+              ? `$ ${formatter.format(price.value)} ${price.currency}`
+              : "--"}
+          </p>
         </div>
       </div>
       <div className="inm-slider">
