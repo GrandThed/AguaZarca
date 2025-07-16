@@ -93,7 +93,9 @@ const ImageSlider = ({ propiedad, uid }) => {
               </div>
               <h3 className="image-price-title">{comercialStatus}</h3>
               <p className="image-price">
-                ${currencyFormat.format(price.value)} {price.currency}
+                {Number(price.value) > 0
+                  ? `${currencyFormat.format(price.value)} ${price.currency}`
+                  : "--"}
               </p>
             </IconContext.Provider>
         </Link>

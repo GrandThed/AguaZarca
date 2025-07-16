@@ -49,7 +49,7 @@ const Home = () => {
           if (data.featured) {
             setFeatureds((ps) => [...ps, doc]);
           }
-          if (data.rentalfeatured) {
+          if (data.rentalFeatured) {
             setRentalFeatureds((ps) => [...ps, doc]);
           }
           setLocations((ps) => (ps.indexOf(data.location.city) === -1 ? [...ps, data.location.city] : ps));
