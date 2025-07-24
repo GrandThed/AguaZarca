@@ -16,6 +16,7 @@ import LogInForm from "../../logInform/LogInForm";
 import { PROPIEDAD, CONTACTO } from "../../../routes";
 import LoginMeli from "./meli_login";
 import { useVerifyMeliToken } from "./useVerifyMeliUser";
+import { compressImage } from "../../../utils/imageOptim";
 
 const TOKEN_LIFETIME = 6 * 60 * 60 * 1000; // 6 horas
 /*
@@ -133,6 +134,165 @@ export const Publicar = () => {
     });
   };
 
+  // ************* MercadoLibre Image Fetching *************
+  
+  const fetchMercadoLibreImages = async (pictures, switchImage) => {
+    if (!pictures || pictures.length === 0) return;
+
+    // Show loading toast
+    const loadingToast = toast.info(`Cargando ${pictures.length} imágenes de MercadoLibre...`, {
+      position: "top-right",
+      autoClose: false,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: false,
+    });
+
+    const MAX_SIZE_MB = 5;
+    const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+    // Create parallel promises for all images
+    const imagePromises = pictures.map(async (picture, index) => {
+      try {
+        // Fetch image with timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+        const response = await fetch(picture.secure_url, {
+          signal: controller.signal,
+          headers: {
+            'Accept': 'image/*',
+          }
+        });
+        
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const blob = await response.blob();
+        
+        // Validate image type
+        if (!ALLOWED_TYPES.includes(blob.type)) {
+          console.warn(`Imagen ${index + 1}: Tipo no soportado (${blob.type})`);
+          return null;
+        }
+
+        // Validate size
+        const sizeMB = blob.size / (1024 * 1024);
+        if (sizeMB > MAX_SIZE_MB * 2) { // Allow 2x size before compression
+          console.warn(`Imagen ${index + 1}: Demasiado grande (${sizeMB.toFixed(1)}MB)`);
+          return null;
+        }
+
+        // Create file with proper name
+        let file = new File([blob], `ml-image-${index + 1}.jpg`, { 
+          type: blob.type,
+          lastModified: Date.now()
+        });
+
+        // Compress if needed
+        if (sizeMB > MAX_SIZE_MB) {
+          try {
+            file = await compressImage(file, {
+              maxSizeMB: MAX_SIZE_MB,
+              maxWidthOrHeight: 1280,
+              useWebWorker: true,
+            });
+          } catch (compressionError) {
+            console.warn(`Error comprimiendo imagen ${index + 1}:`, compressionError);
+            // Use original file if compression fails
+          }
+        }
+
+        return { file, index, originalIndex: index };
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          console.warn(`Imagen ${index + 1}: Timeout al cargar`);
+        } else {
+          console.warn(`Error cargando imagen ${index + 1}:`, error.message);
+        }
+        return null;
+      }
+    });
+
+    try {
+      // Wait for all images (successful and failed)
+      const results = await Promise.allSettled(imagePromises);
+      
+      // Filter successful results and maintain order
+      const successfulImages = results
+        .map((result, index) => ({
+          success: result.status === 'fulfilled' && result.value !== null,
+          data: result.value,
+          originalIndex: index
+        }))
+        .filter(item => item.success)
+        .map(item => item.data);
+
+      const failedCount = pictures.length - successfulImages.length;
+
+      // Update files array in correct order
+      if (successfulImages.length > 0) {
+        // Sort by original index to maintain MercadoLibre order
+        successfulImages.sort((a, b) => a.originalIndex - b.originalIndex);
+        
+        // Build new files array with switchImage logic
+        let newFiles = [];
+        successfulImages.forEach(({ file, originalIndex }) => {
+          if (originalIndex === switchImage) {
+            newFiles.unshift(file); // Add to beginning
+          } else {
+            newFiles.push(file);
+          }
+        });
+
+        // Single state update
+        setFilesArrayRaw(prevFiles => [...newFiles, ...prevFiles]);
+
+        // Success message
+        toast.dismiss(loadingToast);
+        toast.success(
+          `${successfulImages.length} imagen${successfulImages.length !== 1 ? 'es' : ''} cargada${successfulImages.length !== 1 ? 's' : ''} correctamente` +
+          (failedCount > 0 ? ` (${failedCount} fallaron)` : ''), 
+          {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
+        );
+      } else {
+        // All images failed
+        toast.dismiss(loadingToast);
+        toast.error('No se pudieron cargar las imágenes de MercadoLibre. Verifica tu conexión.', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
+
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error('Error inesperado al procesar las imágenes', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      console.error('Error in fetchMercadoLibreImages:', error);
+    }
+  };
+
   // ************* effects *************
 
   // useEfect for Mercado Libre input
@@ -182,14 +342,8 @@ export const Publicar = () => {
               type: "fullfilWithML",
               value: CF.mlFullfil(estate, CF.attributes),
             });
-            estate.info.data.pictures.forEach((e, index) => {
-              fetch(e.secure_url)
-                .then((e) => e.blob())
-                .then((b) => new File([b], `${b.size}`, { type: b.type }))
-                .then((file) =>
-                  setFilesArrayRaw((prefiles) => (index === switchImage ? [file, ...prefiles] : [...prefiles, file]))
-                );
-            });
+            // Improved parallel image fetching with error handling
+            fetchMercadoLibreImages(estate.info.data.pictures, switchImage);
           }
         })
         .catch((err) => {
