@@ -39,9 +39,24 @@ const Venta = () => {
           name="description" 
           content="Propiedades en venta en Villa Carlos Paz y alrededores. Casas, departamentos, lotes y locales comerciales. Inmobiliaria AguaZarca - Operaciones confiables desde 2005." 
         />
-        <meta property="og:title" content="Propiedades en Venta - Villa Carlos Paz" />
-        <meta property="og:description" content="Descubre propiedades en venta en Villa Carlos Paz. Casas, departamentos y lotes con la confianza de AguaZarca Inmobiliaria." />
+        
+        {/* Open Graph / Facebook / WhatsApp */}
+        <meta property="og:title" content="Propiedades en Venta - Villa Carlos Paz | AguaZarca" />
+        <meta property="og:description" content="Descubre propiedades en venta en Villa Carlos Paz. Casas, departamentos y lotes con la confianza de AguaZarca Inmobiliaria desde 2005." />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://aguazarca.com.ar/images/vcp-panoramica.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:url" content="https://aguazarca.com.ar/venta" />
+        <meta property="og:site_name" content="AguaZarca Inmobiliaria" />
+        <meta property="og:locale" content="es_AR" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Propiedades en Venta - Villa Carlos Paz" />
+        <meta name="twitter:description" content="Descubre propiedades en venta en Villa Carlos Paz. Casas, departamentos y lotes con la confianza de AguaZarca Inmobiliaria." />
+        <meta name="twitter:image" content="https://aguazarca.com.ar/images/vcp-panoramica.jpg" />
+        
         <link rel="canonical" href="https://aguazarca.com.ar/venta" />
       </Helmet>
       <PageTitle title="Venta"></PageTitle>

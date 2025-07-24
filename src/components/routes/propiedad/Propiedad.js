@@ -9,6 +9,7 @@ import { icons } from "../../slider/Slider";
 import { IconContext } from "react-icons";
 import Breadcrumb from "../../breadcrumb/Breadcrumb";
 import { HOME } from "../../../routes";
+import { generateSocialMetaTags } from "../../../utils/socialMeta";
 
 import { GoCheck } from "react-icons/go";
 
@@ -75,23 +76,56 @@ const Propiedad = (props) => {
 
   return doc.location ? (
     <main className="inm-div" role="main">
-      <Helmet>
-        <title>{doc.title} - {doc.location?.city} | AguaZarca Inmobiliaria</title>
-        <meta 
-          name="description" 
-          content={`${doc.title} en ${doc.location?.city}. ${doc.description?.substring(0, 150)}... Inmobiliaria AguaZarca.`} 
-        />
-        <meta property="og:title" content={`${doc.title} - ${doc.location?.city}`} />
-        <meta property="og:description" content={doc.description?.substring(0, 200)} />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content={doc.images?.[0]} />
-        <link rel="canonical" href={`https://aguazarca.com.ar/propiedad/${id}`} />
-        {generatePropertyStructuredData({...doc, id}) && (
-          <script type="application/ld+json">
-            {generatePropertyStructuredData({...doc, id})}
-          </script>
-        )}
-      </Helmet>
+      {(() => {
+        const socialMeta = generateSocialMetaTags(doc, id);
+        return (
+          <Helmet>
+            {/* Basic meta tags */}
+            <title>{socialMeta.title}</title>
+            <meta name="description" content={socialMeta.description} />
+            <link rel="canonical" href={socialMeta.canonical} />
+            
+            {/* Open Graph / Facebook / WhatsApp / LinkedIn */}
+            <meta property="og:title" content={socialMeta.og.title} />
+            <meta property="og:description" content={socialMeta.og.description} />
+            <meta property="og:image" content={socialMeta.og.image} />
+            <meta property="og:image:width" content={socialMeta.og.imageWidth} />
+            <meta property="og:image:height" content={socialMeta.og.imageHeight} />
+            <meta property="og:image:alt" content={socialMeta.og.imageAlt} />
+            <meta property="og:url" content={socialMeta.og.url} />
+            <meta property="og:type" content={socialMeta.og.type} />
+            <meta property="og:site_name" content={socialMeta.og.siteName} />
+            <meta property="og:locale" content={socialMeta.og.locale} />
+            
+            {/* Twitter Card */}
+            <meta name="twitter:card" content={socialMeta.twitter.card} />
+            <meta name="twitter:title" content={socialMeta.twitter.title} />
+            <meta name="twitter:description" content={socialMeta.twitter.description} />
+            <meta name="twitter:image" content={socialMeta.twitter.image} />
+            <meta name="twitter:image:alt" content={socialMeta.twitter.imageAlt} />
+            {socialMeta.twitter.site && <meta name="twitter:site" content={socialMeta.twitter.site} />}
+            
+            {/* Additional meta for rich previews */}
+            <meta name="author" content={socialMeta.additional.author} />
+            <meta name="keywords" content={socialMeta.additional.tags} />
+            {socialMeta.additional.priceAmount && (
+              <>
+                <meta property="product:price:amount" content={socialMeta.additional.priceAmount} />
+                <meta property="product:price:currency" content={socialMeta.additional.priceCurrency} />
+                <meta property="product:availability" content={socialMeta.additional.availability} />
+                <meta property="product:condition" content={socialMeta.additional.condition} />
+              </>
+            )}
+            
+            {/* Structured data for search engines */}
+            {generatePropertyStructuredData({...doc, id}) && (
+              <script type="application/ld+json">
+                {generatePropertyStructuredData({...doc, id})}
+              </script>
+            )}
+          </Helmet>
+        );
+      })()}
       <InmuebleBody document={doc} />
     </main>
   ) : (

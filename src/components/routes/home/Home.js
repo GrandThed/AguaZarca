@@ -80,10 +80,30 @@ const Home = () => {
           name="description" 
           content="Inmobiliaria AguaZarca en Villa Carlos Paz. Compra, venta y alquiler de propiedades. Casas, departamentos y lotes desde 2005. Operaciones confiables y asesoramiento profesional." 
         />
+        
+        {/* Open Graph / Facebook / WhatsApp */}
         <meta property="og:title" content="AguaZarca Inmobiliaria - Propiedades en Villa Carlos Paz" />
         <meta property="og:description" content="Inmobiliaria líder en Villa Carlos Paz. Propiedades en venta y alquiler. Servicios inmobiliarios profesionales desde 2005." />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="/images/vcp-panoramica.jpg" />
+        <meta property="og:image" content="https://aguazarca.com.ar/images/vcp-panoramica.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Vista panorámica de Villa Carlos Paz - AguaZarca Inmobiliaria" />
+        <meta property="og:url" content="https://aguazarca.com.ar/" />
+        <meta property="og:site_name" content="AguaZarca Inmobiliaria" />
+        <meta property="og:locale" content="es_AR" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="AguaZarca Inmobiliaria - Villa Carlos Paz" />
+        <meta name="twitter:description" content="Inmobiliaria líder en Villa Carlos Paz. Propiedades en venta y alquiler desde 2005." />
+        <meta name="twitter:image" content="https://aguazarca.com.ar/images/vcp-panoramica.jpg" />
+        <meta name="twitter:image:alt" content="Vista panorámica de Villa Carlos Paz" />
+        
+        {/* Additional meta */}
+        <meta name="author" content="AguaZarca Inmobiliaria" />
+        <meta name="keywords" content="inmobiliaria, Villa Carlos Paz, propiedades, venta, alquiler, casas, departamentos" />
+        
         <link rel="canonical" href="https://aguazarca.com.ar/" />
       </Helmet>
       {slider.length > 0 && <Slider estates={slider} />}
