@@ -11,14 +11,15 @@ import {
   FaEye, 
   FaHeart,
   FaFilter,
-  FaTimes
+  FaTimes,
+  FaRegNewspaper
 } from 'react-icons/fa';
 import { auth } from '../../../firebase';
 import { isAdmin } from '../../../utils/auth';
 import BlogService from '../../../utils/blogService';
 import { PageTitle } from '../../pageTitle/PageTitle';
 import * as ROUTES from '../../../routes';
-import './blogs.css';
+import './blogsNew.css';
 
 const BlogsNew = () => {
   const [user] = useAuthState(auth);
@@ -176,7 +177,28 @@ const BlogsNew = () => {
         <link rel="canonical" href="https://aguazarca.com.ar/blog" />
       </Helmet>
 
-      <PageTitle title="Blog" />
+      {/* Hero Section */}
+      <div className="blog-hero">
+        <div className="blog-hero-content">
+          <div className="blog-hero-text">
+            <h1 className="blog-hero-title">Blog Inmobiliario</h1>
+            <p className="blog-hero-subtitle">
+              Descubre consejos expertos, tendencias del mercado y noticias inmobiliarias 
+              de Villa Carlos Paz y alrededores
+            </p>
+          </div>
+          <div className="blog-hero-stats">
+            <div className="blog-stat">
+              <span className="blog-stat-number">{blogs.length}</span>
+              <span className="blog-stat-label">Artículos</span>
+            </div>
+            <div className="blog-stat">
+              <span className="blog-stat-number">{allTags.length}</span>
+              <span className="blog-stat-label">Categorías</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Header with Search and Admin Actions */}
       <div className="blogs-header">
@@ -287,23 +309,97 @@ const BlogsNew = () => {
         </div>
       )}
 
-      {/* Blogs Grid */}
+      {/* Featured Blog (First Blog) */}
       {!loading && blogs.length > 0 && (
-        <>
+        <div className="featured-blog-section">
+          <h2 className="section-title">Artículo Destacado</h2>
+          <article className="featured-blog-card">
+            <Link to={`${ROUTES.BLOGS}/${blogs[0].slug}`} className="featured-blog-link">
+              <div className="featured-blog-image">
+                {blogs[0].featuredImage ? (
+                  <img 
+                    src={blogs[0].featuredImage.url} 
+                    alt={blogs[0].title}
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="featured-blog-placeholder">
+                    <FaRegNewspaper className="placeholder-icon" />
+                  </div>
+                )}
+                <div className="featured-blog-overlay">
+                  <div className="featured-blog-badge">Destacado</div>
+                </div>
+              </div>
+              
+              <div className="featured-blog-content">
+                {blogs[0].tags && blogs[0].tags.length > 0 && (
+                  <div className="featured-blog-tags">
+                    {blogs[0].tags.slice(0, 3).map((tag, index) => (
+                      <span key={index} className="featured-blog-tag">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                
+                <h2 className="featured-blog-title">{blogs[0].title}</h2>
+                <p className="featured-blog-excerpt">
+                  {blogs[0].excerpt || generateExcerpt(blogs[0].content, 200)}
+                </p>
+                
+                <div className="featured-blog-meta">
+                  <IconContext.Provider value={{ className: "featured-blog-meta-icon" }}>
+                    <div className="featured-blog-meta-item">
+                      <FaCalendar />
+                      <span>{formatDate(blogs[0].publishedAt)}</span>
+                    </div>
+                    <div className="featured-blog-meta-item">
+                      <FaClock />
+                      <span>{blogs[0].readingTime} min de lectura</span>
+                    </div>
+                    <div className="featured-blog-meta-item">
+                      <FaEye />
+                      <span>{blogs[0].views || 0} vistas</span>
+                    </div>
+                  </IconContext.Provider>
+                </div>
+                
+                <div className="featured-blog-cta">
+                  <span className="read-more-btn">Leer artículo completo →</span>
+                </div>
+              </div>
+            </Link>
+          </article>
+        </div>
+      )}
+
+      {/* Recent Blogs Grid */}
+      {!loading && blogs.length > 1 && (
+        <div className="recent-blogs-section">
+          <h2 className="section-title">Artículos Recientes</h2>
           <div className="blogs-grid">
-            {blogs.map((blog) => (
+            {blogs.slice(1).map((blog) => (
               <article key={blog.id} className="blog-card">
                 <Link to={`${ROUTES.BLOGS}/${blog.slug}`} className="blog-card-link">
                   {/* Featured Image */}
-                  {blog.featuredImage && (
-                    <div className="blog-card-image">
+                  <div className="blog-card-image">
+                    {blog.featuredImage ? (
                       <img 
                         src={blog.featuredImage.url} 
                         alt={blog.title}
                         loading="lazy"
                       />
+                    ) : (
+                      <div className="blog-card-placeholder">
+                        <FaRegNewspaper className="placeholder-icon" />
+                      </div>
+                    )}
+                    <div className="blog-card-overlay">
+                      <FaClock className="reading-time-icon" />
+                      <span>{blog.readingTime} min</span>
                     </div>
-                  )}
+                  </div>
 
                   {/* Content */}
                   <div className="blog-card-content">
@@ -319,7 +415,7 @@ const BlogsNew = () => {
                     )}
 
                     {/* Title */}
-                    <h2 className="blog-card-title">{blog.title}</h2>
+                    <h3 className="blog-card-title">{blog.title}</h3>
 
                     {/* Excerpt */}
                     <p className="blog-card-excerpt">
@@ -334,41 +430,42 @@ const BlogsNew = () => {
                           <span>{formatDate(blog.publishedAt)}</span>
                         </div>
                         
-                        <div className="blog-card-meta-item">
-                          <FaClock />
-                          <span>{blog.readingTime} min</span>
-                        </div>
-                        
-                        <div className="blog-card-meta-item">
-                          <FaEye />
-                          <span>{blog.views || 0}</span>
-                        </div>
-                        
-                        <div className="blog-card-meta-item">
-                          <FaHeart />
-                          <span>{blog.likes || 0}</span>
+                        <div className="blog-card-meta-group">
+                          <div className="blog-card-meta-item">
+                            <FaEye />
+                            <span>{blog.views || 0}</span>
+                          </div>
+                          
+                          <div className="blog-card-meta-item">
+                            <FaHeart />
+                            <span>{blog.likes || 0}</span>
+                          </div>
                         </div>
                       </IconContext.Provider>
+                    </div>
+                    
+                    <div className="blog-card-footer">
+                      <span className="read-more">Leer más →</span>
                     </div>
                   </div>
                 </Link>
               </article>
             ))}
           </div>
+        </div>
+      )}
 
-          {/* Load More Button */}
-          {hasMore && (
-            <div className="load-more-container">
-              <button 
-                onClick={loadMore}
-                disabled={loadingMore}
-                className="load-more-btn"
-              >
-                {loadingMore ? 'Cargando...' : 'Cargar más blogs'}
-              </button>
-            </div>
-          )}
-        </>
+      {/* Load More Button */}
+      {hasMore && (
+        <div className="load-more-container">
+          <button 
+            onClick={loadMore}
+            disabled={loadingMore}
+            className="load-more-btn"
+          >
+            {loadingMore ? 'Cargando...' : 'Cargar más blogs'}
+          </button>
+        </div>
       )}
     </div>
   );
