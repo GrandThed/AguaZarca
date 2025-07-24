@@ -456,7 +456,7 @@ const BlogsNew = () => {
       )}
 
       {/* Load More Button */}
-      {hasMore && (
+      {!loading && hasMore && blogs.length > 0 && (
         <div className="load-more-container">
           <button 
             onClick={loadMore}
