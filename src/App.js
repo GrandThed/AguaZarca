@@ -1,5 +1,6 @@
 import React from "react";
-import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 
 import { Menu } from "./components/menu/menu";
 import Footer from "./components/footer/Footer";
@@ -26,8 +27,9 @@ import ScrollToTop from "./components/scrollToTop/ScrollToTop";
 
 const App = () => {
   return (
-    <div className="App">
-      <Router basename={process.env.PUBLIC_URL}>
+    <HelmetProvider>
+      <div className="App">
+        <Router basename={process.env.PUBLIC_URL}>
         {/* menu spacer for the responsive menu */}
         <div className="menu-spacer" />
         <Menu />
@@ -54,6 +56,7 @@ const App = () => {
         <Footer />
       </Router>
     </div>
+    </HelmetProvider>
   );
 };
 

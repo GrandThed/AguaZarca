@@ -265,6 +265,62 @@
   
 }
 
+/* Semantic navigation list styles */
+.menu-nav-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: content;
+}
+
+.menu-nav-list li {
+  margin: 0;
+  padding: 0;
+}
+
+/* Accessibility focus styles */
+.menu-link:focus,
+.scrollmenu-publish:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Profile button accessibility */
+.menu-profile-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.menu-profile-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-profile-button:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-icon-profile {
+  display: block;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .menu-link {
+    border: 1px solid transparent;
+  }
+  
+  .menu-link:focus {
+    border-color: currentColor;
+  }
+}
+
 
 
 

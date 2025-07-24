@@ -1,15 +1,66 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { firestore } from "../../../firebase";
 import mapboxgl from "mapbox-gl";
 import ProductSlider from "../../slider/ProductSlider";
 import "./propiedad.css";
 import { icons } from "../../slider/Slider";
 import { IconContext } from "react-icons";
+import Breadcrumb from "../../breadcrumb/Breadcrumb";
+import { HOME } from "../../../routes";
 
 import { GoCheck } from "react-icons/go";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAP_API_KEY;
+
+// Generate structured data for real estate
+const generatePropertyStructuredData = (property) => {
+  if (!property || !property.location) return null;
+
+  const baseUrl = "https://aguazarca.com.ar";
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    "name": property.title,
+    "description": property.description,
+    "url": `${baseUrl}/propiedad/${property.id}`,
+    "image": property.images?.map(img => `${baseUrl}${img}`) || [],
+    "offers": {
+      "@type": "Offer",
+      "price": property.price?.value || 0,
+      "priceCurrency": property.price?.currency || "ARS",
+      "availability": "https://schema.org/InStock",
+      "seller": {
+        "@type": "RealEstateAgent",
+        "name": property.agent?.name || "AguaZarca Inmobiliaria",
+        "telephone": property.agent?.phone || "3541 7896-825"
+      }
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": property.location?.address || "",
+      "addressLocality": property.location?.city || "",
+      "addressRegion": property.location?.state || "",
+      "addressCountry": property.location?.country || "AR"
+    },
+    "geo": property.location?.coordinates ? {
+      "@type": "GeoCoordinates",
+      "latitude": property.location.coordinates.lat,
+      "longitude": property.location.coordinates.lng
+    } : undefined,
+    "numberOfRooms": property.characteristics?.bedrooms || undefined,
+    "numberOfBathroomsTotal": property.characteristics?.bathrooms || undefined,
+    "floorSize": property.characteristics?.covered_area ? {
+      "@type": "QuantitativeValue",
+      "value": property.characteristics.covered_area,
+      "unitCode": "MTK"
+    } : undefined,
+    "category": property.type || "Propiedad"
+  };
+
+  return JSON.stringify(structuredData, null, 2);
+};
 
 const Propiedad = (props) => {
   const [doc, setDoc] = useState({});
@@ -23,9 +74,26 @@ const Propiedad = (props) => {
   }, [id]);
 
   return doc.location ? (
-    <div className="inm-div">
+    <main className="inm-div" role="main">
+      <Helmet>
+        <title>{doc.title} - {doc.location?.city} | AguaZarca Inmobiliaria</title>
+        <meta 
+          name="description" 
+          content={`${doc.title} en ${doc.location?.city}. ${doc.description?.substring(0, 150)}... Inmobiliaria AguaZarca.`} 
+        />
+        <meta property="og:title" content={`${doc.title} - ${doc.location?.city}`} />
+        <meta property="og:description" content={doc.description?.substring(0, 200)} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={doc.images?.[0]} />
+        <link rel="canonical" href={`https://aguazarca.com.ar/propiedad/${id}`} />
+        {generatePropertyStructuredData({...doc, id}) && (
+          <script type="application/ld+json">
+            {generatePropertyStructuredData({...doc, id})}
+          </script>
+        )}
+      </Helmet>
       <InmuebleBody document={doc} />
-    </div>
+    </main>
   ) : (
     <div className="c-loader" />
   );
@@ -45,8 +113,16 @@ const InmuebleBody = (props) => {
     type,
   } = props.document;
   const { addressLine, city, country, neighborhood, state } = location;
+  // Generate breadcrumb items
+  const breadcrumbItems = [
+    { name: 'Inicio', url: HOME },
+    { name: comercialStatus === 'Venta' ? 'Propiedades en Venta' : 'Alquileres', url: comercialStatus === 'Venta' ? '/venta' : '/alquiler-anual' },
+    { name: title, url: null } // Current page, no URL
+  ];
+
   return (
     <>
+      <Breadcrumb items={breadcrumbItems} />
       <div className="inm-spacer" />
       <div className="inm-title-div">
         <div className="inm-title-left">

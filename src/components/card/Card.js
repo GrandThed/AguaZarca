@@ -12,6 +12,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { isAdmin } from "../../utils/auth";
 import { fetchEffect, mlFullfil } from "../routes/publicar/const_funct";
 import { toast } from "react-toastify";
+import { createPropertyUrl } from "../../utils/slugify";
 
 const Card = ({ propiedad }) => {
   const data = propiedad ? propiedad.data() : false;
@@ -19,9 +20,14 @@ const Card = ({ propiedad }) => {
     <article className="card-div">
       {data ? (
         <div>
-          <Link className="card-link" to={PROPIEDAD + propiedad.id}>
-            <div className="card-image" style={{ backgroundImage: `url(${data.images[0]})` }}>
-              <p className="card-image-counter">
+          <Link className="card-link" to={createPropertyUrl(data, propiedad.id)} aria-label={`Ver detalles de ${data.title} en ${data.location?.city}`}>
+            <div 
+              className="card-image" 
+              style={{ backgroundImage: `url(${data.images[0]})` }}
+              role="img"
+              aria-label={`Imagen de ${data.title} - ${data.type} en ${data.location?.city}`}
+            >
+              <p className="card-image-counter" aria-label={`${data.images.length} fotos disponibles`}>
                 <IconContext.Provider value={{ className: "card-image-icon" }}>
                   <BiCamera />
                 </IconContext.Provider>
@@ -65,8 +71,10 @@ const CardContent = ({ propiedad }) => {
         <div className="card-cont-container-filler"></div>
         <div className="card-cont-container">
           <IconContext.Provider value={{ className: "card-cont-icons" }}>
-            <h2 className="card-cont-title">{title}</h2>
-            <h4 className="card-cont-ubication">{`${location.city}, ${location.state}`}</h4>
+            <header className="card-header">
+              <h2 className="card-cont-title">{title}</h2>
+              <address className="card-cont-ubication">{`${location.city}, ${location.state}`}</address>
+            </header>
             <div className="card-cont-features">
               {(selectCharacteristics[type] || []).map((key) => {
                 return (

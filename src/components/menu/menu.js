@@ -64,10 +64,18 @@ export const Menu = () => {
       </div>
       {/* LogIn form & Dashboard */}
       <div className="menu-login">
-        <IconContext.Provider value={{ className: "menu-icon-profile" }}>
-          <CgProfile onClick={() => setShowLog((e) => !e)} />
-        </IconContext.Provider>
-        {showLog && <LogInForm />}
+        <button 
+          className="menu-profile-button"
+          onClick={() => setShowLog((e) => !e)}
+          aria-label="Abrir menú de usuario"
+          aria-expanded={showLog}
+          aria-controls="login-form"
+        >
+          <IconContext.Provider value={{ className: "menu-icon-profile" }}>
+            <CgProfile />
+          </IconContext.Provider>
+        </button>
+        {showLog && <div id="login-form"><LogInForm /></div>}
       </div>
       {/* Publish button */}
       <div className="menu-publish">

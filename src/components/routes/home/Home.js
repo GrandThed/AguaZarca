@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import Slider from "../../slider/Slider";
 import Card from "../../card/Card";
 import logo from "./../../../images/vcp-panoramica.jpg";
@@ -72,7 +73,19 @@ const Home = () => {
   }, [filterSearch]);
 
   return (
-    <div>
+    <main role="main">
+      <Helmet>
+        <title>AguaZarca Inmobiliaria - Propiedades en Villa Carlos Paz | Venta y Alquiler</title>
+        <meta 
+          name="description" 
+          content="Inmobiliaria AguaZarca en Villa Carlos Paz. Compra, venta y alquiler de propiedades. Casas, departamentos y lotes desde 2005. Operaciones confiables y asesoramiento profesional." 
+        />
+        <meta property="og:title" content="AguaZarca Inmobiliaria - Propiedades en Villa Carlos Paz" />
+        <meta property="og:description" content="Inmobiliaria líder en Villa Carlos Paz. Propiedades en venta y alquiler. Servicios inmobiliarios profesionales desde 2005." />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/images/vcp-panoramica.jpg" />
+        <link rel="canonical" href="https://aguazarca.com.ar/" />
+      </Helmet>
       {slider.length > 0 && <Slider estates={slider} />}
       <div className="temporal-search temporal-search-menu">
         <div className="temporal-dropdown-div">
@@ -138,7 +151,7 @@ const Home = () => {
         ))}
       </div>
       <ServicesHome />
-    </div>
+    </main>
   );
 };
 

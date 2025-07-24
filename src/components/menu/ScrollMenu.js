@@ -24,43 +24,58 @@ export const ScrollMenu = () => {
   };
   window.onscroll = () => handleScroll();
   return (
-    <div className="scrollmenu-div" style={{ top: scrolled ? "0" : "-85px" }}>
+    <nav className="scrollmenu-div" style={{ top: scrolled ? "0" : "-85px" }} role="navigation" aria-label="Navegación principal">
       <div className="scrollmenu-left">
-        <Link className="scrollmenu-image" onClick={handleClick} to={ROUTES.HOME}>
+        <Link className="scrollmenu-image" onClick={handleClick} to={ROUTES.HOME} aria-label="Ir al inicio - AguaZarca Inmobiliaria">
           <img
             src={logo}
-            alt="logo"
+            alt="Logo AguaZarca Inmobiliaria"
             className="scrollmenu-image"
           />
         </Link>
-        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.HOME}>
-          Inicio
-        </Link>
-        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.VENTA}>
-          Venta
-        </Link>
-        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.ALQUILER_TEMPORAL}>
-          Alquiler temporario
-        </Link>
-        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.ALQUILER_ANUAL}>
-          Alquiler Anual
-        </Link>
-        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.NOTICIAS}>
-          Noticias
-        </Link>
-        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.BLOGS}>
-          Blog
-        </Link>
-        <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.CONTACTO}>
-          Contacto
-        </Link>
+        <ul className="menu-nav-list">
+          <li>
+            <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.HOME}>
+              Inicio
+            </Link>
+          </li>
+          <li>
+            <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.VENTA}>
+              Venta
+            </Link>
+          </li>
+          <li>
+            <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.ALQUILER_TEMPORAL}>
+              Alquiler temporario
+            </Link>
+          </li>
+          <li>
+            <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.ALQUILER_ANUAL}>
+              Alquiler Anual
+            </Link>
+          </li>
+          <li>
+            <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.NOTICIAS}>
+              Noticias
+            </Link>
+          </li>
+          <li>
+            <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.BLOGS}>
+              Blog
+            </Link>
+          </li>
+          <li>
+            <Link className="menu-link scrollmenu-link" onClick={handleClick} to={ROUTES.CONTACTO}>
+              Contacto
+            </Link>
+          </li>
+        </ul>
       </div>
       <div className="scrollmenu-right">
-        <IconContext.Provider value={{ className: "" }}></IconContext.Provider>
-        <Link className="scrollmenu-publish" onClick={handleClick} to={ROUTES.PUBLICAR}>
+        <Link className="scrollmenu-publish" onClick={handleClick} to={ROUTES.PUBLICAR} aria-label="Publicar nueva propiedad">
           Publicar
         </Link>
       </div>
-    </div>
+    </nav>
   );
 };

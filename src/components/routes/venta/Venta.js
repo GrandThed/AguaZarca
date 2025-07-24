@@ -2,6 +2,7 @@ import { PageTitle } from "./../../pageTitle/PageTitle";
 import "./venta.css";
 
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { firestore } from "../../../firebase";
 import Card from "../../card/Card";
 import EmptyState from "../../emptyState/EmptyState";
@@ -32,6 +33,17 @@ const Venta = () => {
   
   return (
     <div>
+      <Helmet>
+        <title>Propiedades en Venta - Villa Carlos Paz | AguaZarca Inmobiliaria</title>
+        <meta 
+          name="description" 
+          content="Propiedades en venta en Villa Carlos Paz y alrededores. Casas, departamentos, lotes y locales comerciales. Inmobiliaria AguaZarca - Operaciones confiables desde 2005." 
+        />
+        <meta property="og:title" content="Propiedades en Venta - Villa Carlos Paz" />
+        <meta property="og:description" content="Descubre propiedades en venta en Villa Carlos Paz. Casas, departamentos y lotes con la confianza de AguaZarca Inmobiliaria." />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://aguazarca.com.ar/venta" />
+      </Helmet>
       <PageTitle title="Venta"></PageTitle>
       <div className="temporal-search">
         <div className="temporal-dropdown-div">
