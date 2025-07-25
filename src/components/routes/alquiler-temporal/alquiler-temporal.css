@@ -1,34 +1,72 @@
+/* Use the same modern search styles from home.css */
 .temporal-search {
   display: flex;
-  flex-wrap: wrap;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  max-width: 800px;
+  width: 100%;
+  margin: 40px auto;
   justify-content: center;
-  margin-top: -40px;
-  margin-bottom: 30px;
 }
 
 .temporal-dropdown-div {
-  background-color: white;
-  padding: 15px 10px;
-  border: 1px solid rgb(231, 231, 231);
+  background-color: transparent;
+  padding: 24px 20px;
+  border: none;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  flex: 1;
+  min-width: 200px;
 }
 
-/* 
-@media (max-width: 1100px) {
-  .temporal-dropdown-div-right {
-    border-left: 1px solid rgb(231, 231, 231);
-  }
-} */
+.temporal-dropdown-div:last-of-type {
+  border-right: none;
+}
+
+.temporal-dropdown-div-right {
+  border-right: none;
+}
 
 .temporal-dropdown {
-  width: 300px;
+  width: 100%;
+  min-width: 180px;
 }
 
 .Dropdown-control {
-  border: none !important ;
-  /* pssss, don't look at the !important */
+  border: none !important;
+  background: transparent !important;
+  padding: 8px 0 !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  color: #1f2937 !important;
 }
 
 .temporal-dropwdown-description {
-  font-weight: 500;
-  margin: 0 0 0 8px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  .temporal-search {
+    flex-direction: column;
+    border-radius: 12px;
+    margin: 20px 16px;
+  }
+  
+  .temporal-dropdown-div {
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 20px;
+  }
+  
+  .temporal-dropdown-div:last-of-type {
+    border-bottom: none;
+  }
 }

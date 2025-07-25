@@ -147,40 +147,190 @@
 }
 
 
-.temporal-search-menu{
-  margin-top: 30px;
+/* Modern search component styles */
+.temporal-search-menu {
+  margin-top: -80px;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
 }
 
-.temporal-search-button{
+.temporal-search {
+  display: flex;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.temporal-dropdown-div {
+  background-color: transparent;
+  padding: 24px 20px;
+  border: none;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  flex: 1;
+  min-width: 200px;
+}
+
+.temporal-dropdown-div:last-of-type {
+  border-right: none;
+}
+
+.temporal-dropdown-div-right {
+  border-right: none;
+}
+
+.temporal-dropwdown-description {
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.temporal-dropdown {
+  width: 100%;
+  min-width: 180px;
+}
+
+.Dropdown-control {
+  border: none !important;
+  background: transparent !important;
+  padding: 8px 0 !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  color: #1f2937 !important;
+}
+
+.Dropdown-arrow {
+  border-color: #6b7280 transparent transparent !important;
+  border-width: 6px 6px 0 !important;
+}
+
+.Dropdown-menu {
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  backdrop-filter: blur(20px) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.Dropdown-option {
+  padding: 12px 20px !important;
+  transition: all 0.2s ease !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+.Dropdown-option:hover {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+  color: #1e40af !important;
+}
+
+.Dropdown-option.is-selected {
+  background-color: #3b82f6 !important;
+  color: white !important;
+}
+
+.temporal-search-button {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: #A41B1B;
-  padding: 0 30px 0;
-  font-size: 50px;
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  padding: 20px 28px;
+  font-size: 20px;
   cursor: pointer;
-}
-
-.temporal-search-count{
-  font-size: 12px;
   color: white;
-  margin-top: 4px;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  border-radius: 0 16px 16px 0;
+  height: 100%;
+  min-height: 80px;
 }
 
-.temporal-search-link{
+.temporal-search-button:hover {
+  background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+}
+
+.temporal-search-button:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.temporal-search-count {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 2px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.temporal-search-link {
   color: white;
+  text-decoration: none;
+  display: flex;
+  height: 100%;
 }
 
-.temporal-search-icons{
-  margin-top: 10px;
+.temporal-search-icons {
+  margin-bottom: 2px;
+  font-size: 20px;
 }
 
-@media (max-width: 430px) {
-  .temporal-search-button{
-    width: 320px;
-    padding: 8px 0 4px;
+/* Mobile responsive design */
+@media (max-width: 768px) {
+  .temporal-search-menu {
+    margin-top: -60px;
+    padding: 0 16px;
+  }
+  
+  .temporal-search {
+    flex-direction: column;
+    border-radius: 12px;
+  }
+  
+  .temporal-dropdown-div {
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 20px;
+  }
+  
+  .temporal-dropdown-div:last-of-type {
+    border-bottom: none;
+  }
+  
+  .temporal-search-button {
+    border-radius: 0 0 12px 12px;
+    padding: 20px;
+    font-size: 20px;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .temporal-dropdown-div {
+    padding: 16px;
+  }
+  
+  .temporal-dropwdown-description {
+    font-size: 12px;
+  }
+  
+  .temporal-search-button {
+    padding: 16px;
+    font-size: 18px;
   }
 }
 

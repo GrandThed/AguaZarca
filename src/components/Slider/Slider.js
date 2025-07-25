@@ -66,10 +66,14 @@ const ImageSlider = ({ propiedad, uid }) => {
   const currencyFormat = new Intl.NumberFormat("es-ES", { style: "decimal" });
 
   let { title, location, price, comercialStatus, characteristics } = propiedad;
-  // selects the first image of the estate as the background image
+  
+  // selects the first image of the estate as the background image with fallback
   let style = {
-    backgroundImage: `url("${propiedad.images[0]}")`,
+    backgroundImage: propiedad.images && propiedad.images[0] 
+      ? `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("${propiedad.images[0]}")`
+      : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
   };
+  
   return (
     <div>
       <div className="image-div" style={style}>

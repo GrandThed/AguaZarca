@@ -107,45 +107,47 @@ const Home = () => {
         <link rel="canonical" href="https://aguazarca.com.ar/" />
       </Helmet>
       {slider.length > 0 && <Slider estates={slider} />}
-      <div className="temporal-search temporal-search-menu">
-        <div className="temporal-dropdown-div">
-          <p className="temporal-dropwdown-description">Operación</p>
-          <Dropdown
-            className="temporal-dropdown"
-            options={["Cualquiera", "Alquiler", "Alquiler temporal", "Venta", "Local comercial"]}
-            value={filterSearch.operation}
-            onChange={(e) => setFilterSearch({ ...filterSearch, operation: e.value })}
-          />
-        </div>
-        <div className="temporal-dropdown-div">
-          <p className="temporal-dropwdown-description">Tipo de propiedad</p>
-          <Dropdown
-            className="temporal-dropdown"
-            options={["Cualquiera", ...PROPERTY_TYPES]}
-            value={filterSearch.type}
-            onChange={(e) => setFilterSearch({ ...filterSearch, type: e.value })}
-          />
-        </div>
-        <div className="temporal-dropdown-div temporal-dropdown-div-right">
-          <p className="temporal-dropwdown-description">Ubicación</p>
-          <Dropdown
-            className="temporal-dropdown"
-            options={["Cualquiera", ...locations.sort()]}
-            value={filterSearch.locations}
-            onChange={(e) => setFilterSearch({ ...filterSearch, locations: e.value })}
-          />
-        </div>
-        <Link
-          to={`${BUSQUEDA_GLOBAL}?operation=${filterSearch.operation}&type=${filterSearch.type}&location=${filterSearch.locations}`}
-          className="temporal-search-link"
-        >
-          <div className="temporal-search-button">
-            <IconContext.Provider value={{ className: "temporal-search-icons" }}>
-              <BiSearch />
-            </IconContext.Provider>
-            <span className="temporal-search-count">{resultsCount} resultados</span>
+      <div className="temporal-search-menu">
+        <div className="temporal-search">
+          <div className="temporal-dropdown-div">
+            <p className="temporal-dropwdown-description">Operación</p>
+            <Dropdown
+              className="temporal-dropdown"
+              options={["Cualquiera", "Alquiler", "Alquiler temporal", "Venta", "Local comercial"]}
+              value={filterSearch.operation}
+              onChange={(e) => setFilterSearch({ ...filterSearch, operation: e.value })}
+            />
           </div>
-        </Link>
+          <div className="temporal-dropdown-div">
+            <p className="temporal-dropwdown-description">Tipo de propiedad</p>
+            <Dropdown
+              className="temporal-dropdown"
+              options={["Cualquiera", ...PROPERTY_TYPES]}
+              value={filterSearch.type}
+              onChange={(e) => setFilterSearch({ ...filterSearch, type: e.value })}
+            />
+          </div>
+          <div className="temporal-dropdown-div temporal-dropdown-div-right">
+            <p className="temporal-dropwdown-description">Ubicación</p>
+            <Dropdown
+              className="temporal-dropdown"
+              options={["Cualquiera", ...locations.sort()]}
+              value={filterSearch.locations}
+              onChange={(e) => setFilterSearch({ ...filterSearch, locations: e.value })}
+            />
+          </div>
+          <Link
+            to={`${BUSQUEDA_GLOBAL}?operation=${filterSearch.operation}&type=${filterSearch.type}&location=${filterSearch.locations}`}
+            className="temporal-search-link"
+          >
+            <div className="temporal-search-button">
+              <IconContext.Provider value={{ className: "temporal-search-icons" }}>
+                <BiSearch />
+              </IconContext.Provider>
+              <span className="temporal-search-count">{resultsCount} resultados</span>
+            </div>
+          </Link>
+        </div>
       </div>
       <TitleHome
         pretitle="Propiedades disponibles"

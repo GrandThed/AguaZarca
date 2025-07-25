@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { IconContext } from "react-icons";
 import { BiCamera } from "react-icons/bi";
 import { AiOutlineDelete, AiOutlinePauseCircle, AiOutlinePlayCircle, AiOutlineEdit } from "react-icons/ai";
-import { MdSystemUpdateAlt } from "react-icons/md";
+import { FaImages, FaMapMarkerAlt, FaStar, FaHome } from "react-icons/fa";
 import "./card.css";
 import { icons } from "../slider/Slider";
 import { Link } from "react-router-dom";
@@ -10,7 +10,6 @@ import { PROPIEDAD, EDITAR_PROPIEDAD } from "../../routes";
 import { firestore, auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { isAdmin } from "../../utils/auth";
-import { fetchEffect, mlFullfil } from "../routes/publicar/const_funct";
 import { toast } from "react-toastify";
 import { createPropertyUrl } from "../../utils/slugify";
 
@@ -119,7 +118,6 @@ export const HorizontalCard = ({ propiedad, paused }) => {
     location,
     price,
     featured,
-    mercadolibre,
     rentalFeatured,
     slider,
     title,
@@ -203,105 +201,140 @@ export const HorizontalCard = ({ propiedad, paused }) => {
       });
   };
 
-  const handleUpdate = (collection) => {
-    if (mercadolibre.id) {
-      fetchEffect(mercadolibre.id).then((estate) => {
-        firestore
-          .collection(collection)
-          .doc(propiedad.id)
-          .update(mlFullfil(estate))
-          .then(() => {
-            toast.success("Propiedad actializada correctamente", {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
-          })
-          .catch((e) => console.log(e));
-      });
-    }
+
+  const formatPrice = (price) => {
+    if (!price || Number(price.value) <= 0) return "--";
+    return new Intl.NumberFormat("es-ES").format(price.value);
   };
 
   return (
     <>
       {!deleted && (
-        <div className={`hc-main${paused ? " hc-main-paused" : ""}`}>
-          <div className="hc-image" style={{ backgroundImage: `url(${images[0]})` }} />
-          <IconContext.Provider value={{ className: "hc-control-icons" }}>
-            <div className="hc-control">
-              <button className="hc-control-button" onClick={() => handleDelete(paused ? "pausedEstates" : "estates")}>
-                <AiOutlineDelete />
-              </button>
-              <button className="hc-control-button" onClick={() => handlePause(paused ? false : "pause")}>
+        <div className={`hc-modern ${paused ? "hc-paused" : "hc-active"}`}>
+          {/* Status Indicator */}
+          <div className={`hc-status-indicator ${paused ? "paused" : "active"}`}>
+            <span className="hc-status-text">{paused ? "Pausada" : "Activa"}</span>
+          </div>
+
+          {/* Property Image */}
+          <div className="hc-image-container">
+            <div 
+              className="hc-image-modern" 
+              style={{ backgroundImage: `url(${images[0]})` }}
+              role="img"
+              aria-label={`Imagen de ${title}`}
+            >
+              <div className="hc-image-overlay">
+                <span className="hc-property-type">{type}</span>
+                {images.length > 1 && (
+                  <span className="hc-image-count">
+                    <FaImages /> {images.length}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Property Information */}
+          <div className="hc-content">
+            <div className="hc-main-info">
+              <div className="hc-header">
+                <h3 className="hc-title-modern">{title}</h3>
+                <div className="hc-meta">
+                  <span className="hc-commercial-status">{comercialStatus}</span>
+                  <span className="hc-date-created">{date.toLocaleDateString()}</span>
+                </div>
+              </div>
+
+              <div className="hc-location">
+                <FaMapMarkerAlt className="hc-location-icon" />
+                <span>{location.city}, {location.state}</span>
+              </div>
+
+              <div className="hc-price-container">
+                <span className="hc-price-modern">
+                  {formatPrice(price)}
+                  {price && price.currency && Number(price.value) > 0 && (
+                    <span className="hc-currency"> {price.currency}</span>
+                  )}
+                </span>
+              </div>
+            </div>
+
+            {/* Featured Options */}
+            <div className="hc-featured-section">
+              <div className="hc-featured-options">
+                <label className="hc-featured-option" title="Destacada General">
+                  <input
+                    type="checkbox"
+                    checked={whereFreat.featured}
+                    onChange={(e) => handleFirebaseUpdate("featured", e.target.checked)}
+                    className="hc-checkbox"
+                  />
+                  <div className="hc-checkbox-custom">
+                    <FaStar className="hc-checkbox-icon" />
+                  </div>
+                </label>
+
+                <label className="hc-featured-option" title="Destacada Alquiler">
+                  <input
+                    type="checkbox"
+                    checked={whereFreat.rentalFeatured}
+                    onChange={(e) => handleFirebaseUpdate("rentalFeatured", e.target.checked)}
+                    className="hc-checkbox"
+                  />
+                  <div className="hc-checkbox-custom">
+                    <FaHome className="hc-checkbox-icon" />
+                  </div>
+                </label>
+
+                <label className="hc-featured-option" title="Slider Principal">
+                  <input
+                    type="checkbox"
+                    checked={whereFreat.slider}
+                    onChange={(e) => handleFirebaseUpdate("slider", e.target.checked)}
+                    className="hc-checkbox"
+                  />
+                  <div className="hc-checkbox-custom">
+                    <FaImages className="hc-checkbox-icon" />
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Controls */}
+          <div className="hc-actions">
+            <div className="hc-actions-group">
+              <button 
+                className="hc-action-btn hc-pause-btn"
+                onClick={() => handlePause(paused ? false : "pause")}
+                title={paused ? "Reactivar propiedad" : "Pausar propiedad"}
+              >
                 {paused ? <AiOutlinePlayCircle /> : <AiOutlinePauseCircle />}
+                <span>{paused ? "Reactivar" : "Pausar"}</span>
               </button>
-              <button className="hc-control-button" onClick={() => handleUpdate(paused ? "pausedEstates" : "estates")}>
-                <MdSystemUpdateAlt />
-              </button>
+
+
               {isAdmin(user) && (
-                <Link className="hc-control-button" to={EDITAR_PROPIEDAD.replace(":id", propiedad.id)}>
+                <Link 
+                  className="hc-action-btn hc-edit-btn"
+                  to={EDITAR_PROPIEDAD.replace(":id", propiedad.id)}
+                  title="Editar propiedad"
+                >
                   <AiOutlineEdit />
+                  <span>Editar</span>
                 </Link>
               )}
-            </div>
-          </IconContext.Provider>
-          <div className="hc-body">
-            <div className="hc-info">
-              <div className="hc-title-div">
-                <h2 className="hc-title">{title}</h2>
-              </div>
-              <div className="hc-status">
-                <p className="hc-status-p">
-                  <span className="hc-status-span">{comercialStatus} - </span>
-                  <span className="hc-status-span">{type}</span>
-                </p>
-              </div>
-              <div className="hc-price">
-                <p className="hc-price-p">
-                  <span className="hc-price-span">
-                    {Number(price.value) > 0 ? price.value : "--"}
-                  </span>
-                  {Number(price.value) > 0 && (
-                    <span className="hc-price-span">{price.currency}</span>
-                  )}
-                  <span className="hc-date">{date.toLocaleDateString()}</span>
-                </p>
-              </div>
-              <div className="hc-price">
-                <p className="hc-price-p">
-                  {`${location.addressLine}, ${location.neighborhood}, ${location.city}, ${location.state}, ${location.country}`}
-                </p>
-              </div>
-            </div>
-            <div className="hc-tracks">
-              <div className="hc-track-item">
-                <abbr title="Destacado Slider">SL</abbr>
-                <input
-                  type="checkbox"
-                  checked={whereFreat.slider}
-                  onChange={(e) => handleFirebaseUpdate("slider", e.target.checked)}
-                />
-              </div>
-              <div className="hc-track-item">
-                <abbr title="Destacado en alquiler">RF</abbr>
-                <input
-                  type="checkbox"
-                  checked={whereFreat.rentalFeatured}
-                  onChange={(e) => handleFirebaseUpdate("rentalFeatured", e.target.checked)}
-                />
-              </div>
-              <div className="hc-track-item">
-                <abbr title="Destacado general">FR</abbr>
-                <input
-                  type="checkbox"
-                  checked={whereFreat.featured}
-                  onChange={(e) => handleFirebaseUpdate("featured", e.target.checked)}
-                />
-              </div>
+
+              <button 
+                className="hc-action-btn hc-delete-btn"
+                onClick={() => handleDelete(paused ? "pausedEstates" : "estates")}
+                title="Eliminar propiedad"
+              >
+                <AiOutlineDelete />
+                <span>Eliminar</span>
+              </button>
             </div>
           </div>
         </div>

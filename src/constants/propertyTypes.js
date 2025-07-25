@@ -12,6 +12,7 @@ export const PROPERTY_TYPES = [
   "Otros Inmuebles",
   "Ph",
   "Parcelas, Nichos y Bóvedas",
+  "Quintas",
   "Terrenos y Lotes",
   "Tiempo Compartido"
 ];

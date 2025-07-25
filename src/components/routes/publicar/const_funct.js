@@ -147,20 +147,20 @@ const mapPropertyType = (mlType) => {
   const typeMapping = {
     'Apartamento': 'Departamento',
     'Casa': 'Casa',
-    'PH': 'PH',
-    'Quinta': 'Quinta',
-    'Terreno': 'Terreno',
-    'Oficina': 'Oficina',
-    'Local': 'Local comercial',
-    'Depósito': 'Depósito',
-    'Galpón': 'Galpón',
-    'Campo': 'Campo',
-    'Chacra': 'Chacra',
-    'Fondo de comercio': 'Fondo de comercio',
-    'Hotel': 'Hotel',
-    'Cochera': 'Cochera',
-    'Consultorio': 'Consultorio',
-    'Edificio': 'Edificio'
+    'PH': 'Ph',
+    'Quinta': 'Quintas',
+    'Terreno': 'Terrenos y Lotes',
+    'Oficina': 'Oficinas',
+    'Local': 'Locales',
+    'Depósito': 'Depósitos y Galpones',
+    'Galpón': 'Depósitos y Galpones',
+    'Campo': 'Campos',
+    'Chacra': 'Campos',
+    'Fondo de comercio': 'Fondo de Comercio',
+    'Hotel': 'Otros Inmuebles',
+    'Cochera': 'Cocheras',
+    'Consultorio': 'Consultorios',
+    'Edificio': 'Otros Inmuebles'
   };
   return typeMapping[mlType] || 'Departamento';
 };
