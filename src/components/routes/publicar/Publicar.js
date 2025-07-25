@@ -393,13 +393,47 @@ export const Publicar = () => {
 
   useEffect(() => {
     const queryToken = getTokenFromHash();
+    
+    // Debug logging for token detection
+    if (process.env.NODE_ENV === 'development') {
+      console.log('MercadoLibre OAuth Debug:', {
+        fullUrl: window.location.href,
+        hash: window.location.hash,
+        search: window.location.search,
+        detectedToken: queryToken ? 'Found' : 'Not found'
+      });
+    }
 
     if (queryToken) {
       setMLToken(queryToken);
       setAutofill(true);
       const info = { token: queryToken, expiresAt: Date.now() + TOKEN_LIFETIME };
       localStorage.setItem("meli_token", JSON.stringify(info));
-      window.history.replaceState({}, "", "/");
+      
+      // Clean up URL by removing token parameters from both hash and search
+      const currentUrl = new URL(window.location.href);
+      
+      // Remove token-related parameters from search
+      currentUrl.searchParams.delete('access_token');
+      currentUrl.searchParams.delete('token');
+      currentUrl.searchParams.delete('code');
+      currentUrl.searchParams.delete('state');
+      
+      // Clean up hash if it contains token parameters
+      let cleanHash = currentUrl.hash;
+      if (cleanHash && (cleanHash.includes('access_token=') || cleanHash.includes('token='))) {
+        // If hash contains route + params, preserve only the route
+        if (cleanHash.includes('?')) {
+          cleanHash = cleanHash.substring(0, cleanHash.indexOf('?'));
+        } else if (cleanHash.includes('access_token=')) {
+          // If hash is just token params, remove everything
+          cleanHash = '';
+        }
+        currentUrl.hash = cleanHash;
+      }
+      
+      // Update URL without reload
+      window.history.replaceState({}, "", currentUrl.toString());
       setCheckingMeli(false);
       return;
     }
@@ -426,13 +460,65 @@ export const Publicar = () => {
   }, []);
 
   function getTokenFromHash() {
-    const hash = window.location.hash; // ejemplo: "#/publicar-propiedad?token=abc123"
-    const queryStart = hash.indexOf("?");
-    if (queryStart === -1) return null;
-
-    const queryString = hash.substring(queryStart + 1);
-    const params = new URLSearchParams(queryString);
-    return params.get("token");
+    try {
+      // Check for token in multiple possible locations
+      
+      // 1. Check URL hash fragment: #access_token=abc123
+      const hash = window.location.hash;
+      if (hash && hash.includes('access_token=')) {
+        try {
+          const hashParams = new URLSearchParams(hash.substring(1));
+          const token = hashParams.get('access_token');
+          if (token && token.trim()) return token.trim();
+        } catch (e) {
+          console.warn('Error parsing hash access_token:', e);
+        }
+      }
+      
+      // 2. Check URL hash with query params: #/publicar-propiedad?token=abc123
+      if (hash && hash.includes('?')) {
+        try {
+          const queryStart = hash.indexOf("?");
+          const queryString = hash.substring(queryStart + 1);
+          const params = new URLSearchParams(queryString);
+          const token = params.get("token");
+          if (token && token.trim()) return token.trim();
+        } catch (e) {
+          console.warn('Error parsing hash token:', e);
+        }
+      }
+      
+      // 3. Check regular URL query params: ?access_token=abc123 or ?token=abc123
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessToken = urlParams.get('access_token');
+        if (accessToken && accessToken.trim()) return accessToken.trim();
+        
+        const token = urlParams.get('token');
+        if (token && token.trim()) return token.trim();
+      } catch (e) {
+        console.warn('Error parsing URL search params:', e);
+      }
+      
+      // 4. Check for code parameter (OAuth authorization code)
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code && code.trim()) {
+          // This would need to be exchanged for an access token
+          // For now, we'll treat it as a token placeholder
+          console.warn('OAuth code detected, may need token exchange:', code);
+          return code.trim();
+        }
+      } catch (e) {
+        console.warn('Error parsing OAuth code:', e);
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Error in getTokenFromHash:', error);
+      return null;
+    }
   }
 
   return (
@@ -449,28 +535,24 @@ export const Publicar = () => {
               className={`progress-step ${state.title ? 'completed' : 'active'}`}
               onClick={() => scrollToSection('basic-info-section')}
             >
-              <span className="step-icon">📝</span>
               <span className="step-text">Información Básica</span>
             </button>
             <button 
               className={`progress-step ${state.location.addressLine ? 'completed' : state.title ? 'active' : ''}`}
               onClick={() => scrollToSection('location-section')}
             >
-              <span className="step-icon">📍</span>
               <span className="step-text">Ubicación</span>
             </button>
             <button 
               className={`progress-step ${Object.values(state.characteristics).some(val => val) ? 'completed' : state.location.addressLine ? 'active' : ''}`}
               onClick={() => scrollToSection('characteristics-section')}
             >
-              <span className="step-icon">🏠</span>
               <span className="step-text">Características</span>
             </button>
             <button 
               className={`progress-step ${filesArrayRaw.length > 0 ? 'completed' : Object.values(state.characteristics).some(val => val) ? 'active' : ''}`}
               onClick={() => scrollToSection('images-section')}
             >
-              <span className="step-icon">📸</span>
               <span className="step-text">Imágenes</span>
             </button>
           </div>
@@ -485,8 +567,8 @@ export const Publicar = () => {
                   </svg>
                   MercadoLibre
                 </div>
-                <div className={`meli-status-badge ${mlToken ? 'connected' : 'disconnected'}`}>
-                  {mlToken ? 'Conectado' : 'No conectado'}
+                <div className={`meli-status-badge ${mlToken && valid !== false ? 'connected' : 'disconnected'}`}>
+                  {mlToken && valid !== false ? 'Conectado' : 'No conectado'}
                 </div>
               </div>
               <p className="meli-description">
@@ -494,13 +576,18 @@ export const Publicar = () => {
               </p>
             </div>
 
-            {checkingMeli ? (
+            {checkingMeli || (mlToken && valid === null) ? (
               <div className="meli-loading">
                 <div className="meli-spinner"></div>
-                <p>Verificando conexión...</p>
+                <p>Verificando conexión con MercadoLibre...</p>
               </div>
-            ) : !mlToken ? (
+            ) : !mlToken || valid === false ? (
               <div className="meli-login-section">
+                {valid === false && (
+                  <div className="meli-error-message">
+                    <p>⚠️ Error de conexión con MercadoLibre. Tu sesión puede haber expirado.</p>
+                  </div>
+                )}
                 <div className="meli-benefits">
                   <h4>¿Por qué conectar con MercadoLibre?</h4>
                   <ul>
@@ -514,15 +601,43 @@ export const Publicar = () => {
               </div>
             ) : (
               <div className="meli-connected-section">
-                {meliUser && (
+                {meliUser ? (
                   <div className="meli-user-card">
                     <div className="meli-user-avatar">
-                      {meliUser.nickname?.charAt(0).toUpperCase() || 'U'}
+                      {meliUser.nickname?.charAt(0).toUpperCase() || meliUser.email?.charAt(0).toUpperCase() || 'U'}
                     </div>
                     <div className="meli-user-details">
-                      <h4>{meliUser.nickname}</h4>
-                      <p>ID: {meliUser.id}</p>
+                      <h4>{meliUser.nickname || meliUser.first_name || 'Usuario MercadoLibre'}</h4>
+                      <p>
+                        {meliUser.email && `Email: ${meliUser.email}`}
+                        {meliUser.id && ` • ID: ${meliUser.id}`}
+                      </p>
                     </div>
+                    <button 
+                      className="meli-disconnect-btn"
+                      onClick={() => {
+                        localStorage.removeItem("meli_token");
+                        setMLToken(null);
+                        setAutofill(false);
+                      }}
+                      title="Desconectar cuenta de MercadoLibre"
+                    >
+                      🔗 Desconectar
+                    </button>
+                  </div>
+                ) : (
+                  <div className="meli-token-only">
+                    <p>✅ Token de MercadoLibre válido</p>
+                    <button 
+                      className="meli-disconnect-btn"
+                      onClick={() => {
+                        localStorage.removeItem("meli_token");
+                        setMLToken(null);
+                        setAutofill(false);
+                      }}
+                    >
+                      🔗 Desconectar
+                    </button>
                   </div>
                 )}
 

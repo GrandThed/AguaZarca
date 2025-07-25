@@ -44,6 +44,7 @@ export const attributes = [
   "Toilette",
   "Vestidor",
   "Lavadero",
+  "Agua corriente",
 ];
 
 export const characteristics = [
@@ -53,11 +54,13 @@ export const characteristics = [
   "Baños",
   "Cocheras",
   "Superficie total",
+  "Ambientes",
   "Horario check out",
   "Horario check in",
   "Camas",
   "Huéspedes",
   "Estadía mínima (noches)",
+  "Antigüedad",
 ];
 
 export const ubicationFields = [
@@ -172,35 +175,79 @@ const mapCommercialStatus = (mlOperation) => {
   return statusMapping[mlOperation] || 'Alquiler temporal';
 };
 
-const extractAdvancedAttributes = (mlAttributes) => {
-  const advancedMapping = {
-    'Pileta': ['Pileta', 'Pool', 'Swimming pool', 'Piscina'],
-    'Aire acondicionado': ['Aire acondicionado', 'A/C', 'Air conditioning', 'AC'],
-    'Calefacción': ['Calefacción', 'Heating', 'Caldera', 'Radiador'],
-    'Balcón': ['Balcón', 'Balcony', 'Terraza', 'Terrace'],
-    'Jardín': ['Jardín', 'Garden', 'Patio', 'Yard'],
-    'Cocheras': ['Cochera', 'Garage', 'Parking', 'Estacionamiento'],
-    'Seguridad 24 horas': ['Seguridad', 'Security', '24hs', 'Portero'],
-    'Gimnasio': ['Gimnasio', 'Gym', 'Fitness'],
-    'Ascensor': ['Ascensor', 'Elevator', 'Lift'],
-    'Amoblado': ['Amoblado', 'Furnished', 'Mobiliario']
-  };
-
+const extractAdvancedAttributes = (mlAttributes, localAttributes) => {
   const extractedAttributes = {};
   
-  mlAttributes.forEach(attr => {
-    const attrName = attr.name;
-    const attrValue = attr.value_name;
+  // Create a mapping of ML attribute names to local attribute names
+  const mlToLocalMapping = {
+    // Direct ML API attribute name mappings based on real API response
+    'Jardín': 'Jardín',
+    'Cocina': 'Cocina', 
+    'Patio': 'Patio',
+    'Acceso a internet': 'Acceso a internet',
+    'Gas natural': 'Gas natural',
+    'Pileta': 'Pileta',
+    'Placards': 'Placards',
+    'Agua corriente': 'Agua corriente',
     
-    Object.keys(advancedMapping).forEach(localAttr => {
-      const variations = advancedMapping[localAttr];
-      if (variations.some(variation => 
-        attrName.toLowerCase().includes(variation.toLowerCase()) ||
-        attrValue.toLowerCase().includes(variation.toLowerCase())
-      )) {
-        extractedAttributes[localAttr] = attrValue === 'Sí' || attrValue === 'Yes' || attrValue === true;
+    // Additional pattern mappings for variations
+    'Pool': 'Pileta',
+    'Swimming pool': 'Pileta',
+    'Piscina': 'Pileta',
+    'A/C': 'Aire acondicionado',
+    'Air conditioning': 'Aire acondicionado',
+    'AC': 'Aire acondicionado',
+    'Heating': 'Calefacción',
+    'Caldera': 'Calefacción',
+    'Radiador': 'Calefacción',
+    'Balcony': 'Balcón',
+    'Terraza': 'Terraza',
+    'Terrace': 'Terraza',
+    'Garden': 'Jardín',
+    'Yard': 'Jardín',
+    'Garage': 'Cocheras',
+    'Parking': 'Cocheras', 
+    'Estacionamiento': 'Cocheras',
+    'Security': 'Seguridad 24 horas',
+    '24hs': 'Seguridad 24 horas',
+    'Portero': 'Seguridad 24 horas',
+    'Gym': 'Gimnasio',
+    'Fitness': 'Gimnasio',
+    'Elevator': 'Ascensor',
+    'Lift': 'Ascensor',
+    'Furnished': 'Amoblado',
+    'Mobiliario': 'Amoblado'
+  };
+  
+  mlAttributes.forEach(attr => {
+    const mlAttrName = attr.name;
+    const mlAttrValue = attr.value_name;
+    
+    // Only process boolean attributes (value_type: "boolean")
+    if (attr.value_type === 'boolean') {
+      // First: Try direct name matching
+      if (localAttributes.includes(mlAttrName)) {
+        extractedAttributes[mlAttrName] = mlAttrValue === 'Sí';
       }
-    });
+      // Second: Try mapping table
+      else if (mlToLocalMapping[mlAttrName] && localAttributes.includes(mlToLocalMapping[mlAttrName])) {
+        extractedAttributes[mlToLocalMapping[mlAttrName]] = mlAttrValue === 'Sí';
+      }
+      // Third: Try pattern matching for any unmapped attributes
+      else {
+        localAttributes.forEach(localAttr => {
+          const variations = Object.keys(mlToLocalMapping).filter(key => 
+            mlToLocalMapping[key] === localAttr
+          );
+          
+          if (variations.some(variation => 
+            mlAttrName.toLowerCase().includes(variation.toLowerCase())
+          )) {
+            extractedAttributes[localAttr] = mlAttrValue === 'Sí';
+          }
+        });
+      }
+    }
   });
 
   return extractedAttributes;
@@ -223,8 +270,8 @@ export const mlFullfil = ({ info, description }, att = attributes) => {
     mlAttributes.filter((e) => att.includes(e.name))
   );
   
-  // Advanced attribute extraction
-  const advancedAttrs = extractAdvancedAttributes(mlAttributes);
+  // Advanced attribute extraction with local attributes array
+  const advancedAttrs = extractAdvancedAttributes(mlAttributes, att);
   
   // Combine both attribute lists
   let attList = att.reduce((acc, e) => {
@@ -237,26 +284,42 @@ export const mlFullfil = ({ info, description }, att = attributes) => {
     mlAttributes.filter((e) => characteristics.includes(e.name))
   );
 
-  // Try to extract additional characteristics
+  // Enhanced characteristics extraction with comprehensive mapping
   const additionalChars = {};
+  
+  // Create comprehensive characteristics mapping
+  const characteristicsMappings = {
+    "Superficie total": ["Superficie total", "Total area"],
+    "Superficie cubierta": ["Superficie cubierta", "Covered area"], 
+    "Ambientes": ["Ambientes", "Rooms"],
+    "Dormitorios": ["Dormitorios", "Bedrooms"],
+    "Baños": ["Baños", "Bathrooms", "Full bathrooms"],
+    "Cocheras": ["Cocheras", "Parking spaces", "Parking lots"],
+    "Cantidad de pisos": ["Cantidad de pisos", "Floors"],
+    "Antigüedad": ["Antigüedad", "Property age", "Age"]
+  };
+  
   mlAttributes.forEach(attr => {
-    if (attr.name === "Superficie total" || attr.name === "Superficie") {
-      additionalChars["Superficie total"] = attr.value_name;
-    }
-    if (attr.name === "Superficie cubierta") {
-      additionalChars["Superficie cubierta"] = attr.value_name;
-    }
-    if (attr.name === "Ambientes" || attr.name === "Rooms") {
-      additionalChars["Dormitorios"] = attr.value_name;
-    }
-    if (attr.name === "Baños" || attr.name === "Bathrooms") {
-      additionalChars["Baños"] = attr.value_name;
-    }
-    if (attr.name === "Dormitorios" || attr.name === "Bedrooms") {
-      additionalChars["Dormitorios"] = attr.value_name;
-    }
-    if (attr.name === "Cocheras" || attr.name === "Parking spaces") {
-      additionalChars["Cocheras"] = attr.value_name;
+    const mlAttrName = attr.name;
+    const mlAttrValue = attr.value_name;
+    
+    // Only process number and number_unit attributes for characteristics
+    if (attr.value_type === 'number' || attr.value_type === 'number_unit') {
+      // First: Direct name matching
+      if (characteristics.includes(mlAttrName)) {
+        additionalChars[mlAttrName] = mlAttrValue;
+      }
+      // Second: Try mapping variations
+      else {
+        Object.keys(characteristicsMappings).forEach(localChar => {
+          const variations = characteristicsMappings[localChar];
+          if (variations.some(variation => 
+            mlAttrName.toLowerCase() === variation.toLowerCase()
+          )) {
+            additionalChars[localChar] = mlAttrValue;
+          }
+        });
+      }
     }
   });
 

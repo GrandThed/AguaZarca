@@ -1,0 +1,530 @@
+{
+  "id": "MLA2046245636",
+  "site_id": "MLA",
+  "title": "En Venta: Casa Ph Reciclada - Carlos Paz - A 400 Mt Balneario La Hoya Y 20 Cuadras Del Centro",
+  "family_name": null,
+  "seller_id": 296857145,
+  "category_id": "MLA401685",
+  "user_product_id": null,
+  "official_store_id": null,
+  "price": 87000.0,
+  "base_price": 87000.0,
+  "original_price": null,
+  "inventory_id": null,
+  "currency_id": "USD",
+  "initial_quantity": 1,
+  "available_quantity": 1,
+  "sold_quantity": 0,
+  "sale_terms": [
+    {
+      "id": "IS_FINANCEABLE",
+      "name": "Es financiable",
+      "value_id": "242085",
+      "value_name": "Sí",
+      "value_struct": null,
+      "values": [
+        {
+          "id": "242085",
+          "name": "Sí",
+          "struct": null
+        }
+      ],
+      "value_type": "boolean"
+    },
+    {
+      "id": "FINANCEABLE_BY",
+      "name": "Financiado por",
+      "value_id": "13325708",
+      "value_name": "Banco Galicia",
+      "value_struct": null,
+      "values": [
+        {
+          "id": "13325708",
+          "name": "Banco Galicia",
+          "struct": null
+        }
+      ],
+      "value_type": "string"
+    }
+  ],
+  "buying_mode": "classified",
+  "listing_type_id": "silver",
+  "start_time": "2025-04-07T23:45:37.598Z",
+  "stop_time": "2026-02-13T04:00:00.000Z",
+  "end_time": "2026-02-13T04:00:00.000Z",
+  "expiration_time": "2025-08-17T11:15:23.218Z",
+  "condition": "used",
+  "permalink": "https://casa.mercadolibre.com.ar/MLA-2046245636-en-venta-casa-ph-reciclada-carlos-paz-a-400-mt-balneario-la-hoya-y-20-cuadras-del-centro-_JM",
+  "thumbnail_id": "628549-MLA83599162807_042025",
+  "thumbnail": "http://http2.mlstatic.com/D_628549-MLA83599162807_042025-I.jpg",
+  "pictures": [
+    {
+      "id": "628549-MLA83599162807_042025",
+      "url": "http://http2.mlstatic.com/D_628549-MLA83599162807_042025-O.jpg",
+      "secure_url": "https://http2.mlstatic.com/D_628549-MLA83599162807_042025-O.jpg",
+      "size": "375x500",
+      "max_size": "780x1040",
+      "quality": ""
+    }
+  ],
+  "video_id": null,
+  "descriptions": [
+    
+  ],
+  "accepts_mercadopago": false,
+  "non_mercado_pago_payment_methods": [
+    
+  ],
+  "shipping": {
+    "mode": "not_specified",
+    "methods": [
+      
+    ],
+    "tags": [
+      
+    ],
+    "dimensions": null,
+    "local_pick_up": false,
+    "free_shipping": false,
+    "logistic_type": null,
+    "store_pick_up": false
+  },
+  "international_delivery_mode": "none",
+  "seller_address": {
+    "address_line": "López Y Planes 148",
+    "zip_code": "5152",
+    "city": {
+      "id": "QVItWFZpbGxhIENhcmxvcyBQYXo",
+      "name": "Villa Carlos Paz"
+    },
+    "state": {
+      "id": "AR-X",
+      "name": "Córdoba"
+    },
+    "country": {
+      "id": "AR",
+      "name": "Argentina"
+    },
+    "search_location": {
+      "city": {
+        "id": "TVhYVmlsbGEgQ2FybG9zIFBhelRVeEJVRU5QV",
+        "name": "Villa Carlos Paz"
+      },
+      "state": {
+        "id": "TUxBUENPUmFkZGIw",
+        "name": "Córdoba"
+      }
+    },
+    "latitude": -31.391301,
+    "longitude": -64.464588,
+    "id": 1023645375
+  },
+  "seller_contact": {
+    "contact": "",
+    "other_info": "",
+    "country_code": "54",
+    "area_code": "",
+    "phone": "3541659041",
+    "country_code2": "54",
+    "area_code2": "",
+    "phone2": "3517896825",
+    "email": "gillio.inmo@gmail.com",
+    "webpage": ""
+  },
+  "location": {
+    "address_line": "Los Alamos 287, Villa Carlos Paz",
+    "zip_code": "",
+    "neighborhood": {
+      "id": "TVhYTGEgUXVpbnRhIEN1YXJ0YSBTZWNjacOzb",
+      "name": "La Quinta Cuarta Sección"
+    },
+    "city": {
+      "id": "TVhYVmlsbGEgQ2FybG9zIFBhelRVeEJVRU5QV",
+      "name": "Villa Carlos Paz"
+    },
+    "state": {
+      "id": "TUxBUENPUmFkZGIw",
+      "name": "Córdoba"
+    },
+    "country": {
+      "id": "AR",
+      "name": "Argentina"
+    },
+    "latitude": -31.4225288,
+    "longitude": -64.5169041
+  },
+  "geolocation": {
+    "latitude": -31.4225288,
+    "longitude": -64.5169041
+  },
+  "coverage_areas": [
+    
+  ],
+  "attributes": [
+    {
+      "id": "HAS_GARDEN",
+      "name": "Jardín",
+      "value_id": "242085",
+      "value_name": "Sí",
+      "values": [
+        {
+          "id": "242085",
+          "name": "Sí",
+          "struct": null
+        }
+      ],
+      "value_type": "boolean"
+    },
+    {
+      "id": "HAS_KITCHEN",
+      "name": "Cocina",
+      "value_id": "242085",
+      "value_name": "Sí",
+      "values": [
+        {
+          "id": "242085",
+          "name": "Sí",
+          "struct": null
+        }
+      ],
+      "value_type": "boolean"
+    },
+    {
+      "id": "HAS_PATIO",
+      "name": "Patio",
+      "value_id": "242085",
+      "value_name": "Sí",
+      "values": [
+        {
+          "id": "242085",
+          "name": "Sí",
+          "struct": null
+        }
+      ],
+      "value_type": "boolean"
+    },
+    {
+      "id": "HAS_INTERNET_ACCESS",
+      "name": "Acceso a internet",
+      "value_id": "242085",
+      "value_name": "Sí",
+      "values": [
+        {
+          "id": "242085",
+          "name": "Sí",
+          "struct": null
+        }
+      ],
+      "value_type": "boolean"
+    },
+    {
+      "id": "HAS_NATURAL_GAS",
+      "name": "Gas natural",
+      "value_id": "242085",
+      "value_name": "Sí",
+      "values": [
+        {
+          "id": "242085",
+          "name": "Sí",
+          "struct": null
+        }
+      ],
+      "value_type": "boolean"
+    },
+    {
+      "id": "HAS_SWIMMING_POOL",
+      "name": "Pileta",
+      "value_id": "242085",
+      "value_name": "Sí",
+      "values": [
+        {
+          "id": "242085",
+          "name": "Sí",
+          "struct": null
+        }
+      ],
+      "value_type": "boolean"
+    },
+    {
+      "id": "BEDROOMS",
+      "name": "Dormitorios",
+      "value_id": null,
+      "value_name": "3",
+      "values": [
+        {
+          "id": null,
+          "name": "3",
+          "struct": null
+        }
+      ],
+      "value_type": "number"
+    },
+    {
+      "id": "COVERED_AREA",
+      "name": "Superficie cubierta",
+      "value_id": null,
+      "value_name": "110 m²",
+      "values": [
+        {
+          "id": null,
+          "name": "110 m²",
+          "struct": {
+            "number": 110,
+            "unit": "m²"
+          }
+        }
+      ],
+      "value_type": "number_unit"
+    },
+    {
+      "id": "FACING",
+      "name": "Orientación",
+      "value_id": "242327",
+      "value_name": "Norte",
+      "values": [
+        {
+          "id": "242327",
+          "name": "Norte",
+          "struct": null
+        }
+      ],
+      "value_type": "list"
+    },
+    {
+      "id": "FLOORS",
+      "name": "Cantidad de pisos",
+      "value_id": null,
+      "value_name": "1",
+      "values": [
+        {
+          "id": null,
+          "name": "1",
+          "struct": null
+        }
+      ],
+      "value_type": "number"
+    },
+    {
+      "id": "FULL_BATHROOMS",
+      "name": "Baños",
+      "value_id": null,
+      "value_name": "2",
+      "values": [
+        {
+          "id": null,
+          "name": "2",
+          "struct": null
+        }
+      ],
+      "value_type": "number"
+    },
+    {
+      "id": "HOUSE_PROPERTY_SUBTYPE",
+      "name": "Tipo de casa",
+      "value_id": "266260",
+      "value_name": "Ph",
+      "values": [
+        {
+          "id": "266260",
+          "name": "Ph",
+          "struct": null
+        }
+      ],
+      "value_type": "list"
+    },
+    {
+      "id": "PARKING_LOTS",
+      "name": "Cocheras",
+      "value_id": null,
+      "value_name": "1",
+      "values": [
+        {
+          "id": null,
+          "name": "1",
+          "struct": null
+        }
+      ],
+      "value_type": "number"
+    },
+    {
+      "id": "PROPERTY_AGE",
+      "name": "Antigüedad",
+      "value_id": null,
+      "value_name": "45 años",
+      "values": [
+        {
+          "id": null,
+          "name": "45 años",
+          "struct": {
+            "number": 45,
+            "unit": "años"
+          }
+        }
+      ],
+      "value_type": "number_unit"
+    },
+    {
+      "id": "ROOMS",
+      "name": "Ambientes",
+      "value_id": null,
+      "value_name": "4",
+      "values": [
+        {
+          "id": null,
+          "name": "4",
+          "struct": null
+        }
+      ],
+      "value_type": "number"
+    },
+    {
+      "id": "TOTAL_AREA",
+      "name": "Superficie total",
+      "value_id": null,
+      "value_name": "225 m²",
+      "values": [
+        {
+          "id": null,
+          "name": "225 m²",
+          "struct": {
+            "number": 225,
+            "unit": "m²"
+          }
+        }
+      ],
+      "value_type": "number_unit"
+    },
+    {
+      "id": "OPERATION",
+      "name": "Operación",
+      "value_id": "242075",
+      "value_name": "Venta",
+      "values": [
+        {
+          "id": "242075",
+          "name": "Venta",
+          "struct": null
+        }
+      ],
+      "value_type": "list"
+    },
+    {
+      "id": "OPERATION_SUBTYPE",
+      "name": "Subtipo de operación",
+      "value_id": "244562",
+      "value_name": "Propiedad individual",
+      "values": [
+        {
+          "id": "244562",
+          "name": "Propiedad individual",
+          "struct": null
+        }
+      ],
+      "value_type": "list"
+    },
+    {
+      "id": "PROPERTY_TYPE",
+      "name": "Inmueble",
+      "value_id": "242060",
+      "value_name": "Casa",
+      "values": [
+        {
+          "id": "242060",
+          "name": "Casa",
+          "struct": null
+        }
+      ],
+      "value_type": "list"
+    },
+    {
+      "id": "HAS_CLOSETS",
+      "name": "Placards",
+      "value_id": "242085",
+      "value_name": "Sí",
+      "values": [
+        {
+          "id": "242085",
+          "name": "Sí",
+          "struct": null
+        }
+      ],
+      "value_type": "boolean"
+    },
+    {
+      "id": "HAS_TAP_WATER",
+      "name": "Agua corriente",
+      "value_id": "242085",
+      "value_name": "Sí",
+      "values": [
+        {
+          "id": "242085",
+          "name": "Sí",
+          "struct": null
+        }
+      ],
+      "value_type": "boolean"
+    },
+    {
+      "id": "ITEM_CONDITION",
+      "name": "Condición del ítem",
+      "value_id": "2230581",
+      "value_name": "Usado",
+      "values": [
+        {
+          "id": "2230581",
+          "name": "Usado",
+          "struct": null
+        }
+      ],
+      "value_type": "list"
+    },
+    {
+      "id": "WITH_VIRTUAL_TOUR",
+      "name": "Con tour virtual",
+      "value_id": "242084",
+      "value_name": "No",
+      "values": [
+        {
+          "id": "242084",
+          "name": "No",
+          "struct": null
+        }
+      ],
+      "value_type": "boolean"
+    }
+  ],
+  "warnings": [
+    
+  ],
+  "listing_source": "",
+  "variations": [
+    
+  ],
+  "status": "active",
+  "sub_status": [
+    "pack_quota_assigned"
+  ],
+  "tags": [
+    "address_line_by_reference"
+  ],
+  "warranty": null,
+  "catalog_product_id": null,
+  "domain_id": "MLA-INDIVIDUAL_HOUSES_FOR_SALE",
+  "seller_custom_field": null,
+  "parent_item_id": null,
+  "differential_pricing": null,
+  "deal_ids": [
+    
+  ],
+  "automatic_relist": false,
+  "date_created": "2025-04-07T23:45:37.824Z",
+  "last_updated": "2025-05-29T11:15:23.242Z",
+  "health": 0.5,
+  "catalog_listing": false,
+  "item_relations": [
+    
+  ],
+  "channels": [
+    "marketplace"
+  ]
+}

@@ -13,56 +13,65 @@
 }
 
 .progress-navigator {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-top: 20px;
   margin-bottom: 25px;
-  padding: 15px 20px;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
-  backdrop-filter: blur(10px);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .progress-step {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  margin: 0 8px;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
+  padding: 16px 20px;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
   color: #6c757d;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  text-align: center;
 }
 
 .progress-step:hover {
-  background: rgba(0, 123, 255, 0.1);
-  color: #007bff;
+  background: #f8f9fa;
+  border-color: #007bff;
+  color: #495057;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .progress-step.active {
-  background: rgba(0, 123, 255, 0.15);
+  background: #e3f2fd;
+  border-color: #007bff;
   color: #0056b3;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
 }
 
 .progress-step.completed {
-  background: rgba(40, 167, 69, 0.15);
+  background: #e8f5e8;
+  border-color: #28a745;
   color: #155724;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
 }
 
-.progress-step.completed .step-icon {
-  filter: sepia(1) hue-rotate(100deg) saturate(2);
+.progress-step.completed::before {
+  content: '✓';
+  font-size: 14px;
+  margin-right: 6px;
+  font-weight: bold;
 }
 
 .step-icon {
-  font-size: 16px;
-  opacity: 0.8;
+  display: none;
 }
 
 .step-text {
@@ -70,9 +79,9 @@
   white-space: nowrap;
 }
 
-.progress-step.active .step-icon,
-.progress-step.completed .step-icon {
-  opacity: 1;
+.progress-step.active .step-text,
+.progress-step.completed .step-text {
+  font-weight: 600;
 }
 
 .publish-section {
@@ -111,14 +120,13 @@
 }
 
 .meli-integration-card {
-  background: linear-gradient(135deg, #FFE600 0%, #FFCC00 100%);
-  border-radius: 16px;
-  padding: 30px;
-  margin-bottom: 30px;
-  box-shadow: 0 8px 25px rgba(255, 230, 0, 0.3);
-  border: none;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   position: relative;
-  overflow: hidden;
 }
 
 .meli-integration-card::before {
@@ -127,76 +135,81 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #ff6b35, #f7931e, #ffe600);
+  height: 3px;
+  background: #FFE600;
+  border-radius: 8px 8px 0 0;
 }
 
 .meli-header {
-  margin-bottom: 25px;
+  margin-bottom: 24px;
 }
 
 .meli-brand {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 .meli-logo {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  color: #495057;
 }
 
 .meli-logo svg {
-  color: #28a745;
+  color: #6c757d;
+  width: 18px;
+  height: 18px;
 }
 
 .meli-status-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .meli-status-badge.connected {
-  background: #28a745;
-  color: white;
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
 }
 
 .meli-status-badge.disconnected {
-  background: #dc3545;
-  color: white;
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f1aeb5;
 }
 
 .meli-description {
-  color: #555;
-  font-size: 16px;
+  color: #6c757d;
+  font-size: 14px;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .meli-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 30px;
-  color: #666;
+  padding: 20px;
+  color: #6c757d;
 }
 
 .meli-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #333;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #f8f9fa;
+  border-top: 2px solid #6c757d;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 @keyframes spin {
@@ -205,19 +218,20 @@
 }
 
 .meli-login-section {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 12px;
-  padding: 25px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 20px;
 }
 
 .meli-benefits {
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .meli-benefits h4 {
-  color: #333;
-  margin-bottom: 15px;
-  font-size: 18px;
+  color: #495057;
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .meli-benefits ul {
@@ -227,54 +241,57 @@
 }
 
 .meli-benefits li {
-  padding: 8px 0;
-  color: #555;
-  font-size: 15px;
+  padding: 6px 0;
+  color: #6c757d;
+  font-size: 13px;
 }
 
 .meli-connected-section {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 12px;
-  padding: 25px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 20px;
 }
 
 .meli-user-card {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 15px;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 10px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
   margin-bottom: 20px;
 }
 
 .meli-user-avatar {
-  width: 50px;
-  height: 50px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: #007bff;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
-  font-size: 20px;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .meli-user-details h4 {
-  margin: 0 0 5px 0;
-  color: #333;
-  font-size: 16px;
+  margin: 0 0 4px 0;
+  color: #495057;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .meli-user-details p {
   margin: 0;
-  color: #666;
-  font-size: 14px;
+  color: #6c757d;
+  font-size: 12px;
 }
 
 .meli-import-section {
-  border-top: 1px solid #eee;
+  border-top: 1px solid #e9ecef;
   padding-top: 20px;
 }
 
@@ -286,52 +303,53 @@
 
 .meli-switch {
   position: relative;
-  width: 50px;
-  height: 24px;
+  width: 40px;
+  height: 20px;
   -webkit-appearance: none;
-  background: #ccc;
-  border-radius: 12px;
+  background: #dee2e6;
+  border-radius: 10px;
   outline: none;
   cursor: pointer;
   transition: background 0.3s;
 }
 
 .meli-switch:checked {
-  background: #28a745;
+  background: #007bff;
 }
 
 .meli-switch::before {
   content: '';
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   top: 2px;
   left: 2px;
   background: white;
   transition: transform 0.3s;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .meli-switch:checked::before {
-  transform: translateX(26px);
+  transform: translateX(20px);
 }
 
 .meli-switch-label {
-  margin-left: 15px;
+  margin-left: 12px;
   cursor: pointer;
 }
 
 .meli-switch-text {
-  font-weight: 600;
-  color: #333;
-  font-size: 16px;
+  font-weight: 500;
+  color: #495057;
+  font-size: 14px;
 }
 
 .meli-url-input-section {
-  background: #f8f9fa;
-  border-radius: 10px;
-  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 16px;
 }
 
 .meli-input-group {
@@ -342,33 +360,88 @@
 
 .meli-url-input {
   flex: 1;
-  padding: 15px 50px 15px 15px;
-  border: 2px solid #ddd;
-  border-radius: 10px;
-  font-size: 16px;
-  transition: all 0.3s ease;
+  padding: 10px 40px 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.2s ease;
   background: white;
 }
 
 .meli-url-input:focus {
   outline: none;
   border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
 }
 
 .meli-input-icon {
   position: absolute;
-  right: 15px;
-  font-size: 20px;
+  right: 12px;
+  font-size: 16px;
   pointer-events: none;
+  color: #6c757d;
 }
 
 .meli-help-text {
   margin-top: 12px;
-  font-size: 14px;
-  color: #666;
-  text-align: center;
-  font-style: italic;
+  font-size: 12px;
+  color: #6c757d;
+  text-align: left;
+}
+
+.meli-error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  border-left: 3px solid #dc3545;
+}
+
+.meli-error-message p {
+  margin: 0;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.meli-disconnect-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+}
+
+.meli-disconnect-btn:hover {
+  background: #5a6268;
+}
+
+.meli-user-card .meli-disconnect-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.meli-token-only {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #e2f3ff;
+  border: 1px solid #b8daff;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.meli-token-only p {
+  margin: 0;
+  color: #004085;
+  font-weight: 500;
+  font-size: 13px;
 }
 
 .publish-form-input{
@@ -380,7 +453,9 @@
   color: #495057;
   background: #fff;
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
+  min-width: 0;
 }
 
 .publish-form-input:focus{
@@ -440,6 +515,9 @@
   height: 52px;
   display: flex;
   align-items: center;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .characteristics-grid {
@@ -506,6 +584,9 @@
   background: white;
   color: #495057;
   font-size: 16px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .images-section {
@@ -699,12 +780,16 @@
 
 @media (max-width: 768px) {
   .publish-form {
-    padding: 0 10px;
+    padding: 0 15px;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
   .publish-section {
-    padding: 20px;
+    padding: 20px 15px;
     margin-bottom: 15px;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
   .form-row,
@@ -713,15 +798,47 @@
     gap: 15px;
   }
   
+  .form-col {
+    width: 100%;
+    min-width: 0;
+  }
+  
   .price-input-container,
   .currency-container {
     flex: 1;
-    min-width: auto;
+    min-width: 0;
+    width: 100%;
+  }
+  
+  .publish-form-input {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 14px 16px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .publish-form-dropdown,
+  .currency-dropdown {
+    font-size: 16px; /* Prevents zoom on iOS */
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .currency-container {
+    min-width: 0;
+  }
+
+  textarea.publish-form-input {
+    resize: vertical;
+    min-height: 120px;
   }
   
   .characteristics-grid,
   .attributes-grid {
     grid-template-columns: 1fr;
+    gap: 15px;
   }
   
   .images-grid {
@@ -729,23 +846,18 @@
   }
   
   .progress-navigator {
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 12px 15px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
   }
   
   .progress-step {
-    margin: 0 4px;
-    padding: 6px 10px;
-    font-size: 12px;
+    padding: 12px 16px;
+    font-size: 13px;
   }
 
   .step-text {
-    font-size: 11px;
-  }
-
-  .step-icon {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .meli-integration-card {
@@ -762,7 +874,26 @@
   .meli-user-card {
     flex-direction: column;
     text-align: center;
-    gap: 10px;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .meli-login-section,
+  .meli-connected-section {
+    padding: 16px;
+  }
+
+  .meli-url-input {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px 40px 12px 12px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .meli-url-input-section {
+    overflow-x: hidden;
   }
 
   .fixed-submit-container {
@@ -775,6 +906,51 @@
   .fixed-submit-btn {
     width: 100%;
     margin: 0 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .publish-form {
+    padding: 0 10px;
+  }
+  
+  .publish-section {
+    padding: 15px 10px;
+    margin-bottom: 15px;
+  }
+
+  .meli-integration-card {
+    padding: 16px;
+  }
+
+  .publish-form-input,
+  .publish-form-dropdown,
+  .currency-dropdown,
+  .meli-url-input {
+    padding: 12px 14px;
+    font-size: 16px;
+  }
+
+  .currency-dropdown {
+    height: 48px;
+  }
+
+  .price-row {
+    gap: 12px;
+  }
+
+  .form-row {
+    gap: 12px;
+  }
+
+  .progress-navigator {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .progress-step {
+    padding: 10px 12px;
+    font-size: 12px;
   }
 }
 
