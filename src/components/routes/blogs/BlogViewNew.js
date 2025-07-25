@@ -48,8 +48,34 @@ const BlogViewNew = () => {
         setLoading(true);
         setError(null);
 
-        // Get blog by slug
-        const blogData = await BlogService.getBlogBySlug(slug);
+        // Get blog by slug - in development, try to get any blog (including drafts)
+        let blogData;
+        try {
+          blogData = await BlogService.getBlogBySlug(slug);
+        } catch (error) {
+          // In development, if published blog not found, try to get any blog with this slug
+          if (process.env.NODE_ENV === 'development') {
+            try {
+              const allBlogsResult = await BlogService.getAllBlogs(null, 50, null);
+              const foundBlog = allBlogsResult.blogs.find(blog => blog.slug === slug);
+              if (foundBlog) {
+                blogData = foundBlog;
+                // For drafts, manually increment views without waiting
+                if (foundBlog.id) {
+                  BlogService.incrementViews(foundBlog.id).catch(() => {
+                    // Silently ignore view count errors
+                  });
+                }
+              } else {
+                throw new Error('Blog not found in development mode');
+              }
+            } catch (devError) {
+              throw error; // Re-throw original error
+            }
+          } else {
+            throw error;
+          }
+        }
         setBlog(blogData);
         setLikeCount(blogData.likes || 0);
 
@@ -66,7 +92,7 @@ const BlogViewNew = () => {
         }
 
       } catch (error) {
-        console.error('Error loading blog:', error);
+        console.error('Error loading blog detail:', error);
         setError(error.message);
       } finally {
         setLoading(false);

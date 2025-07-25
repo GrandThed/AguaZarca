@@ -14,7 +14,7 @@ export const TIPO_DE_PROPIEDAD = prefix + "/tipo/:type";
 export const BUSQUEDA_GLOBAL = prefix + "/busqueda";
 export const BLOG_CREATE = prefix + "/crear-blog";
 
-export const BLOG_VIEW = prefix + "/blog/:id";
+export const BLOG_VIEW = prefix + "/blog/:slug";
 
 export const EDITAR_PROPIEDAD = prefix + "/editar-propiedad/:id";
 export const DASHBOARD = prefix + "/dashboard/";

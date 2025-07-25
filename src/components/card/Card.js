@@ -87,7 +87,7 @@ const CardContent = ({ propiedad }) => {
                           key === "Superficie cubierta" || key === "Superficie total" ? " m2 m2card" : ""
                         }`}
                       >
-                        {parseInt(characteristics[key])}
+                        {parseInt(characteristics[key]) || 0}
                       </span>
                     </p>
                   </div>

@@ -19,9 +19,9 @@ const BlogCreateNew = () => {
     return <Redirect to={ROUTES.HOME} />;
   }
 
-  // Handle blog save (both draft and publish)
-  const handleSave = async (blogData, isAutoSave = false) => {
-    if (isSubmitting && !isAutoSave) return;
+  // Handle blog save (manual save only)
+  const handleSave = async (blogData) => {
+    if (isSubmitting) return;
 
     try {
       setIsSubmitting(true);
@@ -43,28 +43,22 @@ const BlogCreateNew = () => {
       // Create the blog post
       const createdBlog = await BlogService.createBlog(blogData, user.uid);
 
-      if (!isAutoSave) {
-        // Redirect to the created blog or blog list
-        if (blogData.isPublished) {
-          toast.success('Blog publicado correctamente');
-          history.push(`${ROUTES.BLOGS}/${createdBlog.slug}`);
-        } else {
-          toast.success('Borrador guardado correctamente');
-          history.push(ROUTES.BLOGS);
-        }
+      // Redirect to the created blog or blog list
+      if (blogData.isPublished) {
+        toast.success('Blog publicado correctamente');
+        history.push(`${ROUTES.BLOGS}/${createdBlog.slug}`);
+      } else {
+        toast.success('Borrador guardado correctamente');
+        history.push(ROUTES.BLOGS);
       }
 
       return createdBlog;
     } catch (error) {
       console.error('Error saving blog:', error);
-      if (!isAutoSave) {
-        toast.error(`Error al guardar el blog: ${error.message}`);
-      }
+      toast.error(`Error al guardar el blog: ${error.message}`);
       throw error;
     } finally {
-      if (!isAutoSave) {
-        setIsSubmitting(false);
-      }
+      setIsSubmitting(false);
     }
   };
 
@@ -91,7 +85,7 @@ const BlogCreateNew = () => {
         onSave={handleSave}
         onCancel={handleCancel}
         isEditing={false}
-        autoSave={true}
+        autoSave={false}
       />
     </div>
   );

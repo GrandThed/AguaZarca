@@ -1,4 +1,5 @@
 import { firestore } from '../firebase';
+import firebase from 'firebase/app';
 import { slugify } from './slugify';
 import { extractImagesFromContent, deleteBlogImage } from './blogImageUpload';
 
@@ -24,6 +25,7 @@ export class BlogService {
         seoDescription: blogData.excerpt || this.generateExcerpt(blogData.content),
         readingTime: this.calculateReadingTime(blogData.content)
       };
+
 
       const docRef = await firestore.collection(this.COLLECTION_NAME).add(blog);
       
@@ -217,18 +219,37 @@ export class BlogService {
   // Get blogs by tag
   static async getBlogsByTag(tag, limit = 10) {
     try {
+      // In development, get all blogs and filter client-side to avoid index requirements
+      if (process.env.NODE_ENV === 'development') {
+        const allBlogsResult = await this.getAllBlogs(null, 50, null);
+        const filteredBlogs = allBlogsResult.blogs
+          .filter(blog => blog.tags && blog.tags.includes(tag))
+          .filter(blog => blog.status === 'published' || blog.isPublished)
+          .slice(0, limit);
+        return filteredBlogs;
+      }
+
+      // In production, use the simple query and filter afterward
       const querySnapshot = await firestore
         .collection(this.COLLECTION_NAME)
         .where('tags', 'array-contains', tag)
-        .where('status', '==', 'published')
-        .orderBy('publishedAt', 'desc')
-        .limit(limit)
+        .limit(50) // Get more to filter
         .get();
 
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      const blogs = querySnapshot.docs
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        .filter(blog => blog.status === 'published' || blog.isPublished)
+        .sort((a, b) => {
+          const dateA = a.publishedAt?.toDate?.() || new Date(a.publishedAt);
+          const dateB = b.publishedAt?.toDate?.() || new Date(b.publishedAt);
+          return dateB - dateA;
+        })
+        .slice(0, limit);
+
+      return blogs;
     } catch (error) {
       console.error('Error fetching blogs by tag:', error);
       throw error;
@@ -267,7 +288,7 @@ export class BlogService {
   static async incrementViews(blogId) {
     try {
       await firestore.collection(this.COLLECTION_NAME).doc(blogId).update({
-        views: firestore.FieldValue.increment(1)
+        views: firebase.firestore.FieldValue.increment(1)
       });
     } catch (error) {
       console.error('Error incrementing views:', error);

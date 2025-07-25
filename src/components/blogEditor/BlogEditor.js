@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-toastify';
-import { uploadBlogImage, deleteBlogImage } from '../../utils/blogImageUpload';
+import { uploadBlogImage } from '../../utils/blogImageUpload';
 import { slugify } from '../../utils/slugify';
 import './blogEditor.css';
 
@@ -24,10 +24,11 @@ const BlogEditor = ({
   const [excerpt, setExcerpt] = useState('');
   const [tags, setTags] = useState([]);
   const [featuredImage, setFeaturedImage] = useState(null);
-  const [isPublished, setIsPublished] = useState(false);
+  const [isPublished, setIsPublished] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [uploadingImages, setUploadingImages] = useState([]);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   // Refs
   const quillRef = useRef(null);
@@ -41,26 +42,26 @@ const BlogEditor = ({
     }
   }, [title, isEditing]);
 
-  // Auto-save functionality
-  useEffect(() => {
-    if (!autoSave || !title || !content) return;
+  // Auto-save functionality disabled
+  // useEffect(() => {
+  //   if (!autoSave || !title || !content) return;
 
-    // Clear existing timeout
-    if (autoSaveTimeoutRef.current) {
-      clearTimeout(autoSaveTimeoutRef.current);
-    }
+  //   // Clear existing timeout
+  //   if (autoSaveTimeoutRef.current) {
+  //     clearTimeout(autoSaveTimeoutRef.current);
+  //   }
 
-    // Set new timeout
-    autoSaveTimeoutRef.current = setTimeout(() => {
-      handleAutoSave();
-    }, 3000); // Auto-save after 3 seconds of inactivity
+  //   // Set new timeout
+  //   autoSaveTimeoutRef.current = setTimeout(() => {
+  //     handleAutoSave();
+  //   }, 3000); // Auto-save after 3 seconds of inactivity
 
-    return () => {
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current);
-      }
-    };
-  }, [content, title, excerpt, tags, autoSave]);
+  //   return () => {
+  //     if (autoSaveTimeoutRef.current) {
+  //       clearTimeout(autoSaveTimeoutRef.current);
+  //     }
+  //   };
+  // }, [content, title, excerpt, tags, autoSave]);
 
   // Custom image handler for Quill
   const imageHandler = useCallback(async () => {
@@ -140,38 +141,38 @@ const BlogEditor = ({
     'link', 'image', 'video'
   ];
 
-  // Auto-save function
-  const handleAutoSave = async () => {
-    if (isSaving) return;
+  // Auto-save function disabled
+  // const handleAutoSave = async () => {
+  //   if (isSaving) return;
 
-    try {
-      setIsSaving(true);
-      const blogData = {
-        title,
-        slug,
-        content,
-        excerpt,
-        tags,
-        featuredImage,
-        isPublished: false, // Auto-saves are always drafts
-        updatedAt: new Date(),
-        isDraft: true
-      };
+  //   try {
+  //     setIsSaving(true);
+  //     const blogData = {
+  //       title,
+  //       slug,
+  //       content,
+  //       excerpt,
+  //       tags,
+  //       featuredImage,
+  //       isPublished: false, // Auto-saves are always drafts
+  //       updatedAt: new Date(),
+  //       isDraft: true
+  //     };
 
-      if (onSave) {
-        await onSave(blogData, true); // true indicates auto-save
-      }
+  //     if (onSave) {
+  //       await onSave(blogData, true); // true indicates auto-save
+  //     }
 
-      setLastSaved(new Date());
-    } catch (error) {
-      console.error('Auto-save error:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
+  //     setLastSaved(new Date());
+  //   } catch (error) {
+  //     console.error('Auto-save error:', error);
+  //   } finally {
+  //     setIsSaving(false);
+  //   }
+  // };
 
   // Manual save function
-  const handleSave = async (publish = false) => {
+  const handleSave = async (forceDraft = false) => {
     if (!title.trim()) {
       toast.error('El título es obligatorio');
       return;
@@ -185,6 +186,9 @@ const BlogEditor = ({
     try {
       setIsSaving(true);
       
+      // Use forceDraft to override the radio button selection (for draft button)
+      const shouldPublish = forceDraft ? false : isPublished;
+      
       const blogData = {
         title: title.trim(),
         slug: slug || slugify(title),
@@ -192,17 +196,17 @@ const BlogEditor = ({
         excerpt: excerpt || generateExcerpt(content),
         tags,
         featuredImage,
-        isPublished: publish,
-        [publish ? 'publishedAt' : 'updatedAt']: new Date(),
-        isDraft: !publish
+        isPublished: shouldPublish,
+        [shouldPublish ? 'publishedAt' : 'updatedAt']: new Date(),
+        isDraft: !shouldPublish
       };
 
+
       if (onSave) {
-        await onSave(blogData, false); // false indicates manual save
+        await onSave(blogData);
       }
 
-      toast.success(publish ? 'Blog publicado correctamente' : 'Blog guardado como borrador');
-      setLastSaved(new Date());
+      toast.success(shouldPublish ? 'Blog publicado correctamente' : 'Blog guardado como borrador');
       
     } catch (error) {
       console.error('Save error:', error);
@@ -236,8 +240,7 @@ const BlogEditor = ({
   };
 
   // Featured image upload
-  const handleFeaturedImageUpload = async (e) => {
-    const file = e.target.files[0];
+  const handleFeaturedImageUpload = async (file) => {
     if (!file) return;
 
     try {
@@ -256,173 +259,340 @@ const BlogEditor = ({
     }
   };
 
+  // Handle file input change
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      handleFeaturedImageUpload(file);
+    }
+  };
+
+  // Drag and drop handlers
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Only set to false if we're leaving the drop zone completely
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setIsDragOver(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+    
+    const files = e.dataTransfer.files;
+    if (files && files[0]) {
+      const file = files[0];
+      
+      // Check if it's an image
+      if (file.type.startsWith('image/')) {
+        handleFeaturedImageUpload(file);
+      } else {
+        toast.error('Por favor, selecciona solo archivos de imagen');
+      }
+    }
+  };
+
   return (
-    <div className="blog-editor">
+    <div className="blog-editor-page">
       <Helmet>
         <title>{isEditing ? 'Editar Blog' : 'Crear Nuevo Blog'} | AguaZarca</title>
         <meta name="description" content="Editor de blog profesional para AguaZarca Inmobiliaria" />
       </Helmet>
 
-      {/* Editor Header */}
-      <div className="blog-editor-header">
-        <div className="blog-editor-title">
-          <h1>{isEditing ? 'Editar Blog' : 'Crear Nuevo Blog'}</h1>
-          {lastSaved && (
-            <span className="last-saved">
-              Último guardado: {lastSaved.toLocaleTimeString()}
-            </span>
-          )}
-        </div>
-        
-        <div className="blog-editor-actions">
-          {isSaving && <span className="saving-indicator">Guardando...</span>}
-          <button 
-            className="btn-secondary" 
-            onClick={onCancel}
-            disabled={isSaving}
-          >
-            Cancelar
-          </button>
-          <button 
-            className="btn-draft" 
-            onClick={() => handleSave(false)}
-            disabled={isSaving}
-          >
-            Guardar Borrador
-          </button>
-          <button 
-            className="btn-publish" 
-            onClick={() => handleSave(true)}
-            disabled={isSaving}
-          >
-            Publicar Blog
-          </button>
-        </div>
-      </div>
-
-      {/* Main Editor */}
-      <div className="blog-editor-content">
-        {/* Left Column - Editor */}
-        <div className="blog-editor-main">
-          {/* Title Input */}
-          <div className="blog-field">
-            <input
-              type="text"
-              placeholder="Título del blog..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="blog-title-input"
-              maxLength={100}
-            />
-            <div className="character-count">{title.length}/100</div>
+      {/* Hero Section */}
+      <div className="blog-editor-hero">
+        <div className="blog-editor-hero-content">
+          <div className="blog-editor-hero-text">
+            <h1 className="blog-editor-hero-title">
+              {isEditing ? 'Editar Artículo' : 'Crear Nuevo Artículo'}
+            </h1>
+            <p className="blog-editor-hero-subtitle">
+              {isEditing 
+                ? 'Modifica tu artículo y comparte actualizaciones con tu audiencia'
+                : 'Comparte tus conocimientos y experiencias inmobiliarias con nuestra comunidad'
+              }
+            </p>
           </div>
-
-          {/* Slug Input */}
-          <div className="blog-field">
-            <label htmlFor="slug">URL del blog:</label>
-            <div className="slug-preview">
-              aguazarca.com.ar/blog/
-              <input
-                id="slug"
-                type="text"
-                value={slug}
-                onChange={(e) => setSlug(slugify(e.target.value))}
-                className="blog-slug-input"
-                placeholder="url-del-blog"
-              />
-            </div>
-          </div>
-
-          {/* Rich Text Editor */}
-          <div className="blog-field">
-            <ReactQuill
-              ref={quillRef}
-              theme="snow"
-              value={content}
-              onChange={setContent}
-              modules={modules}
-              formats={formats}
-              placeholder="Escribe el contenido de tu blog aquí..."
-              style={{ height: '400px', marginBottom: '50px' }}
-            />
-          </div>
-        </div>
-
-        {/* Right Sidebar - Metadata */}
-        <div className="blog-editor-sidebar">
-          {/* Featured Image */}
-          <div className="blog-sidebar-section">
-            <h3>Imagen Destacada</h3>
-            {featuredImage ? (
-              <div className="featured-image-preview">
-                <img src={featuredImage.url} alt="Imagen destacada" />
-                <button 
-                  className="remove-featured-image"
-                  onClick={() => setFeaturedImage(null)}
-                >
-                  Remover
-                </button>
-              </div>
-            ) : (
-              <div className="featured-image-upload">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFeaturedImageUpload}
-                  className="file-input"
-                  id="featured-image-input"
-                />
-                <label htmlFor="featured-image-input" className="file-input-label">
-                  Subir Imagen Destacada
-                </label>
+          <div className="blog-editor-hero-actions">
+            {isSaving && (
+              <div className="saving-indicator">
+                <div className="saving-spinner"></div>
+                <span>Guardando...</span>
               </div>
             )}
           </div>
+        </div>
+      </div>
 
-          {/* Excerpt */}
-          <div className="blog-sidebar-section">
-            <h3>Extracto</h3>
-            <textarea
-              placeholder="Breve descripción del blog (opcional)"
-              value={excerpt}
-              onChange={(e) => setExcerpt(e.target.value)}
-              className="blog-excerpt-input"
-              maxLength={160}
-              rows={3}
-            />
-            <div className="character-count">{excerpt.length}/160</div>
+      {/* Action Bar */}
+      <div className="blog-editor-actions-bar">
+        <div className="blog-editor-actions-content">
+          <div className="blog-editor-breadcrumb">
+            <span>Blog</span>
+            <span className="breadcrumb-separator">→</span>
+            <span>{isEditing ? 'Editar' : 'Crear'}</span>
           </div>
-
-          {/* Tags */}
-          <div className="blog-sidebar-section">
-            <h3>Etiquetas</h3>
-            <div className="tags-container">
-              {tags.map((tag, index) => (
-                <span key={index} className="tag">
-                  {tag}
-                  <button onClick={() => removeTag(tag)}>×</button>
-                </span>
-              ))}
-            </div>
-            <input
-              type="text"
-              placeholder="Agregar etiqueta (Enter o coma para agregar)"
-              onKeyDown={handleTagsChange}
-              className="tag-input"
-            />
+          
+          <div className="blog-editor-actions">
+            <button 
+              className="btn-secondary" 
+              onClick={onCancel}
+              disabled={isSaving}
+            >
+              Cancelar
+            </button>
+            <button 
+              className="btn-draft" 
+              onClick={() => handleSave(true)}
+              disabled={isSaving}
+            >
+              Guardar Borrador
+            </button>
+            <button 
+              className="btn-publish" 
+              onClick={() => handleSave(false)}
+              disabled={isSaving}
+            >
+              {isPublished ? 'Publicar Blog' : 'Guardar Borrador'}
+            </button>
           </div>
+        </div>
+      </div>
 
-          {/* Publishing Options */}
-          <div className="blog-sidebar-section">
-            <h3>Opciones de Publicación</h3>
-            <label className="checkbox-label">
+      {/* Main Editor Container */}
+      <div className="blog-editor-container">
+        <div className="blog-editor-content">
+          {/* Left Column - Editor */}
+          <div className="blog-editor-main">
+            {/* Title Input */}
+            <div className="blog-field blog-field-title">
+              <label htmlFor="title" className="blog-field-label">
+                Título del artículo
+              </label>
               <input
-                type="checkbox"
-                checked={isPublished}
-                onChange={(e) => setIsPublished(e.target.checked)}
+                id="title"
+                type="text"
+                placeholder="Escribe un título atractivo para tu artículo..."
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="blog-title-input"
+                maxLength={100}
               />
-              Publicar inmediatamente
-            </label>
+              <div className="character-count">{title.length}/100</div>
+            </div>
+
+            {/* Slug Input */}
+            <div className="blog-field">
+              <label htmlFor="slug" className="blog-field-label">
+                URL del artículo
+              </label>
+              <div className="slug-preview">
+                <span className="slug-domain">aguazarca.com.ar/blog/</span>
+                <input
+                  id="slug"
+                  type="text"
+                  value={slug}
+                  onChange={(e) => setSlug(slugify(e.target.value))}
+                  className="blog-slug-input"
+                  placeholder="url-del-articulo"
+                />
+              </div>
+              <div className="field-help">
+                La URL se genera automáticamente basada en el título
+              </div>
+            </div>
+
+            {/* Rich Text Editor */}
+            <div className="blog-field blog-field-editor">
+              <label className="blog-field-label">
+                Contenido del artículo
+              </label>
+              <div className="editor-wrapper">
+                <ReactQuill
+                  ref={quillRef}
+                  theme="snow"
+                  value={content}
+                  onChange={setContent}
+                  modules={modules}
+                  formats={formats}
+                  placeholder="Escribe el contenido de tu artículo aquí. Puedes usar el formato de texto, insertar imágenes y crear listas..."
+                  style={{ height: '500px', marginBottom: '50px' }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Sidebar - Metadata */}
+          <div className="blog-editor-sidebar">
+            <div className="sidebar-header">
+              <h2>Configuración del Artículo</h2>
+              <p>Personaliza cómo se mostrará tu artículo</p>
+            </div>
+
+            {/* Featured Image */}
+            <div className="blog-sidebar-section">
+              <h3 className="sidebar-section-title">
+                <span className="section-icon">🖼️</span>
+                Imagen Destacada
+              </h3>
+              <p className="section-description">
+                Selecciona una imagen que represente tu artículo
+              </p>
+              {featuredImage ? (
+                <div className="featured-image-preview">
+                  <img src={featuredImage.url} alt="Imagen destacada" />
+                  <div className="image-actions">
+                    <button 
+                      className="btn-remove-image"
+                      onClick={() => setFeaturedImage(null)}
+                    >
+                      Cambiar imagen
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div 
+                  className={`featured-image-upload ${isDragOver ? 'drag-over' : ''}`}
+                  onDragOver={handleDragOver}
+                  onDragEnter={handleDragEnter}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                >
+                  <div className="upload-placeholder">
+                    <div className="upload-icon">📷</div>
+                    <p>{isDragOver ? 'Suelta la imagen aquí' : 'Arrastra una imagen aquí'}</p>
+                    <span className="upload-or">o</span>
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileInputChange}
+                    className="file-input"
+                    id="featured-image-input"
+                  />
+                  <label htmlFor="featured-image-input" className="file-input-label">
+                    Seleccionar Imagen
+                  </label>
+                </div>
+              )}
+            </div>
+
+            {/* Excerpt */}
+            <div className="blog-sidebar-section">
+              <h3 className="sidebar-section-title">
+                <span className="section-icon">📝</span>
+                Extracto
+              </h3>
+              <p className="section-description">
+                Breve descripción que aparecerá en la lista de artículos
+              </p>
+              <textarea
+                placeholder="Escribe un resumen atractivo de tu artículo..."
+                value={excerpt}
+                onChange={(e) => setExcerpt(e.target.value)}
+                className="blog-excerpt-input"
+                maxLength={160}
+                rows={4}
+              />
+              <div className="character-count">{excerpt.length}/160</div>
+              <div className="field-help">
+                Se generará automáticamente si se deja vacío
+              </div>
+            </div>
+
+            {/* Tags */}
+            <div className="blog-sidebar-section">
+              <h3 className="sidebar-section-title">
+                <span className="section-icon">🏷️</span>
+                Etiquetas
+              </h3>
+              <p className="section-description">
+                Agrega etiquetas para categorizar tu artículo
+              </p>
+              <div className="tags-container">
+                {tags.map((tag, index) => (
+                  <span key={index} className="tag">
+                    <span className="tag-text">#{tag}</span>
+                    <button 
+                      className="tag-remove"
+                      onClick={() => removeTag(tag)}
+                      aria-label={`Remover etiqueta ${tag}`}
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+                {tags.length === 0 && (
+                  <div className="no-tags">
+                    <span>No hay etiquetas</span>
+                  </div>
+                )}
+              </div>
+              <input
+                type="text"
+                placeholder="Escribe una etiqueta y presiona Enter..."
+                onKeyDown={handleTagsChange}
+                className="tag-input"
+              />
+              <div className="field-help">
+                Presiona Enter o coma para agregar etiquetas
+              </div>
+            </div>
+
+            {/* Publishing Options */}
+            <div className="blog-sidebar-section">
+              <h3 className="sidebar-section-title">
+                <span className="section-icon">🚀</span>
+                Estado de Publicación
+              </h3>
+              <div className="publishing-options">
+                <label className="publish-option">
+                  <input
+                    type="radio"
+                    name="publishStatus"
+                    value="published"
+                    checked={isPublished}
+                    onChange={() => setIsPublished(true)}
+                  />
+                  <div className="option-content">
+                    <div className="option-title">Publicar ahora</div>
+                    <div className="option-description">
+                      Visible para todos los visitantes inmediatamente
+                    </div>
+                  </div>
+                </label>
+                <label className="publish-option">
+                  <input
+                    type="radio"
+                    name="publishStatus"
+                    value="draft"
+                    checked={!isPublished}
+                    onChange={() => setIsPublished(false)}
+                  />
+                  <div className="option-content">
+                    <div className="option-title">Borrador</div>
+                    <div className="option-description">
+                      Guarda tu trabajo sin publicar
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </div>

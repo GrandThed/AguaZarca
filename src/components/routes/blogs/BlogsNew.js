@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -44,13 +44,8 @@ const BlogsNew = () => {
     }
   }, [location.search]);
 
-  // Load initial blogs
-  useEffect(() => {
-    loadBlogs(true);
-  }, [selectedTag]);
-
   // Load blogs function
-  const loadBlogs = async (reset = false) => {
+  const loadBlogs = useCallback(async (reset = false) => {
     try {
       if (reset) {
         setLoading(true);
@@ -69,8 +64,12 @@ const BlogsNew = () => {
         result = await BlogService.searchBlogs(searchTerm, 10);
         result = { blogs: result, hasMore: false, lastDoc: null };
       } else {
-        // Load all published blogs
-        result = await BlogService.getPublishedBlogs(10, reset ? null : lastDoc);
+        // Load all blogs in development, published blogs in production
+        if (process.env.NODE_ENV === 'development') {
+          result = await BlogService.getAllBlogs(null, 10, reset ? null : lastDoc);
+        } else {
+          result = await BlogService.getPublishedBlogs(10, reset ? null : lastDoc);
+        }
       }
 
       if (reset) {
@@ -99,7 +98,12 @@ const BlogsNew = () => {
       setLoading(false);
       setLoadingMore(false);
     }
-  };
+  }, [selectedTag, searchTerm]);
+
+  // Load initial blogs
+  useEffect(() => {
+    loadBlogs(true);
+  }, [selectedTag]);
 
   // Handle search
   const handleSearch = (e) => {
