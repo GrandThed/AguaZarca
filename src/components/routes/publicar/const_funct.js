@@ -140,6 +140,72 @@ export const fetchEffect = async (itemId, token) => {
   return result;
 };
 
+const mapPropertyType = (mlType) => {
+  const typeMapping = {
+    'Apartamento': 'Departamento',
+    'Casa': 'Casa',
+    'PH': 'PH',
+    'Quinta': 'Quinta',
+    'Terreno': 'Terreno',
+    'Oficina': 'Oficina',
+    'Local': 'Local comercial',
+    'Depósito': 'Depósito',
+    'Galpón': 'Galpón',
+    'Campo': 'Campo',
+    'Chacra': 'Chacra',
+    'Fondo de comercio': 'Fondo de comercio',
+    'Hotel': 'Hotel',
+    'Cochera': 'Cochera',
+    'Consultorio': 'Consultorio',
+    'Edificio': 'Edificio'
+  };
+  return typeMapping[mlType] || 'Departamento';
+};
+
+const mapCommercialStatus = (mlOperation) => {
+  const statusMapping = {
+    'Venta': 'Venta',
+    'Alquiler': 'Alquiler anual',
+    'Alquiler temporal': 'Alquiler temporal',
+    'Alquiler por día': 'Alquiler temporal'
+  };
+  return statusMapping[mlOperation] || 'Alquiler temporal';
+};
+
+const extractAdvancedAttributes = (mlAttributes) => {
+  const advancedMapping = {
+    'Pileta': ['Pileta', 'Pool', 'Swimming pool', 'Piscina'],
+    'Aire acondicionado': ['Aire acondicionado', 'A/C', 'Air conditioning', 'AC'],
+    'Calefacción': ['Calefacción', 'Heating', 'Caldera', 'Radiador'],
+    'Balcón': ['Balcón', 'Balcony', 'Terraza', 'Terrace'],
+    'Jardín': ['Jardín', 'Garden', 'Patio', 'Yard'],
+    'Cocheras': ['Cochera', 'Garage', 'Parking', 'Estacionamiento'],
+    'Seguridad 24 horas': ['Seguridad', 'Security', '24hs', 'Portero'],
+    'Gimnasio': ['Gimnasio', 'Gym', 'Fitness'],
+    'Ascensor': ['Ascensor', 'Elevator', 'Lift'],
+    'Amoblado': ['Amoblado', 'Furnished', 'Mobiliario']
+  };
+
+  const extractedAttributes = {};
+  
+  mlAttributes.forEach(attr => {
+    const attrName = attr.name;
+    const attrValue = attr.value_name;
+    
+    Object.keys(advancedMapping).forEach(localAttr => {
+      const variations = advancedMapping[localAttr];
+      if (variations.some(variation => 
+        attrName.toLowerCase().includes(variation.toLowerCase()) ||
+        attrValue.toLowerCase().includes(variation.toLowerCase())
+      )) {
+        extractedAttributes[localAttr] = attrValue === 'Sí' || attrValue === 'Yes' || attrValue === true;
+      }
+    });
+  });
+
+  return extractedAttributes;
+};
+
 export const mlFullfil = ({ info, description }, att = attributes) => {
   if (!info) {
     return { description: description ? description.data.plain_text : "" };
@@ -148,47 +214,82 @@ export const mlFullfil = ({ info, description }, att = attributes) => {
   const { id, permalink, title, price, currency_id, location, attributes: mlAttributes, video_id } = info.data;
   const { address_line, neighborhood, city, state, country } = location;
 
-  // MercadoLibre ya no provee attribute_group_id. Filtramos por nombre.
+  // Find property type and operation from attributes
+  const propertyTypeAttr = mlAttributes.find(attr => attr.id === "PROPERTY_TYPE");
+  const operationAttr = mlAttributes.find(attr => attr.id === "OPERATION");
+
+  // Standard attribute mapping
   let attListml = convertObjToListInAttributes(
     mlAttributes.filter((e) => att.includes(e.name))
   );
+  
+  // Advanced attribute extraction
+  const advancedAttrs = extractAdvancedAttributes(mlAttributes);
+  
+  // Combine both attribute lists
   let attList = att.reduce((acc, e) => {
-    const value = attListml[e] || false;
+    const value = attListml[e] || advancedAttrs[e] || false;
     return { ...acc, [e]: value };
   }, {});
 
+  // Enhanced characteristics mapping
   let charListml = convertObjToListInCharacteristics(
     mlAttributes.filter((e) => characteristics.includes(e.name))
   );
+
+  // Try to extract additional characteristics
+  const additionalChars = {};
+  mlAttributes.forEach(attr => {
+    if (attr.name === "Superficie total" || attr.name === "Superficie") {
+      additionalChars["Superficie total"] = attr.value_name;
+    }
+    if (attr.name === "Superficie cubierta") {
+      additionalChars["Superficie cubierta"] = attr.value_name;
+    }
+    if (attr.name === "Ambientes" || attr.name === "Rooms") {
+      additionalChars["Dormitorios"] = attr.value_name;
+    }
+    if (attr.name === "Baños" || attr.name === "Bathrooms") {
+      additionalChars["Baños"] = attr.value_name;
+    }
+    if (attr.name === "Dormitorios" || attr.name === "Bedrooms") {
+      additionalChars["Dormitorios"] = attr.value_name;
+    }
+    if (attr.name === "Cocheras" || attr.name === "Parking spaces") {
+      additionalChars["Cocheras"] = attr.value_name;
+    }
+  });
+
+  // Merge characteristics
+  const finalCharacteristics = { ...charListml, ...additionalChars };
+
   return {
     mercadolibre: {
       id,
       link: permalink,
     },
     title: title,
-    type: attributes.filter((e) => e.id === "PROPERTY_TYPE")[0].value_name,
-    comercialStatus: attributes.filter((e) => e.id === "OPERATION")[0].value_name,
+    type: propertyTypeAttr ? mapPropertyType(propertyTypeAttr.value_name) : 'Departamento',
+    comercialStatus: operationAttr ? mapCommercialStatus(operationAttr.value_name) : 'Alquiler temporal',
     price: {
       value: price,
       currency: currency_id,
     },
-    characteristics: charListml,
+    characteristics: finalCharacteristics,
     attributes: attList,
-    //this should be set on form.
     description: description ? description.data.plain_text : "",
     featured: false,
     slider: false,
     rentalFeatured: false,
     revisorMesagge: "",
-    //this should be set on form. end
     location: {
-      addressLine: address_line,
-      neighborhood: neighborhood.name,
-      city: city.name,
-      state: state.name,
-      country: country.name,
+      addressLine: address_line || "",
+      neighborhood: neighborhood?.name || "",
+      city: city?.name || "",
+      state: state?.name || "Córdoba",
+      country: country?.name || "Argentina",
     },
-    video_id,
+    video_id: video_id || "",
   };
 };
 

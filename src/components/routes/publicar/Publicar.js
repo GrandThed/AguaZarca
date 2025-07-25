@@ -38,6 +38,21 @@ export const Publicar = () => {
   const [token, setToken] = useState(null);
   const [checkingMeli, setCheckingMeli] = useState(true);
   const { meliUser, valid, error } = useVerifyMeliToken(mlToken);
+
+  // Check if required fields are filled
+  const requiredFieldsFilled = state.title && state.price.value && state.location.addressLine;
+
+  // Smooth scroll to section
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  };
   useEffect(() => {
     if (editing) {
       firestore
@@ -422,71 +437,177 @@ export const Publicar = () => {
 
   return (
     <div className="publish-div">
-      <PageTitle title={editing ? "Editar" : "Publicar"} />
-      <p>token: {mlToken}</p>
+      <PageTitle title={editing ? "Editar Propiedad" : "Publicar Nueva Propiedad"} />
       {redirect && <Redirect to={PROPIEDAD + redirect} />}
       {user ? (
         <div className="publish-form">
           <ToastContainer />
-          <div>
-            <p>✅ Token válido</p>
-            <p>Usuario: {meliUser?.nickname}</p>
-            <p>ID: {meliUser?.id}</p>
+          
+          {/* Progress Navigator */}
+          <div className="progress-navigator">
+            <button 
+              className={`progress-step ${state.title ? 'completed' : 'active'}`}
+              onClick={() => scrollToSection('basic-info-section')}
+            >
+              <span className="step-icon">📝</span>
+              <span className="step-text">Información Básica</span>
+            </button>
+            <button 
+              className={`progress-step ${state.location.addressLine ? 'completed' : state.title ? 'active' : ''}`}
+              onClick={() => scrollToSection('location-section')}
+            >
+              <span className="step-icon">📍</span>
+              <span className="step-text">Ubicación</span>
+            </button>
+            <button 
+              className={`progress-step ${Object.values(state.characteristics).some(val => val) ? 'completed' : state.location.addressLine ? 'active' : ''}`}
+              onClick={() => scrollToSection('characteristics-section')}
+            >
+              <span className="step-icon">🏠</span>
+              <span className="step-text">Características</span>
+            </button>
+            <button 
+              className={`progress-step ${filesArrayRaw.length > 0 ? 'completed' : Object.values(state.characteristics).some(val => val) ? 'active' : ''}`}
+              onClick={() => scrollToSection('images-section')}
+            >
+              <span className="step-icon">📸</span>
+              <span className="step-text">Imágenes</span>
+            </button>
           </div>
-          {checkingMeli ? <div className="c-loader" /> : !mlToken && <LoginMeli />}
-          <div className="publish-form-mercadolibre">
-            <input
-              id="autofill"
-              className="publish-form-mercadolibre-in"
-              type="checkbox"
-              checked={autofill}
-              disabled={!mlToken}
-              onChange={(e) => setAutofill(e.target.checked)}
-              name="autofill"
-            />
-            <label htmlFor="autofill" className="publish-form-mercadolibre-label">
-              Autocompletar con MercadoLibre
-            </label>
-          </div>
-          {autofill && (
-            <div className="publish-form-mercadolibre-url-div">
-              <input
-                className="publish-form-mercadolibre-url"
-                type="text"
-                placeholder="Pega aquí la URL de la publicación de MercadoLibre"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                name="mlurl"
-              />
-              <small className="publish-form-mercadolibre-help">
-                Se completarán automáticamente los datos si la URL es válida
-              </small>
+
+          {/* MercadoLibre Integration Card */}
+          <div className="meli-integration-card">
+            <div className="meli-header">
+              <div className="meli-brand">
+                <div className="meli-logo">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                  MercadoLibre
+                </div>
+                <div className={`meli-status-badge ${mlToken ? 'connected' : 'disconnected'}`}>
+                  {mlToken ? 'Conectado' : 'No conectado'}
+                </div>
+              </div>
+              <p className="meli-description">
+                Importa automáticamente los datos de tu publicación existente en MercadoLibre
+              </p>
             </div>
-          )}
+
+            {checkingMeli ? (
+              <div className="meli-loading">
+                <div className="meli-spinner"></div>
+                <p>Verificando conexión...</p>
+              </div>
+            ) : !mlToken ? (
+              <div className="meli-login-section">
+                <div className="meli-benefits">
+                  <h4>¿Por qué conectar con MercadoLibre?</h4>
+                  <ul>
+                    <li>✨ Autocompletar todos los datos de tu propiedad</li>
+                    <li>🏠 Importar características y atributos</li>
+                    <li>📍 Copiar ubicación exacta</li>
+                    <li>🖼️ Descargar todas las imágenes</li>
+                  </ul>
+                </div>
+                <LoginMeli />
+              </div>
+            ) : (
+              <div className="meli-connected-section">
+                {meliUser && (
+                  <div className="meli-user-card">
+                    <div className="meli-user-avatar">
+                      {meliUser.nickname?.charAt(0).toUpperCase() || 'U'}
+                    </div>
+                    <div className="meli-user-details">
+                      <h4>{meliUser.nickname}</h4>
+                      <p>ID: {meliUser.id}</p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="meli-import-section">
+                  <div className="meli-toggle">
+                    <input
+                      id="autofill"
+                      className="meli-switch"
+                      type="checkbox"
+                      checked={autofill}
+                      onChange={(e) => setAutofill(e.target.checked)}
+                    />
+                    <label htmlFor="autofill" className="meli-switch-label">
+                      <span className="meli-switch-text">
+                        Activar importación automática
+                      </span>
+                    </label>
+                  </div>
+                  
+                  {autofill && (
+                    <div className="meli-url-input-section">
+                      <div className="meli-input-group">
+                        <input
+                          className="meli-url-input"
+                          type="text"
+                          placeholder="https://articulo.mercadolibre.com.ar/MLA-xxxxxxxxx-..."
+                          value={input}
+                          onChange={(e) => setInput(e.target.value)}
+                        />
+                        <div className="meli-input-icon">
+                          {input && input.match(/([A-Z]{3})-(\d+)/) ? '✅' : '📋'}
+                        </div>
+                      </div>
+                      <div className="meli-help-text">
+                        Pega la URL de tu publicación y verás los datos completarse automáticamente
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
           <form encType="multipart/form-data" className="publish-form-form">
-            <div className="publish-form-title-price-div">
-              <label className="publish-form-title-label" htmlFor="title">
-                Título de la propiedad
-              </label>
-              <div className="publish-form-title-div">
+            
+            {/* Basic Information Section */}
+            <div id="basic-info-section" className="publish-section">
+              <h2 className="publish-section-title">Información Básica</h2>
+              
+              <div className="form-group">
+                <label className="form-label" htmlFor="title">
+                  Título de la propiedad *
+                </label>
                 <input
                   required={true}
-                  className="publish-form-title-input publish-form-input"
+                  className="publish-form-input"
                   name="title"
                   type="text"
+                  placeholder="Ej: Hermoso departamento 2 ambientes en Palermo"
                   value={state.title}
                   onChange={(e) => dispatch({ type: "field", field: "title", value: e.target.value })}
                 />
               </div>
-              <div className="publish-form-price-div">
-                <div className="publish-form-price-il-div">
-                  <label className="publish-form-price-label" htmlFor="price">
-                    Precio:
-                  </label>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="description">
+                  Descripción
+                </label>
+                <textarea
+                  className="publish-form-input"
+                  name="description"
+                  rows="6"
+                  placeholder="Describe tu propiedad en detalle: características, ubicación, servicios incluidos..."
+                  value={state.description}
+                  onChange={(e) => dispatch({ type: "field", field: "description", value: e.target.value })}
+                />
+              </div>
+
+              <div className="price-row">
+                <div className="price-input-container">
+                  <label className="form-label">Precio *</label>
                   <input
-                    className="publish-form-price-input publish-form-input"
+                    className="publish-form-input"
                     type="number"
                     name="price"
+                    placeholder="0"
                     value={state.price.value}
                     onChange={(e) =>
                       dispatch({
@@ -497,206 +618,263 @@ export const Publicar = () => {
                     }
                   />
                 </div>
-                <Dropdown
-                  className="publish-form-dropdow-currency"
-                  options={CF.dropdownVariables.correncyOptions}
-                  value={state.price.currency}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "setPrice",
-                      field: "currency",
-                      value: e.value,
-                    })
-                  }
-                />
-              </div>
-            </div>
-            <div className="publish-form-description-div">
-              <label className="publish-form-description-label publish-form-title-label" htmlFor="description">
-                Descripcion
-              </label>
-              <textarea
-                className="publish-form-description-div-textarea publish-form-input"
-                name="description"
-                type="text"
-                value={state.description}
-                onChange={(e) => dispatch({ type: "field", field: "description", value: e.target.value })}
-              />
-            </div>
-            <div className="publish-form-dropdown-div">
-              <div className="publish-form-dropdown-type">
-                <p> Tipo </p>
-                <Dropdown
-                  options={CF.dropdownVariables.type}
-                  value={state.type}
-                  onChange={(e) => dispatch({ type: "field", field: "type", value: e.value })}
-                />
-              </div>
-              <div className="publish-form-dropdown-type">
-                <p> Estado </p>
-                <Dropdown
-                  options={CF.dropdownVariables.status}
-                  value={state.comercialStatus}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "field",
-                      field: "comercialStatus",
-                      value: e.value,
-                    })
-                  }
-                />
-              </div>
-            </div>
-            <div className="publish-form-location">
-              <h2 className="publish-candf-title"> Ubicación </h2>
-              {CF.ubicationFields.map((fieldObj) => (
-                <div className="publish-form-location-div" key={fieldObj.dispatchField}>
-                  <label htmlFor={fieldObj.dispatchField} className="publish-form-location-label publish-form-label">
-                    {fieldObj.name}:
-                  </label>
-                  <input
-                    className="publish-form-input publish-form-location-input"
-                    type="text"
-                    name={fieldObj.dispatchField}
-                    value={state.location[fieldObj.dispatchField]}
+                <div className="currency-container">
+                  <label className="form-label">Moneda</label>
+                  <Dropdown
+                    className="currency-dropdown"
+                    options={CF.dropdownVariables.correncyOptions}
+                    value={state.price.currency}
                     onChange={(e) =>
                       dispatch({
-                        type: "setLocation",
-                        field: fieldObj.dispatchField,
-                        value: e.target.value,
+                        type: "setPrice",
+                        field: "currency",
+                        value: e.value,
                       })
                     }
                   />
                 </div>
-              ))}
+              </div>
+
+              <div className="form-row">
+                <div className="form-col">
+                  <label className="form-label">Tipo de Propiedad</label>
+                  <Dropdown
+                    className="publish-form-dropdown"
+                    options={CF.dropdownVariables.type}
+                    value={state.type}
+                    onChange={(e) => dispatch({ type: "field", field: "type", value: e.value })}
+                  />
+                </div>
+                <div className="form-col">
+                  <label className="form-label">Operación</label>
+                  <Dropdown
+                    className="publish-form-dropdown"
+                    options={CF.dropdownVariables.status}
+                    value={state.comercialStatus}
+                    onChange={(e) =>
+                      dispatch({
+                        type: "field",
+                        field: "comercialStatus",
+                        value: e.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
             </div>
-            <div className="publish-form-char">
-              <h2 className="publish-candf-title"> Características y atributos</h2>
-              {CF.characteristics.map((title) => {
-                return (
-                  <div className="publish-form-char-div" key={title}>
-                    <label className="publish-form-char-label"> {title}: </label>
+            {/* Location Section */}
+            <div id="location-section" className="publish-section">
+              <h2 className="publish-section-title">Ubicación</h2>
+              <div className="form-row">
+                {CF.ubicationFields.map((fieldObj) => (
+                  <div className="form-col" key={fieldObj.dispatchField}>
+                    <label className="form-label">
+                      {fieldObj.name}
+                    </label>
                     <input
-                      className="publish-form-input publish-form-char-input"
-                      value={state.characteristics[title]}
+                      className="publish-form-input"
+                      type="text"
+                      name={fieldObj.dispatchField}
+                      placeholder={`Ingresa ${fieldObj.name.toLowerCase()}`}
+                      value={state.location[fieldObj.dispatchField]}
                       onChange={(e) =>
                         dispatch({
-                          type: "charact",
+                          type: "setLocation",
+                          field: fieldObj.dispatchField,
                           value: e.target.value,
-                          field: title,
                         })
                       }
-                      type="text"
                     />
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
-            <div className="publish-form-att">
-              {CF.attributes.map((title) => {
-                return (
-                  <div className="publish-form-att-div" key={title}>
-                    <label
-                      onClick={(e) => {
+
+            {/* Characteristics Section */}
+            <div id="characteristics-section" className="publish-section">
+              <h2 className="publish-section-title">Características</h2>
+              <div className="characteristics-grid">
+                {CF.characteristics.map((title) => {
+                  return (
+                    <div className="form-group" key={title}>
+                      <label className="form-label">{title}</label>
+                      <input
+                        className="publish-form-input"
+                        value={state.characteristics[title]}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "charact",
+                            value: e.target.value,
+                            field: title,
+                          })
+                        }
+                        type="text"
+                        placeholder={title.includes('m²') || title.includes('Superficie') ? 'Ej: 50 m²' : 
+                                   title.includes('Horario') ? 'Ej: 14:00' :
+                                   title.includes('Estadía') ? 'Ej: 2' : 
+                                   'Cantidad'}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Attributes Section */}
+            <div className="publish-section">
+              <h2 className="publish-section-title">Comodidades y Servicios</h2>
+              <div className="attributes-grid">
+                {CF.attributes.map((title) => {
+                  return (
+                    <div 
+                      className={`attribute-item ${state.attributes[title] ? 'selected' : ''}`} 
+                      key={title}
+                      onClick={() => {
                         dispatch({
                           type: "feature",
                           value: !state.attributes[title],
                           field: title,
                         });
                       }}
-                      className="publish-form-att-label"
                     >
-                      {title}
-                    </label>
-                    <input
-                      className="publish-form-att-input"
-                      onChange={(e) => {
-                        dispatch({
-                          type: "feature",
-                          value: e.target.checked,
-                          field: title,
-                        });
-                      }}
-                      type="checkbox"
-                      checked={state.attributes[title]}
+                      <input
+                        className="attribute-checkbox"
+                        onChange={() => {}} // Controlled by parent div onClick
+                        type="checkbox"
+                        checked={state.attributes[title]}
+                        readOnly
+                      />
+                      <span className="attribute-text">{title}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            {/* Images and Media Section */}
+            <div id="images-section" className="publish-section">
+              <h2 className="publish-section-title">Imágenes y Videos</h2>
+              
+              <div {...getRootProps({ className: "images-dropzone" })}>
+                <input {...getInputProps()} />
+                <p>📸 Arrastra las imágenes aquí o haz click para seleccionar archivos</p>
+                <small>Formatos aceptados: JPG, PNG, WebP (máximo 5MB por imagen)</small>
+              </div>
+              
+              {filesArrayRaw.length > 0 && (
+                <div className="images-grid">
+                  {filesArrayRaw.map((file, index) => {
+                    if (!file) return null;
+                    const src = typeof file === "string" ? file : (window.URL || window.webkitURL).createObjectURL(file);
+                    return (
+                      <div className="image-item" key={file.name || index}>
+                        <img className="image-preview" src={src} alt={`Imagen ${index + 1}`} />
+                        <button 
+                          type="button" 
+                          className="image-remove-btn" 
+                          onClick={() => handleRemoveImage(index)}
+                          title="Eliminar imagen"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="form-group">
+                <label className="form-label">Video de YouTube (opcional)</label>
+                <input
+                  className="publish-form-input"
+                  type="text"
+                  placeholder="Ej: https://www.youtube.com/watch?v=abc123..."
+                  value={state.video_id || ""}
+                  onChange={(e) =>
+                    dispatch({ type: "field", field: "video_id", value: e.target.value.match(/(?<=watch\?v=)[\w-]+/) })
+                  }
+                />
+                {state.video_id && (
+                  <div style={{ marginTop: "15px" }}>
+                    <iframe
+                      width="100%"
+                      height="315"
+                      src={`https://www.youtube.com/embed/${state.video_id}`}
+                      frameBorder="0"
+                      allow="autoplay; encrypted-media"
+                      allowFullScreen
+                      title="Video de la propiedad"
+                      style={{ borderRadius: "8px" }}
                     />
                   </div>
-                );
-              })}
-            </div>
-            <div className="publish-form-images-div">
-              <h2 className="publish-form-images-title"> Imagenes y videos</h2>
-              <p
-                onClick={() => {
-                  setSwitchImage((e) => (e ? 0 : 1));
-                }}
-              >
-                asd
-              </p>
-              <div {...getRootProps({ className: "publish-form-images-dropzone" })}>
-                <input {...getInputProps()} />
-                <p> Arrastra las imagenes aqui, o has click para seleccionar los archivos </p>
+                )}
               </div>
-              <aside>
-                <ul className="publish-form-images-ul">
-                  {" "}
-                  {CF.doImageListFromFiles(filesArrayRaw, handleRemoveImage)}{" "}
-                </ul>
-              </aside>
             </div>
-            <div className="publish-form-video-div">
-              <input
-                className="publish-form-video-input"
-                type="text"
-                placeholder="Enlace video YouTube..."
-                value={state.video_id || ""}
-                onChange={(e) =>
-                  dispatch({ type: "field", field: "video_id", value: e.target.value.match(/(?<=watch\?v=)[\w-]+/) })
-                }
-              />
-              {state.video_id && (
-                <iframe
-                  className="publish-form-video-iframe"
-                  src={`https://www.youtube.com/embed/${state.video_id}`}
-                  frameBorder="0"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                  title="video"
-                />
-              )}
+
+            {/* Options Section */}
+            <div className="publish-section">
+              <h2 className="publish-section-title">Opciones de Publicación</h2>
+              <div className="options-grid">
+                <div className="option-item">
+                  <label className="option-label">
+                    <input
+                      checked={state.featured}
+                      onChange={(e) => dispatch({ type: "field", field: "featured", value: e.target.checked })}
+                      type="checkbox"
+                      className="option-checkbox"
+                    />
+                    <span className="option-text">
+                      <strong>⭐ Propiedad Destacada</strong>
+                      <small>Mayor visibilidad en listados generales</small>
+                    </span>
+                  </label>
+                </div>
+
+                <div className="option-item">
+                  <label className="option-label">
+                    <input
+                      checked={state.rentalFeatured}
+                      onChange={(e) => dispatch({ type: "field", field: "rentalFeatured", value: e.target.checked })}
+                      type="checkbox"
+                      className="option-checkbox"
+                    />
+                    <span className="option-text">
+                      <strong>🏖️ Destacada en Alquiler Temporal</strong>
+                      <small>Aparece en la sección de alquileres vacacionales</small>
+                    </span>
+                  </label>
+                </div>
+
+                <div className="option-item">
+                  <label className="option-label">
+                    <input
+                      checked={state.slider}
+                      onChange={(e) => dispatch({ type: "field", field: "slider", value: e.target.checked })}
+                      type="checkbox"
+                      className="option-checkbox"
+                    />
+                    <span className="option-text">
+                      <strong>🎯 Visible en Slider Principal</strong>
+                      <small>Aparece en el carrusel de la página principal</small>
+                    </span>
+                  </label>
+                </div>
+              </div>
             </div>
-            <div>
-              <input
-                checked={state.featured}
-                onChange={(e) => dispatch({ type: "field", field: "featured", value: e.target.checked })}
-                type="checkbox"
-              />
-              <label> Propiedad destacada </label>
-              <br />
-              <input
-                checked={state.rentalFeatured}
-                onChange={(e) => dispatch({ type: "field", field: "rentalFeatured", value: e.target.checked })}
-                type="checkbox"
-              />
-              <label> Propiedad destacada en Alquiler Temporal </label>
-              <br />
-              <input
-                checked={state.slider}
-                onChange={(e) => dispatch({ type: "field", field: "slider", value: e.target.checked })}
-                name="terms"
-                type="checkbox"
-              />
-              <label> Propiedad visible en el slider </label>
-            </div>
-            <div>
-              <input name="terms" type="checkbox" />
-              <label htmlFor="terms"> Acepte los términos y condiciones antes de enviar la propiedad. ( ? ? ? ) </label>
-            </div>
-            <button className="publish-form-submit" onClick={handleSubmit}>
-              {editing ? "Guardar Cambios" : "Enviar Propiedad"}
-            </button>{" "}
-            <br />
+
           </form>
+
+          {/* Fixed Submit Button */}
+          {requiredFieldsFilled && (
+            <div className="fixed-submit-container">
+              <button 
+                className="fixed-submit-btn" 
+                onClick={handleSubmit} 
+                type="submit"
+              >
+                {editing ? "Guardar Cambios" : "Publicar Propiedad"}
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="publish-not-logged">
