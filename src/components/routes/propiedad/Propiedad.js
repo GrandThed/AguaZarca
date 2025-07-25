@@ -10,6 +10,7 @@ import { IconContext } from "react-icons";
 import Breadcrumb from "../../breadcrumb/Breadcrumb";
 import { HOME } from "../../../routes";
 import { generateSocialMetaTags } from "../../../utils/socialMeta";
+import WhatsAppButton from "../../whatsapp-button/WhatsAppButton";
 
 import { GoCheck } from "react-icons/go";
 
@@ -74,6 +75,8 @@ const Propiedad = (props) => {
       .then((e) => setDoc(e.data()));
   }, [id]);
 
+  const currentUrl = window.location.href;
+
   return doc.location ? (
     <main className="inm-div" role="main">
       {(() => {
@@ -127,6 +130,10 @@ const Propiedad = (props) => {
         );
       })()}
       <InmuebleBody document={doc} />
+      <WhatsAppButton 
+        propertyTitle={doc.title || 'Propiedad'} 
+        propertyUrl={currentUrl}
+      />
     </main>
   ) : (
     <div className="c-loader" />
