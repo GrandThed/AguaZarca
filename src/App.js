@@ -14,11 +14,8 @@ import Home from "./components/routes/home/Home";
 import Noticias from "./components/routes/noticias/Noticias";
 import Publicar from "./components/routes/publicar/Publicar";
 import Propiedad from "./components/routes/propiedad/Propiedad";
-import Blogs from "./components/routes/blogs/Blogs";
 import BlogsNew from "./components/routes/blogs/BlogsNew";
-import BlogCreate from "./components/routes/blogs/BlogCreate";
 import BlogCreateNew from "./components/routes/blogs/BlogCreateNew";
-import BlogView from "./components/routes/blogs/BlogView";
 import BlogViewNew from "./components/routes/blogs/BlogViewNew";
 import Registro from "./components/routes/registro/Registro";
 import Dashboard from "./components/routes/dashboard/Dashboard";
@@ -51,6 +48,7 @@ const App = () => {
           <Route path={ROUTES.REGISTRO} component={Registro}></Route>
           <Route path={ROUTES.DASHBOARD} component={Dashboard}></Route>
           <Route path={ROUTES.BLOG_CREATE} component={BlogCreateNew}></Route>
+          <Route path={ROUTES.BLOG_EDIT} component={BlogCreateNew}></Route>
           <Route path={ROUTES.EDITAR_PROPIEDAD} component={Publicar}></Route>
           <Route path={ROUTES.TIPO_DE_PROPIEDAD} component={Type}></Route>
           <Route path={ROUTES.BUSQUEDA_GLOBAL} component={GlobalSearch}></Route>

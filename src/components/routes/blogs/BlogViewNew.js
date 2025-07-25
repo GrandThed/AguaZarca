@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -40,6 +40,8 @@ const BlogViewNew = () => {
   const [likeCount, setLikeCount] = useState(0);
   const [relatedBlogs, setRelatedBlogs] = useState([]);
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const [readingProgress, setReadingProgress] = useState(0);
+  const contentRef = useRef(null);
 
   // Load blog data
   useEffect(() => {
@@ -48,32 +50,29 @@ const BlogViewNew = () => {
         setLoading(true);
         setError(null);
 
-        // Get blog by slug - in development, try to get any blog (including drafts)
+        // Get blog by slug - try published first, then fallback
         let blogData;
         try {
           blogData = await BlogService.getBlogBySlug(slug);
         } catch (error) {
-          // In development, if published blog not found, try to get any blog with this slug
-          if (process.env.NODE_ENV === 'development') {
-            try {
-              const allBlogsResult = await BlogService.getAllBlogs(null, 50, null);
-              const foundBlog = allBlogsResult.blogs.find(blog => blog.slug === slug);
-              if (foundBlog) {
-                blogData = foundBlog;
-                // For drafts, manually increment views without waiting
-                if (foundBlog.id) {
-                  BlogService.incrementViews(foundBlog.id).catch(() => {
-                    // Silently ignore view count errors
-                  });
-                }
-              } else {
-                throw new Error('Blog not found in development mode');
+          // If published blog not found, try to get any blog with this slug
+          try {
+            const allBlogsResult = await BlogService.getAllBlogs(null, 50, null);
+            const foundBlog = allBlogsResult.blogs.find(blog => blog.slug === slug);
+            if (foundBlog && (process.env.NODE_ENV === 'development' || foundBlog.isPublished)) {
+              blogData = foundBlog;
+              // For drafts or manual view increment, do it without waiting
+              if (foundBlog.id) {
+                BlogService.incrementViews(foundBlog.id).catch(() => {
+                  // Silently ignore view count errors
+                });
               }
-            } catch (devError) {
-              throw error; // Re-throw original error
+            } else {
+              throw new Error(`Blog not found or not published: ${slug}`);
             }
-          } else {
-            throw error;
+          } catch (fallbackError) {
+            console.error('Blog fallback search failed:', fallbackError);
+            throw error; // Re-throw original error
           }
         }
         setBlog(blogData);
@@ -103,6 +102,42 @@ const BlogViewNew = () => {
       loadBlog();
     }
   }, [slug, user]);
+
+  // Reading progress tracking
+  useEffect(() => {
+    const updateReadingProgress = () => {
+      if (!contentRef.current) return;
+
+      const contentElement = contentRef.current;
+      const contentTop = contentElement.offsetTop;
+      const contentHeight = contentElement.scrollHeight;
+      const scrollTop = window.scrollY;
+      const windowHeight = window.innerHeight;
+
+      // Calculate how much of the content has been scrolled past
+      const scrolledPastContent = Math.max(0, scrollTop - contentTop);
+      const readableHeight = contentHeight - windowHeight;
+      
+      if (readableHeight <= 0) {
+        setReadingProgress(100);
+        return;
+      }
+
+      const progress = Math.min(100, Math.max(0, (scrolledPastContent / readableHeight) * 100));
+      setReadingProgress(progress);
+    };
+
+    window.addEventListener('scroll', updateReadingProgress);
+    window.addEventListener('resize', updateReadingProgress);
+    
+    // Initial calculation
+    updateReadingProgress();
+
+    return () => {
+      window.removeEventListener('scroll', updateReadingProgress);
+      window.removeEventListener('resize', updateReadingProgress);
+    };
+  }, [blog]);
 
   // Handle like/unlike
   const handleLike = async () => {
@@ -238,6 +273,14 @@ const BlogViewNew = () => {
 
   return (
     <article className="blog-view">
+      {/* Reading Progress Bar */}
+      <div className="reading-progress-container">
+        <div 
+          className="reading-progress-bar"
+          style={{ width: `${readingProgress}%` }}
+        />
+      </div>
+
       <Helmet>
         <title>{socialMeta.title}</title>
         <meta name="description" content={socialMeta.description} />
@@ -273,7 +316,7 @@ const BlogViewNew = () => {
           {isAdmin() && (
             <div className="admin-actions">
               <Link 
-                to={`${ROUTES.BLOG_CREATE.replace(':id', blog.id)}`} 
+                to={ROUTES.BLOG_EDIT.replace(':id', blog.id)} 
                 className="admin-btn edit-btn"
                 title="Editar blog"
               >
@@ -383,7 +426,7 @@ const BlogViewNew = () => {
       </header>
 
       {/* Blog Content */}
-      <div className="blog-content">
+      <div className="blog-content" ref={contentRef}>
         <div 
           className="blog-text"
           dangerouslySetInnerHTML={{ __html: blog.content }}

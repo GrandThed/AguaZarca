@@ -151,7 +151,7 @@
 .temporal-search-menu {
   margin-top: -80px;
   position: relative;
-  z-index: 10;
+  z-index: 100;
   display: flex;
   justify-content: center;
   padding: 0 20px;
@@ -164,7 +164,7 @@
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  overflow: hidden;
+  overflow: visible;
   max-width: 1200px;
   width: 100%;
 }
@@ -221,6 +221,7 @@
   border: 1px solid rgba(0, 0, 0, 0.08) !important;
   backdrop-filter: blur(20px) !important;
   background: rgba(255, 255, 255, 0.95) !important;
+  z-index: 1000 !important;
 }
 
 .Dropdown-option {

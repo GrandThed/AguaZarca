@@ -68,7 +68,23 @@ const BlogsNew = () => {
         if (process.env.NODE_ENV === 'development') {
           result = await BlogService.getAllBlogs(null, 10, reset ? null : lastDoc);
         } else {
-          result = await BlogService.getPublishedBlogs(10, reset ? null : lastDoc);
+          try {
+            result = await BlogService.getPublishedBlogs(10, reset ? null : lastDoc);
+            // If no published blogs found, try to get blogs with isPublished = true
+            if (result.blogs.length === 0) {
+              console.warn('No published blogs found, trying alternative query...');
+              const allBlogsResult = await BlogService.getAllBlogs(null, 10, reset ? null : lastDoc);
+              const publishedBlogs = allBlogsResult.blogs.filter(blog => blog.isPublished === true);
+              result = {
+                ...allBlogsResult,
+                blogs: publishedBlogs
+              };
+            }
+          } catch (error) {
+            console.error('Error loading published blogs, falling back to all blogs:', error);
+            result = await BlogService.getAllBlogs(null, 10, reset ? null : lastDoc);
+            result.blogs = result.blogs.filter(blog => blog.isPublished === true);
+          }
         }
       }
 

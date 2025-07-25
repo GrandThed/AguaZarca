@@ -11,6 +11,10 @@ const BlogEditor = ({
   initialContent = '', 
   initialTitle = '', 
   initialSlug = '',
+  initialExcerpt = '',
+  initialTags = [],
+  initialFeaturedImage = null,
+  initialIsPublished = true,
   blogId = null,
   onSave,
   onCancel,
@@ -21,10 +25,10 @@ const BlogEditor = ({
   const [content, setContent] = useState(initialContent);
   const [title, setTitle] = useState(initialTitle);
   const [slug, setSlug] = useState(initialSlug);
-  const [excerpt, setExcerpt] = useState('');
-  const [tags, setTags] = useState([]);
-  const [featuredImage, setFeaturedImage] = useState(null);
-  const [isPublished, setIsPublished] = useState(true);
+  const [excerpt, setExcerpt] = useState(initialExcerpt);
+  const [tags, setTags] = useState(initialTags);
+  const [featuredImage, setFeaturedImage] = useState(initialFeaturedImage);
+  const [isPublished, setIsPublished] = useState(initialIsPublished);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [uploadingImages, setUploadingImages] = useState([]);

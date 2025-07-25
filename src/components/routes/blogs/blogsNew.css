@@ -1,7 +1,8 @@
 /* Enhanced Blog Listing Styles */
 .blogs-page {
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding-bottom: 60px;
 }
 
 /* Hero Section */
