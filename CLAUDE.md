@@ -26,7 +26,6 @@ This is a real estate website (AguaZarca) built with React that allows users to 
 
 ### Core Structure
 
-- **App.js**: Main application component using HashRouter with all route definitions
 - **routes.js**: Centralized route constants with configurable prefix
 - **firebase.js**: Firebase configuration and service exports
 - **src/components/routes/**: Page-level components organized by functionality

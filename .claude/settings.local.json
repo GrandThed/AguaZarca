@@ -5,7 +5,14 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(npm audit:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npm start)",
+      "Bash(npm run build:*)",
+      "Bash(powershell Compress-Archive:*)",
+      "Bash(curl:*)",
+      "Bash(powershell:*)",
+      "Bash(dir:*)",
+      "WebFetch(domain:developers.mercadolibre.com.ar)"
     ],
     "deny": []
   }
