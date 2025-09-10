@@ -2,6 +2,7 @@ import React from "react";
 import { PageTitle } from "./../../pageTitle/PageTitle";
 import { IconContext } from "react-icons";
 import "./contacto.css";
+import { trackFormSubmission } from "../../../utils/googleAnalytics";
 import {
   RiPhoneLine,
   RiMailLine,
@@ -34,6 +35,7 @@ const ContactForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    trackFormSubmission('contact_form', true);
   };
   const resetInvalid = (event) => {
     if (event.target.value !== "") {

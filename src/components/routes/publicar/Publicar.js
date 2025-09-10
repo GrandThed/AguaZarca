@@ -17,6 +17,7 @@ import { PROPIEDAD, CONTACTO } from "../../../routes";
 import LoginMeli from "./meli_login";
 import { useVerifyMeliToken } from "./useVerifyMeliUser";
 import { compressImage } from "../../../utils/imageOptim";
+import { trackFormSubmission } from "../../../utils/googleAnalytics";
 
 const TOKEN_LIFETIME = 6 * 60 * 60 * 1000; // 6 horas
 /*
@@ -87,6 +88,7 @@ export const Publicar = () => {
         .doc(id)
         .update(state)
         .then(() => {
+          trackFormSubmission('property_edit', true);
           setRedirect(id);
           toast.success("Propiedad actualizada correctamente", {
             position: "top-right",
@@ -98,7 +100,8 @@ export const Publicar = () => {
             progress: undefined,
           });
         })
-        .catch(() =>
+        .catch(() => {
+          trackFormSubmission('property_edit', false);
           toast.warn("Error", {
             position: "top-right",
             autoClose: 5000,
@@ -107,8 +110,8 @@ export const Publicar = () => {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-          })
-        );
+          });
+        });
       return;
     }
     const nameShorcut = state.title.slice(0, 21).replace(/\W/, "-");
@@ -122,6 +125,7 @@ export const Publicar = () => {
             .collection("estates")
             .add({ ...state, created: new Date(), images: imageUrlArray, agent: { ...e.docs[0].data() } })
             .then((prop) => {
+              trackFormSubmission('property_create', true);
               setRedirect(prop.id);
               toast.success("Propiedad subida correctamente", {
                 position: "top-right",
@@ -134,7 +138,8 @@ export const Publicar = () => {
               });
               setTimeout(() => window.location.reload(), 200);
             })
-            .catch(() =>
+            .catch(() => {
+              trackFormSubmission('property_create', false);
               toast.warn("Error", {
                 position: "top-right",
                 autoClose: 5000,
@@ -143,8 +148,8 @@ export const Publicar = () => {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-              })
-            )
+              });
+            })
         );
     });
   };

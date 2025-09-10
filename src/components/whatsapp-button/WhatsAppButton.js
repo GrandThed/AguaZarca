@@ -1,8 +1,9 @@
 import React from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
 import './WhatsAppButton.css';
+import { trackWhatsAppClick } from '../../utils/googleAnalytics';
 
-const WhatsAppButton = ({ propertyTitle, propertyUrl }) => {
+const WhatsAppButton = ({ propertyTitle, propertyUrl, propertyId }) => {
   const phoneNumber = '5493517896825';
   
   const message = encodeURIComponent(
@@ -12,6 +13,7 @@ const WhatsAppButton = ({ propertyTitle, propertyUrl }) => {
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 
   const handleClick = () => {
+    trackWhatsAppClick(propertyId || propertyTitle);
     window.open(whatsappUrl, '_blank');
   };
 

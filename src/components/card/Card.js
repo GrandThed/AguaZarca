@@ -12,6 +12,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { isAdmin } from "../../utils/auth";
 import { toast } from "react-toastify";
 import { createPropertyUrl } from "../../utils/slugify";
+import { trackPropertyEvent } from "../../utils/googleAnalytics";
 
 const Card = ({ propiedad }) => {
   const data = propiedad ? propiedad.data() : false;
@@ -19,7 +20,12 @@ const Card = ({ propiedad }) => {
     <article className="card-div">
       {data ? (
         <div>
-          <Link className="card-link" to={createPropertyUrl(data, propiedad.id)} aria-label={`Ver detalles de ${data.title} en ${data.location?.city}`}>
+          <Link 
+            className="card-link" 
+            to={createPropertyUrl(data, propiedad.id)} 
+            aria-label={`Ver detalles de ${data.title} en ${data.location?.city}`}
+            onClick={() => trackPropertyEvent('property_card_click', propiedad.id, data.type)}
+          >
             <div 
               className="card-image" 
               style={{ backgroundImage: `url(${data.images[0]})` }}

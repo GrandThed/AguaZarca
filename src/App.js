@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import { initGA } from "./utils/googleAnalytics";
 
 import { Menu } from "./components/menu/menu";
 import Footer from "./components/footer/Footer";
@@ -26,6 +27,10 @@ import GlobalSearch from "./components/routes/global-search/GlobalSearch";
 import ScrollToTop from "./components/scrollToTop/ScrollToTop";
 
 const App = () => {
+  useEffect(() => {
+    initGA();
+  }, []);
+
   return (
     <HelmetProvider>
       <div className="App">
