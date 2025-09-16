@@ -2,7 +2,7 @@
 // api/auth_callback.php
 
 $client_id = "1906241279481736";
-$client_secret = "EQ7yvfL36x7KbxH7OlsILmevKCHbYClP";
+$client_secret = "EQ7yvfL36x7KbxH7OlsILmevKCHbYCls";
 $redirect_uri = "https://aguazarca.com.ar/api/auth_callback.php";
 $frontend_url = "https://www.aguazarca.com.ar/#/publicar-propiedad"; // o el dominio de tu frontend
 
