@@ -1,58 +1,35 @@
 {
-  "name": "agua-zarca",
+  "name": "aguazarca-frontend",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.11.5",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "axios": "^0.21.0",
-    "browser-image-compression": "^2.0.2",
-    "firebase": "^8.0.0",
-    "gh-pages": "^3.1.0",
-    "mapbox-gl": "^1.13.0",
-    "phin": "^3.5.1",
-    "quill": "^2.0.3",
-    "react": "17.0.1",
-    "react-dom": "17.0.1",
-    "react-dropdown": "^1.9.0",
-    "react-dropzone": "^11.2.4",
-    "react-firebase-hooks": "^3.0.4",
-    "react-helmet-async": "^2.0.5",
-    "react-icons": "^3.11.0",
-    "react-quill": "^2.0.0",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "^5.0.1",
-    "react-slick": "^0.27.12",
-    "react-toastify": "^7.0.3",
-    "slick-carousel": "^1.8.1",
-    "web-vitals": "^0.2.4"
-  },
-  "homepage": "https://www.aguazarca.com.ar/",
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "dependencies": {
+    "@mapbox/mapbox-gl-geocoder": "^5.1.2",
+    "@types/js-cookie": "^3.0.6",
+    "@types/mapbox-gl": "^3.4.1",
+    "axios": "^1.12.2",
+    "browser-image-compression": "^2.0.2",
+    "js-cookie": "^3.0.5",
+    "mapbox-gl": "^3.15.0",
+    "next": "14.2.32",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-icons": "^5.5.0",
+    "react-toastify": "^11.0.5"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.32",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
   }
 }
