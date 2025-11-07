@@ -1,5 +1,39 @@
+export enum PropertyType {
+  CASA = 'Casa',
+  DEPARTAMENTO = 'Departamento',
+  PH = 'PH',
+  OFICINA = 'Oficina',
+  LOCAL = 'Local',
+  TERRENO = 'Terreno',
+  GALPON = 'Galpón',
+  COCHERA = 'Cochera',
+  QUINTA = 'Quinta',
+  CAMPO = 'Campo',
+  HOTEL = 'Hotel',
+  EDIFICIO = 'Edificio',
+  COUNTRY = 'Country',
+  DEPOSITO = 'Depósito',
+  FONDO_COMERCIO = 'Fondo de comercio',
+  CABANA = 'Cabaña',
+  OTRO = 'Otro'
+}
+
+export enum CommercialStatus {
+  SALE = 'Venta',
+  ANNUAL_RENT = 'Alquiler',
+  TEMPORARY_RENT = 'Alquiler temporal'
+}
+
+export enum PropertyStatus {
+  DRAFT = 'DRAFT',
+  PUBLISHED = 'PUBLISHED',
+  PAUSED = 'PAUSED',
+  SOLD = 'SOLD',
+  RENTED = 'RENTED'
+}
+
 export interface PropertyImage {
-  id: string;
+  id: number;
   url: string;
   order: number;
 }
@@ -8,17 +42,16 @@ export interface PropertyAttribute {
   id: string;
   name: string;
   value: boolean;
-  category: string;
 }
 
 export interface Property {
-  id: string;
+  id: number;
   title: string;
   description: string;
   type: string;
-  commercialStatus: 'sale' | 'annual' | 'temporary';
-  price: number;
-  currency: string;
+  comercialStatus: 'Venta' | 'Alquiler anual' | 'Alquiler temporal';
+  priceValue: number | null;
+  priceCurrency: string;
   coveredArea?: number;
   totalArea?: number;
   bedrooms?: number;
@@ -27,19 +60,22 @@ export interface Property {
   stories?: number;
   yearBuilt?: number;
   address?: string;
-  neighborhood?: string;
+  neighborhood?: string | null;
   city?: string;
   state?: string;
   country?: string;
+  postalCode?: string;
   latitude?: number;
   longitude?: number;
-  videoId?: string;
+  videoId?: string | null;
   mercadolibreId?: string;
   mercadolibreUrl?: string;
   featured: boolean;
   rentalFeatured: boolean;
   slider: boolean;
   published: boolean;
+  views?: number;
+  revisorMessage?: string | null;
   images: PropertyImage[];
   attributes: PropertyAttribute[];
   userId: string;
@@ -47,6 +83,7 @@ export interface Property {
   createdAt: string;
   updatedAt: string;
   viewCount?: number;
+  notes?: string;
 }
 
 export interface User {
@@ -55,6 +92,7 @@ export interface User {
   name: string;
   phone?: string;
   isAdmin: boolean;
+  role?: string;
   createdAt: string;
   updatedAt: string;
 }
