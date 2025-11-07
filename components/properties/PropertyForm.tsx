@@ -10,7 +10,7 @@ import SimpleImageReorder from '@/components/images/SimpleImageReorder';
 import PropertyLocationPicker from '@/components/properties/PropertyLocationPicker';
 import MercadoLibreImport from '@/components/mercadolibre/MercadoLibreImport';
 import { toast } from 'react-toastify';
-import { apiClient } from '@/lib/api-client';
+import api from '@/lib/api';
 import { FaSave, FaEye, FaSpinner, FaFileImport } from 'react-icons/fa';
 import { useDebounce } from '@/hooks/useDebounce';
 
@@ -133,7 +133,7 @@ export default function PropertyForm({
     setAutosaving(true);
     try {
       const formData = { ...debouncedData, images };
-      await apiClient.patch(`/api/properties/draft/${draftId}`, formData);
+      await api.patch(`/properties/draft/${draftId}`, formData);
       toast.success('Guardado automático completado', {
         autoClose: 1000,
         hideProgressBar: true
