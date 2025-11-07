@@ -1,9 +1,11 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
-import api from '@/lib/api';
-import { User } from '@/types/property';
+import api, { setRedirectToLogin } from '@/lib/api';
+import { login as apiLogin, getProfile } from '@/lib/api-client';
+import { User } from '@/types/api';
 
 interface AuthContextType {
   user: User | null;
@@ -19,10 +21,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
+    // Set up the redirect callback for API interceptor
+    setRedirectToLogin(() => router.push('/login'));
     checkAuth();
-  }, []);
+  }, [router]);
 
   const checkAuth = async () => {
     try {
@@ -32,8 +37,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const response = await api.get('/auth/me');
-      setUser(response.data.user);
+      const profile = await getProfile();
+      setUser(profile.user);
     } catch (error) {
       Cookies.remove('token');
       Cookies.remove('refreshToken');
@@ -44,11 +49,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const login = async (email: string, password: string) => {
-    const response = await api.post('/auth/login', { email, password });
-    const { token, refreshToken, user } = response.data;
+    const response = await apiLogin(email, password);
+    const { tokens, user } = response;
 
-    Cookies.set('token', token, { expires: 365 });
-    Cookies.set('refreshToken', refreshToken, { expires: 365 });
+    Cookies.set('token', tokens.accessToken, { expires: 365 });
+    Cookies.set('refreshToken', tokens.refreshToken, { expires: 365 });
     setUser(user);
   };
 
@@ -56,7 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     Cookies.remove('token');
     Cookies.remove('refreshToken');
     setUser(null);
-    window.location.href = '/';
+    router.push('/');
   };
 
   return (

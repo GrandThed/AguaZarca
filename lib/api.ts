@@ -1,7 +1,31 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+let redirectToLogin: (() => void) | null = null;
+
+export const setRedirectToLogin = (callback: () => void) => {
+  redirectToLogin = callback;
+};
+
+// API Configuration - centralized URL handling
+const getApiUrl = () => {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  if (!baseUrl) {
+    // Production fallback - use the actual production API
+    return 'https://api.aguazarca.com.ar';
+  }
+
+  // If the base URL already ends with /api, use it as-is
+  // Otherwise, append /api to the base URL
+  if (baseUrl.endsWith('/api')) {
+    return baseUrl;
+  }
+
+  return `${baseUrl}/api`;
+};
+
+const API_URL = getApiUrl();
 
 const api = axios.create({
   baseURL: API_URL,
@@ -33,16 +57,20 @@ api.interceptors.response.use(
             refreshToken,
           });
 
-          const { token, refreshToken: newRefreshToken } = response.data;
-          Cookies.set('token', token, { expires: 1 });
-          Cookies.set('refreshToken', newRefreshToken, { expires: 30 });
+          const { data } = response.data;
+          const { accessToken } = data;
+          Cookies.set('token', accessToken, { expires: 1 });
 
-          originalRequest.headers.Authorization = `Bearer ${token}`;
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return api(originalRequest);
         } catch (refreshError) {
           Cookies.remove('token');
           Cookies.remove('refreshToken');
-          window.location.href = '/login';
+          if (redirectToLogin) {
+            redirectToLogin();
+          } else {
+            window.location.href = '/login';
+          }
           return Promise.reject(refreshError);
         }
       }

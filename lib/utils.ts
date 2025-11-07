@@ -59,13 +59,8 @@ export function getPropertyTypeLabel(type: string): string {
 }
 
 export function getCommercialStatusLabel(status: string): string {
-  const statuses: Record<string, string> = {
-    sale: 'Venta',
-    annual: 'Alquiler anual',
-    temporary: 'Alquiler temporario',
-  };
-
-  return statuses[status] || status;
+  // Just return the status as-is since we're standardizing on Spanish
+  return status;
 }
 
 export function generateWhatsAppLink(phone: string, message: string): string {
@@ -84,8 +79,8 @@ export function getPropertyShareMessage(property: Property, template: string = '
   return messageTemplate
     .replace('{title}', property.title)
     .replace('{location}', location)
-    .replace('{price}', formatPrice(property.price, property.currency))
+    .replace('{price}', formatPrice(property.priceValue || 0, property.priceCurrency))
     .replace('{url}', url)
     .replace('{type}', getPropertyTypeLabel(property.type))
-    .replace('{status}', getCommercialStatusLabel(property.commercialStatus));
+    .replace('{status}', getCommercialStatusLabel(property.comercialStatus));
 }
