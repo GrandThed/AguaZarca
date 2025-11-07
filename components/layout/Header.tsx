@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FaBars, FaTimes, FaUser } from 'react-icons/fa';
 import { useAuth } from '@/contexts/AuthContext';
+import GlobalSearchBar from '@/components/search/GlobalSearchBar';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
 
   const navItems = [
     { href: '/', label: 'Inicio' },
@@ -33,7 +34,11 @@ const Header: React.FC = () => {
             <span className="text-2xl font-bold text-blue-600">AguaZarca</span>
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:block flex-1 max-w-xl mx-8 relative z-10">
+            <GlobalSearchBar />
+          </div>
+
+          <nav className="hidden md:flex items-center space-x-6 relative z-20">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -46,42 +51,22 @@ const Header: React.FC = () => {
               </Link>
             ))}
 
-            {user ? (
-              <div className="relative group">
-                <button className="flex items-center space-x-2 text-gray-700 hover:text-blue-600">
-                  <FaUser />
-                  <span>{user.name}</span>
-                </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                  {user.isAdmin && (
-                    <Link
-                      href="/admin"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Panel Admin
-                    </Link>
-                  )}
-                  <Link
-                    href="/admin/propiedades/nueva"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Publicar Propiedad
-                  </Link>
-                  <button
-                    onClick={logout}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Cerrar Sesión
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <Link
-                href="/login"
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-              >
-                Ingresar
-              </Link>
+            {!loading && (
+              user ? (
+                <Link
+                  href="/admin"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Dashboard
+                </Link>
+              ) : (
+                <Link
+                  href="/login"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Ingresar
+                </Link>
+              )
             )}
           </nav>
 
@@ -95,6 +80,9 @@ const Header: React.FC = () => {
 
         {isMenuOpen && (
           <nav className="md:hidden py-4 border-t">
+            <div className="mb-4">
+              <GlobalSearchBar />
+            </div>
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -108,42 +96,24 @@ const Header: React.FC = () => {
               </Link>
             ))}
 
-            {user ? (
-              <>
-                {user.isAdmin && (
-                  <Link
-                    href="/admin"
-                    className="block py-2 text-gray-700 hover:text-blue-600"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Panel Admin
-                  </Link>
-                )}
+            {!loading && (
+              user ? (
                 <Link
-                  href="/admin/propiedades/nueva"
-                  className="block py-2 text-gray-700 hover:text-blue-600"
+                  href="/admin"
+                  className="block py-2 text-blue-600 font-semibold"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Publicar Propiedad
+                  Dashboard
                 </Link>
-                <button
-                  onClick={() => {
-                    logout();
-                    setIsMenuOpen(false);
-                  }}
-                  className="block w-full text-left py-2 text-gray-700 hover:text-blue-600"
+              ) : (
+                <Link
+                  href="/login"
+                  className="block py-2 text-blue-600 font-semibold"
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  Cerrar Sesión
-                </button>
-              </>
-            ) : (
-              <Link
-                href="/login"
-                className="block py-2 text-blue-600 font-semibold"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Ingresar
-              </Link>
+                  Ingresar
+                </Link>
+              )
             )}
           </nav>
         )}

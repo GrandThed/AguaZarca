@@ -1,28 +1,38 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import PropertyCard from '@/components/properties/PropertyCard';
-import { Property } from '@/types/property';
+import { useFeaturedProperties } from '@/hooks/useProperties';
 
-async function getFeaturedProperties(): Promise<Property[]> {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties?featured=true&limit=6`);
+const FeaturedProperties: React.FC = () => {
+  const { properties, loading, error } = useFeaturedProperties();
 
-    if (!res.ok) {
-      return [];
-    }
-
-    const data = await res.json();
-    return data.properties || [];
-  } catch (error) {
-    console.error('Error fetching featured properties:', error);
-    return [];
+  if (loading) {
+    return (
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">Propiedades Destacadas</h2>
+            <p className="text-gray-600">Descubre nuestras mejores oportunidades</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+                <div className="h-48 bg-gray-200"></div>
+                <div className="p-4">
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
   }
-}
 
-const FeaturedProperties: React.FC = async () => {
-  const properties = await getFeaturedProperties();
-
-  if (properties.length === 0) {
+  if (error || properties.length === 0) {
     return null;
   }
 
@@ -35,7 +45,7 @@ const FeaturedProperties: React.FC = async () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {properties.map((property) => (
+          {properties.slice(0, 6).map((property) => (
             <PropertyCard key={property.id} property={property} featured={true} />
           ))}
         </div>

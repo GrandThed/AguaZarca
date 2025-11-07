@@ -19,17 +19,17 @@ const HeroSection: React.FC = () => {
     if (propertyType) params.append('type', propertyType);
     if (commercialStatus) params.append('status', commercialStatus);
 
-    router.push(`/propiedades${params.toString() ? `?${params.toString()}` : ''}`);
+    router.push(`/buscar${params.toString() ? `?${params.toString()}` : ''}`);
   };
 
   return (
-    <section className="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white py-24">
+    <section className="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">
             Encuentra tu Propiedad Ideal
           </h1>
-          <p className="text-xl mb-10">
+          <p className="text-lg mb-8">
             Las mejores propiedades en venta y alquiler en Argentina
           </p>
 
