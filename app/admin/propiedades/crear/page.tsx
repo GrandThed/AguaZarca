@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import PropertyForm from '@/components/properties/PropertyForm';
 import { Property } from '@/types/property';
 import { toast } from 'react-toastify';
-import { apiClient } from '@/lib/api-client';
+import api from '@/lib/api';
 
 export default function NewPropertyPage() {
   const router = useRouter();
@@ -15,8 +15,8 @@ export default function NewPropertyPage() {
   const handleSubmit = async (data: Partial<Property>, isDraft: boolean = false) => {
     setLoading(true);
     try {
-      const endpoint = isDraft ? '/api/properties/draft' : '/api/properties';
-      const response = await apiClient.post(endpoint, data);
+      const endpoint = isDraft ? '/properties/draft' : '/properties';
+      const response = await api.post(endpoint, data);
 
       if (response.data.success) {
         if (isDraft) {
