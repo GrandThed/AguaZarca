@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { FaLink, FaListAlt, FaSpinner, FaCheck, FaTimes, FaShoppingCart } from 'react-icons/fa';
-import { apiClient } from '@/lib/api-client';
+import api from '@/lib/api';
 import { toast } from 'react-toastify';
 
 interface MercadoLibreImportProps {
@@ -26,7 +26,7 @@ export default function MercadoLibreImport({ onImport }: MercadoLibreImportProps
 
     setLoading(true);
     try {
-      const response = await apiClient.post('/api/mercadolibre/import/url', { url });
+      const response = await api.post('/mercadolibre/import/url', { url });
 
       if (response.data.success) {
         onImport(response.data.data);
@@ -34,6 +34,7 @@ export default function MercadoLibreImport({ onImport }: MercadoLibreImportProps
         setUrl('');
       }
     } catch (error: any) {
+      console.error('Import error:', error);
       toast.error(error.response?.data?.error || 'Error al importar desde MercadoLibre');
     } finally {
       setLoading(false);
@@ -49,7 +50,7 @@ export default function MercadoLibreImport({ onImport }: MercadoLibreImportProps
 
     setLoading(true);
     try {
-      const response = await apiClient.post('/api/mercadolibre/import/item', { itemId });
+      const response = await api.post('/mercadolibre/import/item', { itemId });
 
       if (response.data.success) {
         onImport(response.data.data);
@@ -57,6 +58,7 @@ export default function MercadoLibreImport({ onImport }: MercadoLibreImportProps
         setItemId('');
       }
     } catch (error: any) {
+      console.error('Import error:', error);
       toast.error(error.response?.data?.error || 'Error al importar desde MercadoLibre');
     } finally {
       setLoading(false);
@@ -67,7 +69,7 @@ export default function MercadoLibreImport({ onImport }: MercadoLibreImportProps
   const loadUserListings = async () => {
     setLoading(true);
     try {
-      const response = await apiClient.get('/api/mercadolibre/listings');
+      const response = await api.get('/mercadolibre/listings');
 
       if (response.data.success) {
         setBulkItems(response.data.data);
@@ -76,6 +78,7 @@ export default function MercadoLibreImport({ onImport }: MercadoLibreImportProps
         }
       }
     } catch (error: any) {
+      console.error('Load listings error:', error);
       toast.error('Error al cargar publicaciones. ¿Está conectada tu cuenta?');
     } finally {
       setLoading(false);
@@ -91,7 +94,7 @@ export default function MercadoLibreImport({ onImport }: MercadoLibreImportProps
 
     setLoading(true);
     try {
-      const response = await apiClient.post('/api/mercadolibre/import/bulk', {
+      const response = await api.post('/mercadolibre/import/bulk', {
         itemIds: selectedItems
       });
 
@@ -101,6 +104,7 @@ export default function MercadoLibreImport({ onImport }: MercadoLibreImportProps
         setSelectedItems([]);
       }
     } catch (error: any) {
+      console.error('Bulk import error:', error);
       toast.error('Error al importar publicaciones');
     } finally {
       setLoading(false);
