@@ -11,15 +11,42 @@ import PropertyLocationPicker from '@/components/properties/PropertyLocationPick
 import MercadoLibreImport from '@/components/mercadolibre/MercadoLibreImport';
 import { toast } from 'react-toastify';
 import api from '@/lib/api';
-import { FaSave, FaEye, FaSpinner, FaFileImport } from 'react-icons/fa';
+import { FaSave, FaEye, FaSpinner, FaFileImport, FaExclamationTriangle } from 'react-icons/fa';
 import { useDebounce } from '@/hooks/useDebounce';
+import { getMercadoLibreStatus } from '@/lib/api-client';
 
 // Validation schema
 const propertySchema = z.object({
   title: z.string().min(5, 'El título debe tener al menos 5 caracteres'),
   description: z.string().min(20, 'La descripción debe tener al menos 20 caracteres'),
-  type: z.nativeEnum(PropertyType),
-  commercial_status: z.nativeEnum(CommercialStatus),
+  type: z.enum([
+    PropertyType.CASA,
+    PropertyType.DEPARTAMENTO,
+    PropertyType.PH,
+    PropertyType.OFICINA,
+    PropertyType.LOCAL,
+    PropertyType.TERRENO,
+    PropertyType.GALPON,
+    PropertyType.COCHERA,
+    PropertyType.QUINTA,
+    PropertyType.CAMPO,
+    PropertyType.HOTEL,
+    PropertyType.EDIFICIO,
+    PropertyType.COUNTRY,
+    PropertyType.DEPOSITO,
+    PropertyType.FONDO_COMERCIO,
+    PropertyType.CABANA,
+    PropertyType.OTRO
+  ] as const, {
+    message: 'Por favor seleccione un tipo de propiedad'
+  }),
+  commercial_status: z.enum([
+    CommercialStatus.SALE,
+    CommercialStatus.ANNUAL_RENT,
+    CommercialStatus.TEMPORARY_RENT
+  ] as const, {
+    message: 'Por favor seleccione un estado comercial'
+  }),
   price: z.number().min(0, 'El precio debe ser mayor a 0'),
   currency: z.enum(['USD', 'ARS']).default('USD'),
 
@@ -62,8 +89,8 @@ const propertySchema = z.object({
 
   // Media
   images: z.array(z.string()).optional(),
-  video_url: z.string().url().optional().or(z.literal('')),
-  virtual_tour_url: z.string().url().optional().or(z.literal('')),
+  video_url: z.string().url('Por favor ingrese una URL válida').optional().or(z.literal('')),
+  virtual_tour_url: z.string().url('Por favor ingrese una URL válida').optional().or(z.literal('')),
 
   // Status
   status: z.nativeEnum(PropertyStatus).default(PropertyStatus.DRAFT),
@@ -89,8 +116,12 @@ export default function PropertyForm({
   loading = false,
   draftId
 }: PropertyFormProps) {
-  const [images, setImages] = useState<string[]>(property?.images || []);
+  const [images, setImages] = useState<string[]>(
+    property?.images ? property.images.map(img => typeof img === 'string' ? img : img.url) : []
+  );
   const [showMLImport, setShowMLImport] = useState(false);
+  const [mlConnected, setMlConnected] = useState(false);
+  const [checkingMLStatus, setCheckingMLStatus] = useState(true);
   const [autosaving, setAutosaving] = useState(false);
   const autosaveTimeoutRef = useRef<NodeJS.Timeout>();
   const lastSavedDataRef = useRef<string>('');
@@ -104,17 +135,33 @@ export default function PropertyForm({
     reset,
     formState: { errors, isDirty }
   } = useForm<PropertyFormData>({
-    resolver: zodResolver(propertySchema),
-    defaultValues: property || {
+    resolver: zodResolver(propertySchema) as any,
+    defaultValues: (property || {
       currency: 'USD',
       country: 'Argentina',
       status: PropertyStatus.DRAFT,
       attributes: {},
-    }
+    }) as any
   });
 
   const watchedData = watch();
   const debouncedData = useDebounce(watchedData, 2000);
+
+  // Check MercadoLibre connection status on mount
+  useEffect(() => {
+    const checkMLConnection = async () => {
+      try {
+        const status = await getMercadoLibreStatus();
+        setMlConnected(status.connected);
+      } catch (error) {
+        console.error('Error checking ML status:', error);
+        setMlConnected(false);
+      } finally {
+        setCheckingMLStatus(false);
+      }
+    };
+    checkMLConnection();
+  }, []);
 
   // Autosave functionality
   useEffect(() => {
@@ -146,9 +193,10 @@ export default function PropertyForm({
   }, [draftId, debouncedData, images, autosaving]);
 
   // Handle image upload
-  const handleImageUpload = (newImages: string[]) => {
-    setImages(prev => [...prev, ...newImages]);
-    setValue('images', [...images, ...newImages]);
+  const handleImageUpload = (uploadedImages: any[]) => {
+    const newImageUrls = uploadedImages.map(img => img.url);
+    setImages(prev => [...prev, ...newImageUrls]);
+    setValue('images', [...images, ...newImageUrls]);
   };
 
   // Handle image reorder
@@ -200,43 +248,66 @@ export default function PropertyForm({
     if (location.state) setValue('state', location.state);
   };
 
-  const onFormSubmit = async (data: PropertyFormData) => {
+  const onFormSubmit = async (data: any) => {
     const finalData = { ...data, images };
     await onSubmit(finalData, false);
   };
 
   const onSaveDraft = async () => {
     const data = watch();
-    const finalData = { ...data, images, status: PropertyStatus.DRAFT };
+    const finalData = { ...data, images, status: PropertyStatus.DRAFT } as any;
     await onSubmit(finalData, true);
   };
 
   const onPreviewClick = () => {
     const data = watch();
-    const finalData = { ...data, images };
+    const finalData = { ...data, images } as any;
     onPreview?.(finalData);
   };
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-8">
-      {/* MercadoLibre Import Section */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900">Importar desde MercadoLibre</h2>
-          <button
-            type="button"
-            onClick={() => setShowMLImport(!showMLImport)}
-            className="btn-secondary flex items-center gap-2"
-          >
-            <FaFileImport />
-            {showMLImport ? 'Cerrar' : 'Importar'}
-          </button>
-        </div>
+      {/* MercadoLibre Import Section - Only show if connected */}
+      {!checkingMLStatus && mlConnected && (
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">Importar desde MercadoLibre</h2>
+            <button
+              type="button"
+              onClick={() => setShowMLImport(!showMLImport)}
+              className="btn-secondary flex items-center gap-2"
+            >
+              <FaFileImport />
+              {showMLImport ? 'Cerrar' : 'Importar'}
+            </button>
+          </div>
 
-        {showMLImport && (
-          <MercadoLibreImport onImport={handleMLImport} />
-        )}
-      </div>
+          {showMLImport && (
+            <MercadoLibreImport onImport={handleMLImport} />
+          )}
+        </div>
+      )}
+
+      {/* ML Not Connected Message */}
+      {!checkingMLStatus && !mlConnected && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div className="flex items-start gap-3">
+            <FaExclamationTriangle className="text-yellow-600 mt-0.5" />
+            <div>
+              <h3 className="font-medium text-yellow-900">MercadoLibre no conectado</h3>
+              <p className="text-sm text-yellow-700 mt-1">
+                Conecta tu cuenta de MercadoLibre para importar propiedades directamente.
+              </p>
+              <a
+                href="/admin/mercadolibre"
+                className="inline-block mt-2 text-sm font-medium text-yellow-900 hover:text-yellow-700 underline"
+              >
+                Ir a configuración de MercadoLibre →
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Basic Information */}
       <div className="bg-white rounded-lg shadow-md p-6">
@@ -268,7 +339,7 @@ export default function PropertyForm({
               <option value="">Seleccionar</option>
               {Object.values(PropertyType).map(type => (
                 <option key={type} value={type}>
-                  {type.replace(/_/g, ' ')}
+                  {type}
                 </option>
               ))}
             </select>
@@ -288,9 +359,7 @@ export default function PropertyForm({
               <option value="">Seleccionar</option>
               {Object.values(CommercialStatus).map(status => (
                 <option key={status} value={status}>
-                  {status === CommercialStatus.SALE ? 'Venta' :
-                   status === CommercialStatus.RENT ? 'Alquiler' :
-                   'Alquiler Temporal'}
+                  {status}
                 </option>
               ))}
             </select>
@@ -313,9 +382,10 @@ export default function PropertyForm({
               </select>
               <input
                 type="number"
-                {...register('price', { valueAsNumber: true })}
+                {...register('price')}
                 className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary"
                 placeholder="0"
+                min="0"
               />
             </div>
             {errors.price && (
@@ -540,9 +610,10 @@ export default function PropertyForm({
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Imágenes</h2>
 
         <ImageUploader
-          onUpload={handleImageUpload}
+          onImagesUploaded={handleImageUpload}
           maxFiles={20}
-          maxSize={5 * 1024 * 1024} // 5MB
+          maxSize={5}
+          existingImagesCount={images.length}
         />
 
         {images.length > 0 && (
