@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { FaCheck, FaSync, FaTimes, FaSpinner, FaClock } from 'react-icons/fa';
 import { SiMercadolibre } from 'react-icons/si';
-import { apiClient } from '@/lib/api-client';
+import api from '@/lib/api';
 
 interface SyncStatus {
   status: 'synced' | 'out_of_sync' | 'syncing' | 'error' | 'not_ml_property';
@@ -47,7 +47,7 @@ export default function SyncStatusIndicator({
     if (!mlItemId) return;
 
     try {
-      const response = await apiClient.get(`/api/mercadolibre/sync-status/${propertyId}`);
+      const response = await api.get(`/mercadolibre/sync-status/${propertyId}`);
 
       if (response.data.success) {
         setSyncStatus(response.data.data);
@@ -66,7 +66,7 @@ export default function SyncStatusIndicator({
     setSyncStatus(prev => ({ ...prev, status: 'syncing' }));
 
     try {
-      const response = await apiClient.post(`/api/mercadolibre/sync-item/${mlItemId}`);
+      const response = await api.post(`/mercadolibre/sync-item/${mlItemId}`);
 
       if (response.data.success) {
         setSyncStatus({ status: 'synced', lastSync: new Date().toISOString() });

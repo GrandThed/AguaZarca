@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FaCheck, FaTimes, FaSpinner, FaEye, FaSync, FaTrash, FaFilter } from 'react-icons/fa';
-import { apiClient } from '@/lib/api-client';
+import api from '@/lib/api';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
@@ -48,7 +48,7 @@ export default function ImportHistory({ propertyId }: ImportHistoryProps) {
         ...(propertyId && { propertyId: propertyId.toString() })
       });
 
-      const response = await apiClient.get(`/api/mercadolibre/import-history?${params}`);
+      const response = await api.get(`/mercadolibre/import-history?${params}`);
 
       if (response.data.success) {
         setImports(response.data.data.imports);
@@ -65,7 +65,7 @@ export default function ImportHistory({ propertyId }: ImportHistoryProps) {
   const handleSync = async (importId: number, mlItemId: string) => {
     setSyncing(mlItemId);
     try {
-      const response = await apiClient.post(`/api/mercadolibre/sync-item/${mlItemId}`);
+      const response = await api.post(`/mercadolibre/sync-item/${mlItemId}`);
 
       if (response.data.success) {
         toast.success('Propiedad sincronizada correctamente');
@@ -84,7 +84,7 @@ export default function ImportHistory({ propertyId }: ImportHistoryProps) {
     }
 
     try {
-      const response = await apiClient.delete(`/api/mercadolibre/import-history/${importId}`);
+      const response = await api.delete(`/mercadolibre/import-history/${importId}`);
 
       if (response.data.success) {
         toast.success('Registro eliminado correctamente');
