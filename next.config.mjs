@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // Only use static export when explicitly building for static hosting
+  ...(process.env.STATIC_BUILD === 'true' && { output: 'export' }),
   images: {
     unoptimized: true,
   },
