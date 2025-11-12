@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaCheck, FaTimes, FaSpinner, FaExternalLinkAlt, FaUnlink, FaSync } from 'react-icons/fa';
-import { SiMercadolibre } from 'react-icons/si';
+import { FaCheck, FaTimes, FaSpinner, FaExternalLinkAlt, FaUnlink, FaSync, FaShoppingCart } from 'react-icons/fa';
 import {
   getMercadoLibreStatus,
   getMercadoLibreAuthUrl,
@@ -153,7 +152,7 @@ export default function MLConnectionManager({ onConnectionChange }: MLConnection
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-center gap-3 mb-6">
-        <SiMercadolibre className="text-3xl text-yellow-500" />
+        <FaShoppingCart className="text-3xl text-yellow-500" />
         <div>
           <h2 className="text-xl font-semibold">MercadoLibre Integration</h2>
           <p className="text-gray-600 text-sm">

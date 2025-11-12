@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
@@ -14,7 +14,14 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, user, loading: authLoading } = useAuth();
+
+  // Navigate to admin when user logs in successfully
+  useEffect(() => {
+    if (user && !authLoading) {
+      router.replace('/admin');
+    }
+  }, [user, authLoading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,8 +30,7 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      // Use router.replace to ensure navigation happens after state update
-      router.replace('/admin');
+      // Navigation will happen automatically via useEffect when user state updates
     } catch (err: any) {
       // Extract error message from API response structure
       let errorMessage = 'Error al iniciar sesión. Por favor, intenta nuevamente.';

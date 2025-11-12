@@ -80,7 +80,7 @@ export function useSiteSettingsProvider(): SiteSettingsContextType {
       // Fallback to default values
       setSettings({
         'site.name': 'AguaZarca',
-        'contact.whatsapp': process.env.NEXT_PUBLIC_AGENT_WHATSAPP || null,
+        'contact.whatsapp': process.env.NEXT_PUBLIC_AGENT_WHATSAPP || undefined,
         'contact.phone': '+54 11 1234-5678',
         'contact.email': 'contacto@aguazarca.com.ar',
         'contact.address': 'Buenos Aires, Argentina',

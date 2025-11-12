@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import PropertyForm from '@/components/properties/PropertyForm';
-import { Property } from '@/types/property';
 import { toast } from 'react-toastify';
 import api from '@/lib/api';
 
@@ -12,7 +11,7 @@ export default function NewPropertyPage() {
   const [loading, setLoading] = useState(false);
   const [draftId, setDraftId] = useState<string | null>(null);
 
-  const handleSubmit = async (data: Partial<Property>, isDraft: boolean = false) => {
+  const handleSubmit = async (data: any, isDraft: boolean = false) => {
     setLoading(true);
     try {
       const endpoint = isDraft ? '/properties/draft' : '/properties';
@@ -35,7 +34,7 @@ export default function NewPropertyPage() {
     }
   };
 
-  const handlePreview = (data: Partial<Property>) => {
+  const handlePreview = (data: any) => {
     // Store in sessionStorage for preview
     sessionStorage.setItem('propertyPreview', JSON.stringify(data));
     window.open('/admin/propiedades/preview', '_blank');

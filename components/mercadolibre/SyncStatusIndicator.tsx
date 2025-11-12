@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaCheck, FaSync, FaTimes, FaSpinner, FaClock } from 'react-icons/fa';
-import { SiMercadolibre } from 'react-icons/si';
+import { FaCheck, FaSync, FaTimes, FaSpinner, FaClock, FaShoppingCart } from 'react-icons/fa';
 import api from '@/lib/api';
 
 interface SyncStatus {
@@ -146,7 +145,7 @@ export default function SyncStatusIndicator({
   if (compact) {
     return (
       <div className="flex items-center gap-1">
-        <SiMercadolibre className="text-yellow-500 text-sm" />
+        <FaShoppingCart className="text-yellow-500 text-sm" />
         {getStatusIcon()}
       </div>
     );
@@ -156,7 +155,7 @@ export default function SyncStatusIndicator({
     <div className={`border rounded-lg p-3 ${getStatusColor()}`}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <SiMercadolibre className="text-yellow-500" />
+          <FaShoppingCart className="text-yellow-500" />
           {getStatusIcon()}
           <span className="font-medium text-sm">{getStatusText()}</span>
         </div>

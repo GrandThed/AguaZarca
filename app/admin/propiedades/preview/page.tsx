@@ -72,7 +72,7 @@ export default function PropertyPreviewPage() {
       <div className="container mx-auto px-4 py-8">
         <PropertyDetailContent
           property={property as Property}
-          isPreview={true}
+          relatedProperties={[]}
         />
       </div>
 

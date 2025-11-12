@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import MLConnectionManager from '@/components/mercadolibre\MLConnectionManager';
-import ImportHistory from '@/components/mercadolibre\ImportHistory';
+import MLConnectionManager from '@/components/mercadolibre/MLConnectionManager';
+import ImportHistory from '@/components/mercadolibre/ImportHistory';
 import { FaLink, FaHistory } from 'react-icons/fa';
 
 export default function MercadoLibreAdminPage() {

@@ -73,18 +73,21 @@ export default function AdminDashboard() {
       href: '/admin/propiedades',
       description: 'Ver y editar todas las propiedades',
       count: propertyStats?.totalProperties,
+      urgent: false,
     },
     {
       title: 'Gestionar Blog',
       href: '/admin/blog',
       description: 'Administrar artículos y contenido',
       count: undefined, // Would need blog stats
+      urgent: false,
     },
     {
       title: 'MercadoLibre',
       href: '/admin/mercadolibre',
       description: 'Conectar y sincronizar con MercadoLibre',
       count: undefined,
+      urgent: false,
     },
   ];
 
