@@ -57,7 +57,7 @@ export default function MLConnectionManager({ onConnectionChange }: MLConnection
       const { authUrl } = await getMercadoLibreAuthUrl();
 
       // Open OAuth window pointing to our callback route
-      const callbackUrl = `${window.location.origin}/admin/mercadolibre/callback`;
+      const callbackUrl = `${window.location.origin}/mercadolibre/callback`;
       const fullAuthUrl = authUrl.includes('redirect_uri')
         ? authUrl
         : `${authUrl}&redirect_uri=${encodeURIComponent(callbackUrl)}`;
