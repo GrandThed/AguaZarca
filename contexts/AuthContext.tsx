@@ -10,7 +10,7 @@ import { User } from '@/types/api';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{ user: User }>;
   logout: () => void;
   checkAuth: () => Promise<void>;
   isAdmin: boolean;
@@ -55,6 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     Cookies.set('token', tokens.accessToken, { expires: 365 });
     Cookies.set('refreshToken', tokens.refreshToken, { expires: 365 });
     setUser(user);
+    return { user };
   };
 
   const logout = () => {

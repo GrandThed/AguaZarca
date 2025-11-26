@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { Property, PropertyType, PropertyStatus, CommercialStatus } from '@/types/property';
 import ImageUploader from '@/components/images/ImageUploader';
 import SimpleImageReorder from '@/components/images/SimpleImageReorder';
-import PropertyLocationPicker from '@/components/properties/PropertyLocationPicker';
+import PropertyLocationPicker, { PropertyLocationPickerRef } from '@/components/properties/PropertyLocationPicker';
 import MercadoLibreImport from '@/components/mercadolibre/MercadoLibreImport';
 import { toast } from 'react-toastify';
 import api from '@/lib/api';
@@ -125,6 +125,7 @@ export default function PropertyForm({
   const [autosaving, setAutosaving] = useState(false);
   const autosaveTimeoutRef = useRef<NodeJS.Timeout>();
   const lastSavedDataRef = useRef<string>('');
+  const locationPickerRef = useRef<PropertyLocationPickerRef>(null);
 
   const {
     register,
@@ -213,22 +214,131 @@ export default function PropertyForm({
   };
 
   // Handle MercadoLibre import
-  const handleMLImport = (importedData: Partial<PropertyFormData>) => {
+  const handleMLImport = async (importedData: any) => {
     if (!importedData) {
       toast.error('No se recibieron datos para importar');
       return;
     }
 
-    Object.entries(importedData).forEach(([key, value]) => {
-      setValue(key as keyof PropertyFormData, value as any);
+    console.log('ML Import data received:', importedData);
+
+    // Extract images - handle both array of strings and array of objects with url property
+    let imageUrls: string[] = [];
+    if (importedData.images && Array.isArray(importedData.images)) {
+      imageUrls = importedData.images.map((img: any) =>
+        typeof img === 'string' ? img : (img.url || '')
+      ).filter((url: string) => url !== '');
+    }
+
+    console.log('Extracted image URLs:', imageUrls);
+
+    // Map the imported data to form fields
+    // MercadoLibre returns different field names, so we need to map them
+    const mappedData: any = {
+      title: importedData.title,
+      description: importedData.description,
+      type: importedData.type,
+      commercial_status: importedData.comercialStatus || importedData.commercial_status,
+      price: importedData.priceValue || importedData.price,
+      currency: importedData.priceCurrency || importedData.currency || 'USD',
+      address: importedData.addressLine || importedData.address,
+      neighborhood: importedData.neighborhood,
+      city: importedData.city,
+      state: importedData.state || 'Córdoba',
+      country: importedData.country || 'Argentina',
+      latitude: importedData.latitude,
+      longitude: importedData.longitude,
+      video_url: importedData.videoId ? `https://www.youtube.com/watch?v=${importedData.videoId}` : '',
+    };
+
+    // Map characteristics if available
+    if (importedData.characteristics && Array.isArray(importedData.characteristics)) {
+      importedData.characteristics.forEach((char: any) => {
+        const name = char.name?.toLowerCase();
+        const value = parseInt(char.value) || 0;
+
+        if (name?.includes('dormitorio') || name?.includes('bedroom')) {
+          mappedData.bedrooms = value;
+        } else if (name?.includes('baño') || name?.includes('bathroom')) {
+          mappedData.bathrooms = value;
+        } else if (name?.includes('cochera') || name?.includes('parking') || name?.includes('garage')) {
+          mappedData.garage_spaces = value;
+        } else if (name?.includes('superficie cubierta') || name?.includes('covered area')) {
+          mappedData.covered_area = value;
+        } else if (name?.includes('superficie total') || name?.includes('total area')) {
+          mappedData.total_area = value;
+        } else if (name?.includes('piso') || name?.includes('floor')) {
+          mappedData.floors = value;
+        }
+      });
+    }
+
+    // Map attributes/amenities if available
+    if (importedData.attributes && Array.isArray(importedData.attributes)) {
+      const attrs: any = {};
+      importedData.attributes.forEach((attr: any) => {
+        const name = attr.name?.toLowerCase();
+        const value = attr.value === true || attr.value === 'true';
+
+        if (name?.includes('pileta') || name?.includes('pool') || name?.includes('piscina')) {
+          attrs.pool = value;
+        } else if (name?.includes('jardín') || name?.includes('garden')) {
+          attrs.garden = value;
+        } else if (name?.includes('terraza') || name?.includes('terrace')) {
+          attrs.terrace = value;
+        } else if (name?.includes('balcón') || name?.includes('balcony')) {
+          attrs.balcony = value;
+        } else if (name?.includes('parrilla') || name?.includes('barbecue') || name?.includes('asador')) {
+          attrs.barbecue = value;
+        } else if (name?.includes('gimnasio') || name?.includes('gym')) {
+          attrs.gym = value;
+        } else if (name?.includes('seguridad') || name?.includes('security')) {
+          attrs.security = value;
+        } else if (name?.includes('ascensor') || name?.includes('elevator')) {
+          attrs.elevator = value;
+        } else if (name?.includes('cochera') || name?.includes('parking')) {
+          attrs.parking = value;
+        } else if (name?.includes('calefacción') || name?.includes('heating')) {
+          attrs.heating = value;
+        } else if (name?.includes('aire') || name?.includes('conditioning') || name?.includes('a/c')) {
+          attrs.air_conditioning = value;
+        } else if (name?.includes('amoblado') || name?.includes('furnished')) {
+          attrs.furnished = value;
+        }
+      });
+      mappedData.attributes = attrs;
+    }
+
+    console.log('Mapped form data:', mappedData);
+
+    // Set all form values
+    Object.entries(mappedData).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        setValue(key as keyof PropertyFormData, value as any);
+      }
     });
 
-    if (importedData.images) {
-      setImages(importedData.images);
+    // Set images
+    if (imageUrls.length > 0) {
+      setImages(imageUrls);
+      setValue('images', imageUrls);
     }
 
     setShowMLImport(false);
-    toast.success('Datos importados correctamente');
+    toast.success(`Datos importados correctamente. ${imageUrls.length} imágenes cargadas.`);
+
+    // Trigger automatic geocoding for the imported address
+    const completeAddress = mappedData.address;
+    if (completeAddress && locationPickerRef.current) {
+      try {
+        console.log('Triggering automatic location search for:', completeAddress);
+        await locationPickerRef.current.searchAddress(completeAddress);
+        toast.success('Ubicación geocodificada automáticamente');
+      } catch (error) {
+        console.error('Error geocoding imported address:', error);
+        toast.info('La dirección se importó pero no pudimos geocodificarla automáticamente');
+      }
+    }
   };
 
   // Handle location update
@@ -266,7 +376,8 @@ export default function PropertyForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-8">
+    <div>
+      <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-8">
       {/* MercadoLibre Import Section - Only show if connected */}
       {!checkingMLStatus && mlConnected && (
         <div className="bg-white rounded-lg shadow-md p-6">
@@ -471,6 +582,7 @@ export default function PropertyForm({
 
         {/* Map Location Picker */}
         <PropertyLocationPicker
+          ref={locationPickerRef}
           initialLocation={{
             latitude: watchedData.latitude,
             longitude: watchedData.longitude,
@@ -521,17 +633,6 @@ export default function PropertyForm({
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-900 mb-1">
-              Superficie Descubierta (m²)
-            </label>
-            <input
-              type="number"
-              {...register('uncovered_area', { valueAsNumber: true })}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary"
-              min="0"
-            />
-          </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-900 mb-1">
@@ -691,52 +792,72 @@ export default function PropertyForm({
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap gap-3 justify-end">
-        {autosaving && (
-          <div className="flex items-center gap-2 text-gray-500">
-            <FaSpinner className="animate-spin" />
-            <span className="text-sm">Guardando automáticamente...</span>
-          </div>
-        )}
+      </form>
 
-        <button
-          type="button"
-          onClick={onSaveDraft}
-          disabled={loading}
-          className="btn-secondary flex items-center gap-2"
-        >
-          <FaSave />
-          Guardar Borrador
-        </button>
+      {/* Fixed Action Buttons at Bottom */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl p-4 md:p-6" style={{ zIndex: 9999 }}>
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row gap-3 justify-end items-center">
+          {autosaving && (
+            <div className="flex items-center gap-2 text-gray-500 order-last sm:order-first">
+              <FaSpinner className="animate-spin text-sm" />
+              <span className="text-sm font-medium">Guardando automáticamente...</span>
+            </div>
+          )}
 
-        {onPreview && (
           <button
             type="button"
-            onClick={onPreviewClick}
+            onClick={onSaveDraft}
             disabled={loading}
-            className="btn-secondary flex items-center gap-2"
+            className="w-full sm:w-auto px-6 py-3 bg-gray-100 hover:bg-gray-200 disabled:bg-gray-100 disabled:opacity-50 text-gray-900 font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 border border-gray-300 hover:border-gray-400 hover:shadow-md"
           >
-            <FaEye />
-            Vista Previa
+            <FaSave className="text-base" />
+            <span>Guardar Borrador</span>
           </button>
-        )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn-primary flex items-center gap-2"
-        >
-          {loading ? (
-            <>
-              <FaSpinner className="animate-spin" />
-              Publicando...
-            </>
-          ) : (
-            'Publicar Propiedad'
+          {onPreview && (
+            <button
+              type="button"
+              onClick={onPreviewClick}
+              disabled={loading}
+              className="w-full sm:w-auto px-6 py-3 bg-blue-50 hover:bg-blue-100 disabled:bg-blue-50 disabled:opacity-50 text-blue-700 font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 border border-blue-300 hover:border-blue-400 hover:shadow-md"
+            >
+              <FaEye className="text-base" />
+              <span>Vista Previa</span>
+            </button>
           )}
-        </button>
+
+          <button
+            type="button"
+            onClick={async () => {
+              const data = watch();
+              const finalData = { ...data, images };
+              await onSubmit(finalData, false);
+            }}
+            disabled={loading}
+            className="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-green-500 disabled:to-green-600 disabled:opacity-50 text-white font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+          >
+            {loading ? (
+              <>
+                <FaSpinner className="animate-spin text-base" />
+                <span>Publicando...</span>
+              </>
+            ) : (
+              <>
+                <span>Publicar Propiedad</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
-    </form>
+
+      {/* Add padding to body to prevent overlap with fixed buttons */}
+      <div className="h-24" />
+
+      <style jsx>{`
+        :global(body) {
+          padding-bottom: 120px;
+        }
+      `}</style>
+    </div>
   );
 }

@@ -16,7 +16,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { login, user, loading: authLoading } = useAuth();
 
-  // Navigate to admin when user logs in successfully
+  // Redirect already authenticated users away from login page
   useEffect(() => {
     if (user && !authLoading) {
       router.replace('/admin');
@@ -30,7 +30,8 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      // Navigation will happen automatically via useEffect when user state updates
+      // Redirect to admin immediately after successful login
+      router.replace('/admin');
     } catch (err: any) {
       // Extract error message from API response structure
       let errorMessage = 'Error al iniciar sesión. Por favor, intenta nuevamente.';
