@@ -11,6 +11,21 @@ import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// Suppress react-beautiful-dnd defaultProps warning
+// This is a known issue with the library and doesn't affect functionality
+if (typeof window !== 'undefined') {
+  const originalError = console.error;
+  (console as any).error = function(...args: any[]) {
+    if (
+      typeof args[0] === 'string' &&
+      args[0].includes('Support for defaultProps will be removed')
+    ) {
+      return;
+    }
+    originalError.apply(console, args);
+  };
+}
+
 export const metadata: Metadata = {
   title: "AguaZarca - Inmobiliaria en Argentina",
   description: "Encuentra tu propiedad ideal con AguaZarca. Venta y alquiler de propiedades en Argentina.",

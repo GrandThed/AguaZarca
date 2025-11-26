@@ -796,7 +796,7 @@ export default function PropertyForm({
 
       {/* Fixed Action Buttons at Bottom */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl p-4 md:p-6" style={{ zIndex: 9999 }}>
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row gap-3 justify-end items-center">
+        <div className="flex flex-col sm:flex-row gap-3 justify-end items-center pr-4 md:pr-8">
           {autosaving && (
             <div className="flex items-center gap-2 text-gray-500 order-last sm:order-first">
               <FaSpinner className="animate-spin text-sm" />

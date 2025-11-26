@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { FaWhatsapp } from 'react-icons/fa';
 import { X, MessageCircle } from 'lucide-react';
 import { useBusinessContact } from '@/hooks/useBusinessContact';
@@ -9,6 +10,10 @@ import { generateWhatsAppLink } from '@/lib/utils';
 export default function FloatingWhatsApp() {
   const { contact, loading } = useBusinessContact();
   const [isExpanded, setIsExpanded] = useState(false);
+  const pathname = usePathname();
+
+  // Hide WhatsApp button on admin pages
+  const isAdminPage = pathname.startsWith('/admin');
 
   const handleOpenWhatsApp = () => {
     if (!contact?.whatsapp) return;
@@ -25,7 +30,7 @@ Gracias!`;
     window.open(whatsappUrl, '_blank');
   };
 
-  if (loading || !contact?.whatsapp) {
+  if (loading || !contact?.whatsapp || isAdminPage) {
     return null;
   }
 
